@@ -1,6 +1,7 @@
 import { appWindow, LogicalSize } from '@tauri-apps/api/window';
 import { FC, ComponentType, PropsWithChildren, createContext, useState, useContext } from 'react';
 import * as Realm from 'realm-web';
+import useSessionState from './useSessionState';
 
 const REALM_APP_ID = "application-0-frqqk";
 
@@ -13,26 +14,28 @@ function useDatabase() {
 }
 
 const DatabaseProvider: FC<PropsWithChildren<IProps>> = ({ Login, children }) => {
-	const [user, setUser] = useState<Realm.User>();
+	const [user, setUser] = useSessionState<Realm.User>('user');
 	return user ? (
     // If a database session user exists, render the children.
 		<DatabaseContext.Provider value={user}>{children}</DatabaseContext.Provider>
 	) : (
     // If it does not exist, render the Login component.
-    <Login login={(username, password) => new Promise((resolve, reject) => {
-      const app = new Realm.App({ id: REALM_APP_ID });
-      const credentials = Realm.Credentials.function({ username, password });
-      app.logIn(credentials)
-        .then(user => { 
-          // On successful login, unlock the window and set the session user.
-          appWindow.setResizable(true);
-          appWindow.setSize(new LogicalSize(1000, 800));
-          appWindow.center();
-          setUser(user); 
-          resolve(undefined);
-        })
-        .catch(err => reject(err));
-    })} />
+    <Login login={(username, password) => 
+      new Promise((resolve, reject) => {
+        const app = new Realm.App({ id: REALM_APP_ID });
+        const credentials = Realm.Credentials.function({ username, password });
+        app.logIn(credentials)
+          .then(user => { 
+            // On successful login, unlock the window and set the session user.
+            appWindow.setResizable(true);
+            appWindow.setSize(new LogicalSize(1000, 700));
+            setTimeout(() => appWindow.center(), 10);
+            setUser(user); 
+            resolve(undefined);
+          })
+          .catch(err => reject(err));
+      }
+    )} />
   );
 }
 

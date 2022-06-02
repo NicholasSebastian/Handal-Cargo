@@ -56,10 +56,12 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
-        "resizable": true,
         "title": "Handal Cargo",
-        "width": 800
+        "resizable": false,
+        "height": 400,
+        "minHeight": 400,
+        "width": 600,
+        "minWidth": 600
       }
     ]
   }
