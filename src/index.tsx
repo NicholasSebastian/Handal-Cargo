@@ -1,14 +1,18 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import './normalize.css';
-import App from './App';
+import { DatabaseProvider } from './data/useDatabase';
+import App from './pages/App';
+import Login from './pages/Login';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+const elements = (
+  <StrictMode>
+    <DatabaseProvider Login={Login}>
+      <App />
+    </DatabaseProvider>
+  </StrictMode>
 );
 
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const target = document.getElementById('root');
+const root = ReactDOM.createRoot(target!);
+root.render(elements);

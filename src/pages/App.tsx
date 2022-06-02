@@ -1,9 +1,6 @@
 import { FC } from 'react';
-import { withDatabase } from "./data/useDatabase";
 
 const App: FC = () => {
-  // TODO: useAuth
-
   return (
     <div className="App">
       <header className="App-header">
@@ -22,4 +19,4 @@ const App: FC = () => {
   );
 }
 
-export default withDatabase(App);
+export default App;

@@ -1,33 +1,49 @@
-import { ComponentType, createContext, useState, useEffect, useContext } from 'react';
+import { appWindow, LogicalSize } from '@tauri-apps/api/window';
+import { FC, ComponentType, PropsWithChildren, createContext, useState, useContext } from 'react';
 import * as Realm from 'realm-web';
+
+const REALM_APP_ID = "application-0-frqqk";
 
 type User = Realm.User | undefined;
 const DatabaseContext = createContext<User>(undefined);
 
 function useDatabase() {
 	const user = useContext(DatabaseContext);
-	return user?.functions;
+	return user!;
 }
 
-function withDatabase(Component: ComponentType) {
-	return () => {
-		const [user, setUser] = useState<Realm.User>();
-		useEffect(() => {
-			const REALM_APP_ID = "TODO";
-			const app = new Realm.App({ id: REALM_APP_ID });
-			const credentials = Realm.Credentials.anonymous();
-			app.logIn(credentials)
-				.then(user => setUser(user))
-				.catch(err => console.error(err));
-		}, []);
-
-		return (
-			<DatabaseContext.Provider value={user}>
-				<Component />
-			</DatabaseContext.Provider>
-		);
-	}
+const DatabaseProvider: FC<PropsWithChildren<IProps>> = ({ Login, children }) => {
+	const [user, setUser] = useState<Realm.User>();
+	return user ? (
+    // If a database session user exists, render the children.
+		<DatabaseContext.Provider value={user}>{children}</DatabaseContext.Provider>
+	) : (
+    // If it does not exist, render the Login component.
+    <Login login={(username, password) => new Promise((resolve, reject) => {
+      const app = new Realm.App({ id: REALM_APP_ID });
+      const credentials = Realm.Credentials.function({ username, password });
+      app.logIn(credentials)
+        .then(user => { 
+          // On successful login, unlock the window and set the session user.
+          appWindow.setResizable(true);
+          appWindow.setSize(new LogicalSize(1000, 800));
+          appWindow.center();
+          setUser(user); 
+          resolve(undefined);
+        })
+        .catch(err => reject(err));
+    })} />
+  );
 }
 
-export { withDatabase };
+export { DatabaseProvider };
 export default useDatabase;
+export type { ILoginProps };
+
+interface IProps {
+  Login: ComponentType<ILoginProps>
+}
+
+interface ILoginProps {
+  login: (username: string, password: string) => Promise<any>
+}
