@@ -1,5 +1,5 @@
 import { appWindow, LogicalSize } from '@tauri-apps/api/window';
-import { FC, ComponentType, PropsWithChildren, createContext, useState, useContext } from 'react';
+import { FC, ComponentType, PropsWithChildren, createContext, useContext } from 'react';
 import * as Realm from 'realm-web';
 import useSessionState from './useSessionState';
 
