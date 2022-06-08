@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Layout as AntLayout, Menu, MenuProps, Tabs, TabsProps } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, AppstoreOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import pages from '../navigation';
-import { toSlug } from '../utils';
+import { toSlug, fromSlug } from '../utils';
 
 type MenuItem = Required<MenuProps>['items'][number];
 type TabsCallback = Required<TabsProps>['onEdit'];
@@ -28,27 +28,50 @@ const menuItems = Object.entries(pages).map(([name, component], i): MenuItem => 
 });
 
 const Layout: FC<PropsWithChildren<{}>> = (props) => {
-  // Sidebar state.
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(DEFAULT_GROUP);
-  const [selected, setSelected] = useState('');
-
-  // Tabs state.
-  const [tabs, setTabs] = useState([]);
+  const [tabs, setTabs] = useState<Array<string>>([]);
   const [active, setActive] = useState('');
 
-  const location = useLocation();
   useEffect(() => {
-    setSelected(location.pathname.slice(1));
-    // TODO: Change to the respective tab whenever the location changes.
-    // TODO: Add a new tab if the respective tab does not exist yet.
+    // Executes when the location changes.
+    const newTabKey = location.pathname.slice(1);
+    const tabExists = tabs.some(tab_name => toSlug(tab_name) === newTabKey);
+
+    // Changes the active key to the new location.
+    setActive(newTabKey);
+    
+    // Adds a new tab if the respective tab does not exist yet.
+    if (!tabExists) {
+      const newTab = fromSlug(newTabKey);
+      setTabs([...tabs, newTab]);
+    }
+
   }, [location]);
 
   const onEdit: TabsCallback = (key, action) => {
+    // Executes when a tab is deleted.
     if (action === 'remove') {
-      // TODO: Remove the target tab.
-      // TODO: Set the active tab to the one directly after/before it if its currently selected.
+      const targetIndex = tabs.findIndex(tab_name => toSlug(tab_name) === key);
+      const target = tabs[targetIndex];
+      const targetKey = toSlug(target);
+      
+      // Changes the active key if the one being deleted is currently active.
+      if (targetKey === active) {
+        const isRightmost = (targetIndex < tabs.length - 1);
+        const newActiveIndex = isRightmost ? (targetIndex + 1) : (targetIndex - 1);
+        const newActive = tabs[newActiveIndex];
+        const newActiveKey = toSlug(newActive);
+        setActive(newActiveKey);
+      }
+
+      // Delete the tab.
+      const before = tabs.slice(0, targetIndex);
+      const after = tabs.slice(targetIndex + 1);
+      setTabs([...before, ...after]);
     }
   };
 
@@ -58,7 +81,7 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
         <Title>Handal Cargo</Title>
         <Menu theme='dark' mode='inline' items={menuItems}
           openKeys={[open]} onOpenChange={keys => setOpen(keys.find(key => key !== open)!)}
-          selectedKeys={[selected]} onSelect={e => navigate(e.key)} />
+          selectedKeys={[active]} onSelect={e => navigate(e.key)} />
       </Sider>
       <AntLayout>
         <Header style={{ backgroundColor: '#fff' }}>
@@ -68,9 +91,10 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
           }
         </Header>
         <Tabs type='editable-card' hideAdd activeKey={active} 
-          onChange={key => setActive(key)} onEdit={onEdit}>
-          {tabs.map(tab => (
-            <TabPane>{}</TabPane>
+          onChange={key => navigate(key)} onEdit={onEdit}>
+          {tabs.map(tab_name => (
+            // TODO
+            <TabPane closable={tabs.length > 1} key={toSlug(tab_name)} tab={tab_name}>{tab_name}</TabPane>
           ))}
         </Tabs>
         <Content>{props.children}</Content>
