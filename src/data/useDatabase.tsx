@@ -28,7 +28,7 @@ const DatabaseProvider: FC<PropsWithChildren<IProps>> = ({ Login, children }) =>
           .then(user => { 
             // On successful login, unlock the window and set the session user.
             appWindow.setResizable(true);
-            appWindow.setSize(new LogicalSize(1000, 700));
+            appWindow.setSize(new LogicalSize(1280, 720));
             setTimeout(() => appWindow.center(), 10);
             setUser(user); 
             resolve(undefined);

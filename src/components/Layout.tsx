@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, useState, useEffect, isValidElement } from 'reac
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Layout as AntLayout, Menu, MenuProps, Tabs, TabsProps } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, AppstoreOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import pages from '../navigation';
 import { toSlug, fromSlug } from '../utils';
 
@@ -31,13 +31,13 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(DEFAULT_GROUP);
   const [tabs, setTabs] = useState<Array<string>>([]);
   const [active, setActive] = useState('');
 
+  // Executes when the location changes.
   useEffect(() => {
-    // Executes when the location changes.
+    if (location.pathname === '/') return;
     const newTabKey = location.pathname.slice(1);
     const tabExists = tabs.some(tab_name => toSlug(tab_name) === newTabKey);
 
@@ -77,7 +77,7 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
 
   return (
     <Container>
-      <Sider collapsible collapsed={collapsed} trigger={null} width={220}>
+      <Sider trigger={null} width={220}>
         <Title>Handal Cargo</Title>
         <Menu theme='dark' mode='inline' items={menuItems}
           openKeys={[open]} onOpenChange={keys => setOpen(keys.find(key => key !== open)!)}
@@ -85,16 +85,14 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
       </Sider>
       <AntLayout>
         <Header style={{ backgroundColor: '#fff' }}>
-          {collapsed ? 
-            <MenuUnfoldOutlined onClick={() => setCollapsed(false)} /> : 
-            <MenuFoldOutlined onClick={() => setCollapsed(true)} />
-          }
+          {/* TODO: Profile icon and name on the top right. */}
         </Header>
         <Tabs type='editable-card' hideAdd activeKey={active} 
           onChange={key => navigate(key)} onEdit={onEdit}>
           {tabs.map(tab_name => (
-            // TODO
-            <TabPane closable={tabs.length > 1} key={toSlug(tab_name)} tab={tab_name}>{tab_name}</TabPane>
+            <TabPane closable={tabs.length > 1} key={toSlug(tab_name)} tab={tab_name}>
+              {tab_name}
+            </TabPane>
           ))}
         </Tabs>
         <Content>{props.children}</Content>
