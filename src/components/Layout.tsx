@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useState, useEffect, isValidElement } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Layout as AntLayout, Menu, MenuProps, Tabs, TabsProps } from 'antd';
+import { Layout as AntLayout, Menu, MenuProps, Tabs, TabsProps, PageHeader, Typography } from 'antd';
 import { AppstoreOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import pages from '../navigation';
 import { toSlug, fromSlug } from '../utils';
@@ -14,6 +14,7 @@ const DEFAULT_GROUP = 'shipping';
 
 const { Sider, Content } = AntLayout;
 const { TabPane } = Tabs;
+const { Title } = Typography;
 const icons = [ AppstoreOutlined, PlusCircleOutlined, SettingOutlined ];
 
 const menuItems = Object.entries(pages).map(([name, component], i): MenuItem => {
@@ -67,6 +68,7 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
         const newActive = tabs[newActiveIndex];
         const newActiveKey = toSlug(newActive);
         setActive(newActiveKey);
+        navigate('/' + newActiveKey);
       }
 
       // Delete the tab.
@@ -79,18 +81,17 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
   return (
     <Container>
       <Sider trigger={null} width={220}>
-        <Title>Handal Cargo</Title>
+        <Title level={3}>Handal Cargo</Title>
         <Menu theme='dark' mode='inline' items={menuItems}
           openKeys={[open]} onOpenChange={keys => setOpen(keys.find(key => key !== open)!)}
           selectedKeys={[active]} onSelect={e => navigate(e.key)} />
       </Sider>
       <AntLayout>
         <Header />
-        <Tabs type='editable-card' hideAdd activeKey={active} 
-          onChange={key => navigate(key)} onEdit={onEdit}>
+        <Tabs type='editable-card' hideAdd activeKey={active} onChange={key => navigate(key)} onEdit={onEdit}>
           {tabs.map(tab_name => (
             <TabPane closable={tabs.length > 1} key={toSlug(tab_name)} tab={tab_name}>
-              {tab_name}
+              <PageHeader title={tab_name} ghost={false} />
             </TabPane>
           ))}
         </Tabs>
@@ -104,10 +105,18 @@ export default Layout;
 
 const Container = styled(AntLayout)`
   min-height: 100vh;
-`;
 
-const Title = styled.h2`
-  color: #fff;
-  text-align: center;
-  margin: 20px 0;
+  > aside h3 {
+    color: #fff;
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  div.ant-tabs-nav {
+    margin-bottom: 0;
+  }
+
+  div.ant-page-header {
+    padding: 8px 24px;
+  }
 `;

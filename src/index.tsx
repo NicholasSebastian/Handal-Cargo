@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import pages from './navigation';
 import './normalize.css';
 import { toSlug } from './utils';
+import Profile from './pages/Profile';
 
 const DEFAULT_PAGE = '/sea-freight';
 
@@ -29,6 +30,7 @@ const elements = (
         <Layout>
           <Routes>
             <Route path='/' element={<Navigate to={DEFAULT_PAGE} />} />
+            <Route path='/profil' element={<Profile />} />
             {routes}
           </Routes>
         </Layout>

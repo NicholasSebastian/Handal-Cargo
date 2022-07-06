@@ -1,28 +1,28 @@
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Layout as AntLayout, Dropdown, Button, Avatar, Menu } from 'antd';
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
-import { logoutAndClose } from '../data/useDatabase';
+import { useUser, logoutAndClose } from '../data/useDatabase';
 
 const { Header: AntHeader } = AntLayout;
-const { Item } = Menu;
-
-// TODO: Replace menu children with menu items instead.
-// TODO: Store and retrieve the user's username.
-
-const overlay = (
-  <Menu>
-    <Item icon={<UserOutlined />}>Profil</Item>
-    <Item icon={<LogoutOutlined />} onClick={logoutAndClose}>Log Out dan Keluar</Item>
-  </Menu>
-);
 
 const Header: FC = () => {
+  const user = useUser();
+  const navigate = useNavigate();
+
+  const overlay = (
+    <Menu items={[
+      { key: 'profile', label: 'Profil', icon: <UserOutlined />, onClick: () => navigate('/profil') },
+      { key: 'logout', label: 'Log Out dan Keluar', icon: <LogoutOutlined />, onClick: logoutAndClose }
+    ]} />
+  );
+
   return (
     <Container>
       <Dropdown overlay={overlay} placement='bottomRight'>
         <Button type='text'>
-          {'test name'}
+          {user?.profile.name}
           <Avatar size={28} icon={<UserOutlined />} />
         </Button>
       </Dropdown>
@@ -40,7 +40,11 @@ const Container = styled(AntHeader)`
   justify-content: end;
   align-items: center;
 
-  button:last-child > span:first-child {
-    margin-right: 7px;
+  button:last-child {
+    font-weight: 500;
+
+    > span:first-child {
+      margin-right: 7px;
+    }
   }
 `;

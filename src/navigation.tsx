@@ -1,4 +1,7 @@
 import App from './pages/App';
+import AccessLevels from './pages/AccessLevels';
+import Staff from './pages/Staff';
+import StaffGroup from './pages/StaffGroups';
 
 type Paths = { 
   [key: string]: JSX.Element | { 
@@ -25,9 +28,9 @@ const pages: Paths = {
     'Expeditions': <App />
   },
   'Admin': {
-    'Staff': <App />,
-    'Staff Groups': <App />,
-    'Access Levels': <App />,
+    'Staff': <Staff />,
+    'Staff Groups': <StaffGroup />,
+    'Access Levels': <AccessLevels />,
     'Company Setup': <App />,
     'Backup and Restore': <App />
   }
