@@ -10,7 +10,7 @@ const pages: Paths = {
   'Shipping': {
     'Sea Freight': <App />,
     'Air Cargo': <App />,
-    'Entry Faktur': <App />,
+    'Entri Faktur': <App />,
     'Pembayaran': <App />,
     'Customers': <App />
   },

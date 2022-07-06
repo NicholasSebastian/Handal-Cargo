@@ -5,13 +5,14 @@ import { Layout as AntLayout, Menu, MenuProps, Tabs, TabsProps } from 'antd';
 import { AppstoreOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import pages from '../navigation';
 import { toSlug, fromSlug } from '../utils';
+import Header from './Header';
 
 type MenuItem = Required<MenuProps>['items'][number];
 type TabsCallback = Required<TabsProps>['onEdit'];
 
 const DEFAULT_GROUP = 'shipping';
 
-const { Header, Sider, Content } = AntLayout;
+const { Sider, Content } = AntLayout;
 const { TabPane } = Tabs;
 const icons = [ AppstoreOutlined, PlusCircleOutlined, SettingOutlined ];
 
@@ -84,9 +85,7 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
           selectedKeys={[active]} onSelect={e => navigate(e.key)} />
       </Sider>
       <AntLayout>
-        <Header style={{ backgroundColor: '#fff' }}>
-          {/* TODO: Profile icon and name on the top right. */}
-        </Header>
+        <Header />
         <Tabs type='editable-card' hideAdd activeKey={active} 
           onChange={key => navigate(key)} onEdit={onEdit}>
           {tabs.map(tab_name => (

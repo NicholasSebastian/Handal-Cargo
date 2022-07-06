@@ -1,45 +1,63 @@
 import { appWindow, LogicalSize } from '@tauri-apps/api/window';
-import { FC, ComponentType, PropsWithChildren, createContext, useContext } from 'react';
+import { Component, ComponentType, PropsWithChildren, createContext, useContext } from 'react';
 import * as Realm from 'realm-web';
-import useSessionState from './useSessionState';
 
 const REALM_APP_ID = "application-0-frqqk";
+const CLUSTER_NAME = "mongodb-atlas";
+const DATABASE_NAME = "Primary";
 
-type User = Realm.User | undefined;
-const DatabaseContext = createContext<User>(undefined);
+const instance = new Realm.App({ id: REALM_APP_ID });
+const DatabaseContext = createContext<Realm.App|undefined>(undefined);
+
+function useUser() {
+	const session = useContext(DatabaseContext);
+	return session?.currentUser;
+}
 
 function useDatabase() {
-	const user = useContext(DatabaseContext);
-	return user!;
+  const user = useUser();
+  const client = user?.mongoClient(CLUSTER_NAME);
+  return client?.db(DATABASE_NAME);
 }
 
-const DatabaseProvider: FC<PropsWithChildren<IProps>> = ({ Login, children }) => {
-	const [user, setUser] = useSessionState<Realm.User>('user');
-	return user ? (
-    // If a database session user exists, render the children.
-		<DatabaseContext.Provider value={user}>{children}</DatabaseContext.Provider>
-	) : (
-    // If it does not exist, render the Login component.
-    <Login login={(username, password) => 
-      new Promise((resolve, reject) => {
-        const app = new Realm.App({ id: REALM_APP_ID });
-        const credentials = Realm.Credentials.function({ username, password });
-        app.logIn(credentials)
-          .then(user => { 
-            // On successful login, unlock the window and set the session user.
-            appWindow.setResizable(true);
-            appWindow.setSize(new LogicalSize(1280, 720));
-            setTimeout(() => appWindow.center(), 10);
-            setUser(user); 
-            resolve(undefined);
-          })
-          .catch(err => reject(err));
-      }
-    )} />
-  );
+function logoutAndClose() {
+  localStorage.clear();
+  appWindow.close();
 }
 
-export { DatabaseProvider };
+class DatabaseProvider extends Component<PropsWithChildren<IProps>> {
+  render() {
+    const { Login, children } = this.props;
+    if (instance.currentUser) {
+      // If a database session user exists, unlock the window.
+      appWindow.setResizable(true);
+      appWindow.setSize(new LogicalSize(1280, 720));
+      setTimeout(() => appWindow.center(), 50);
+      
+      // Make sure to clear the authentication data when the app is closed.
+      appWindow.once('tauri://close-requested', logoutAndClose);
+  
+      // Render the children.
+      return (
+        <DatabaseContext.Provider value={instance}>{children}</DatabaseContext.Provider>
+      );
+    }
+    return (
+      // If it does not exist, render the Login component.
+      <Login login={(username, password) => 
+        new Promise((resolve, reject) => {
+          const credentials = Realm.Credentials.function({ username, password });
+          instance.logIn(credentials)
+            .then(() => resolve())
+            .catch(err => reject(err))
+            .finally(() => this.forceUpdate());
+        }
+      )} />
+    );
+  }
+}
+
+export { DatabaseProvider, useUser, logoutAndClose };
 export default useDatabase;
 export type { ILoginProps };
 
@@ -48,5 +66,5 @@ interface IProps {
 }
 
 interface ILoginProps {
-  login: (username: string, password: string) => Promise<any>
+  login: (username: string, password: string) => Promise<void>
 }
