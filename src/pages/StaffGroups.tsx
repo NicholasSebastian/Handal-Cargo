@@ -1,8 +1,9 @@
 import { FC } from "react";
+import ListTemplate from "../components/ListTemplate";
 
 const StaffGroups: FC = () => {
   return (
-    <div>staff groups</div>
+    <ListTemplate collectionName="StaffGroups" />
   );
 }
 

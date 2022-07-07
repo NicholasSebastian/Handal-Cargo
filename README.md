@@ -38,4 +38,5 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 - Reports
 - Other small shit
   - Advanced Search
+  - Autocomplete on Search
   - Limit table height, add pagination
