@@ -1,5 +1,8 @@
 import { FC } from 'react';
+import { Descriptions } from 'antd';
 import { useUser } from '../data/useDatabase';
+
+const { Item } = Descriptions;
 
 const Profile: FC = () => {
   const user = useUser();

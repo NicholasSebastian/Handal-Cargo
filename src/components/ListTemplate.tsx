@@ -15,7 +15,7 @@ const { Search } = Input;
 const ListTemplate: FC<ITemplateProps> = ({ collectionName, nameLabel, extra }) => {
   const database = useDatabase();
   const { title } = useRoute()!;
-  const [data, setData] = useState<Array<IData>>([]);
+  const [data, setData] = useState<Array<IData>>();
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState<ModalState>(null);
 
@@ -75,7 +75,7 @@ const ListTemplate: FC<ITemplateProps> = ({ collectionName, nameLabel, extra }) 
           New
         </Button>
       </div>
-      <List size='small' dataSource={data} loading={data.length === 0}
+      <List size='small' dataSource={data} loading={data === undefined}
         renderItem={entry => (
           <Item actions={[
             <Button onClick={() => setModal({ id: entry._id })}>Edit</Button>,
@@ -90,12 +90,14 @@ const ListTemplate: FC<ITemplateProps> = ({ collectionName, nameLabel, extra }) 
               <Button onClick={e => e.stopPropagation()}>Delete</Button>
             </Popconfirm>
           ]}>
-            {Object.entries(entry).map(([key, value]) => {
-              if (key === '_id') return;
-              return (
-                <div>{value}</div>
-              );
-            })}
+            <ItemContainer>
+              {Object.entries(entry).map(([key, value]) => {
+                if (key === '_id') return;
+                return (
+                  <div key={key}>{value}</div>
+                );
+              })}
+            </ItemContainer>
           </Item>
         )} />
       <Modal centered maskClosable 
@@ -121,6 +123,7 @@ const ListTemplate: FC<ITemplateProps> = ({ collectionName, nameLabel, extra }) 
   );
 }
 
+export type { IData };
 export default ListTemplate;
 
 const Container = styled.div`
@@ -139,10 +142,17 @@ const Container = styled.div`
   }
 `;
 
+const ItemContainer = styled.div`
+  display: flex;
+
+  > div:first-of-type {
+    width: 20vw;
+  }
+`;
+
 interface IData {
   _id: BSON.ObjectId
   name: string
-  [key: string]: any
 }
 
 type ModalState = null | { id?: BSON.ObjectId }

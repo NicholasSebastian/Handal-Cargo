@@ -117,10 +117,15 @@ export default Layout;
 const Container = styled(AntLayout)`
   min-height: 100vh;
 
-  > aside h3 {
+  aside.ant-layout-sider h3 {
     color: #fff;
     text-align: center;
     margin: 20px 0;
+  }
+
+  main.ant-layout-content {
+    overflow-y: scroll;
+    height: 0; // Explicit height value required for scroll to work.
   }
 
   div.ant-tabs-nav {

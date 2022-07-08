@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Layout as AntLayout, Dropdown, Button, Avatar, Menu } from 'antd';
-import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { Layout as AntLayout, Dropdown, Button, Avatar, Menu, message } from 'antd';
+import { UserOutlined, FontColorsOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useUser, logoutAndClose } from '../data/useDatabase';
 
 const { Header: AntHeader } = AntLayout;
@@ -14,6 +14,7 @@ const Header: FC = () => {
   const overlay = (
     <Menu items={[
       { key: 'profile', label: 'Profil', icon: <UserOutlined />, onClick: () => navigate('/profil') },
+      { key: 'shortcut', label: 'Shortcuts', icon: <FontColorsOutlined />, onClick: () => message.error('Work in Progress') },
       { key: 'logout', label: 'Log Out dan Keluar', icon: <LogoutOutlined />, onClick: logoutAndClose }
     ]} />
   );

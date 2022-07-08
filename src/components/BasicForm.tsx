@@ -10,7 +10,7 @@ const BasicForm: FC<IFormProps> = (props) => {
     <Container 
       initialValues={initialValues} 
       onFinish={onSubmit as never} 
-      labelCol={{ span: 6 }}>
+      labelCol={{ span: 7 }}>
       {formItems.map(item => (
         <Item 
           key={item.key} 
@@ -29,7 +29,7 @@ export type { IFormItem };
 export default BasicForm;
 
 const Container = styled(Form)`
-  width: 460px;
+  width: 500px;
   margin: 0 auto;
   
   > div:last-child {

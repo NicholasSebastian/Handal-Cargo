@@ -90,11 +90,3 @@ export interface CompanySingleton {
   fax: string
   email: string
 }
-
-// TODO:
-// Maybe instead of storing shortcuts globally for all clients,
-// Each client should just have their own individual private shortcuts.
-export interface ShortcutSingleton {
-  key: string
-  value: string
-}

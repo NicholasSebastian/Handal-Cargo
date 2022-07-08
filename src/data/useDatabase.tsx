@@ -34,6 +34,7 @@ class DatabaseProvider extends Component<PropsWithChildren<IProps>> {
       // If a database session user exists, unlock the window.
       appWindow.setResizable(true);
       appWindow.setSize(new LogicalSize(1280, 720));
+      appWindow.setMinSize(new LogicalSize(1000, 640));
       setTimeout(() => appWindow.center(), 50);
       
       // Make sure to clear the authentication data when the app is closed.
