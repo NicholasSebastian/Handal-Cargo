@@ -1,4 +1,3 @@
-import App from './pages/App';
 import ContainerGroups from './pages/references/ContainerGroups';
 import Carriers from './pages/references/Carriers';
 import Routes from './pages/references/Rutes';
@@ -19,11 +18,11 @@ type Paths = {
 
 const pages: Paths = {
   'Shipping': {
-    'Sea Freight': <App />,
-    'Air Cargo': <App />,
-    'Entri Faktur': <App />,
-    'Pembayaran': <App />,
-    'Customers': <App />
+    'Sea Freight': <div>empty</div>,
+    'Air Cargo': <div>empty</div>,
+    'Entri Faktur': <div>empty</div>,
+    'Pembayaran': <div>empty</div>,
+    'Customers': <div>empty</div>
   },
   'References': {
     'Kelompok Container': <ContainerGroups />,
@@ -39,8 +38,8 @@ const pages: Paths = {
     'Staff': <Staff />,
     'Staff Groups': <StaffGroup />,
     'Access Levels': <AccessLevels />,
-    'Company Setup': <App />,
-    'Backup and Restore': <App />
+    'Company Setup': <div>empty</div>,
+    'Backup and Restore': <div>empty</div>
   }
 };
 

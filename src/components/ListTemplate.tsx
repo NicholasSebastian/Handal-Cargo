@@ -75,7 +75,10 @@ const ListTemplate: FC<ITemplateProps> = ({ collectionName, nameLabel, extra }) 
           New
         </Button>
       </div>
-      <List size='small' dataSource={data} loading={data === undefined}
+      <List 
+        size='small' 
+        dataSource={data} 
+        loading={data === undefined}
         renderItem={entry => (
           <Item actions={[
             <Button onClick={() => setModal({ id: entry._id })}>Edit</Button>,
