@@ -14,7 +14,7 @@ const Login: FC<ILoginProps> = ({ login }) => {
   const onSubmit = ({ username, password }: any) => {
     setLoading(true);
     login(username, password)
-      .catch(e => message.error(e.statusCode === 401 ? "Salah Nama atau Password." : `${e.errorCode}: ${e.error}`))
+      .catch(e => { message.error(e.statusCode === 401 ? "Salah Nama atau Password." : `${e.errorCode}: ${e.error}`) })
       .finally(() => setLoading(false));
   };
 

@@ -3,7 +3,9 @@ import ListTemplate from "../components/ListTemplate";
 
 const StaffGroups: FC = () => {
   return (
-    <ListTemplate collectionName="StaffGroups" />
+    <ListTemplate 
+      collectionName="StaffGroups"
+      nameLabel="Nama Grup" />
   );
 }
 

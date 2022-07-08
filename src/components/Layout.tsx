@@ -82,15 +82,26 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
     <Container>
       <Sider trigger={null} width={220}>
         <Title level={3}>Handal Cargo</Title>
-        <Menu theme='dark' mode='inline' items={menuItems}
-          openKeys={[open]} onOpenChange={keys => setOpen(keys.find(key => key !== open)!)}
-          selectedKeys={[active]} onSelect={e => navigate(e.key)} />
+        <Menu theme='dark' 
+          mode='inline' 
+          items={menuItems}
+          openKeys={[open]} 
+          onOpenChange={keys => setOpen(keys.find(key => key !== open)!)}
+          selectedKeys={[active]} 
+          onSelect={e => navigate(e.key)} />
       </Sider>
       <AntLayout>
         <Header />
-        <Tabs type='editable-card' hideAdd activeKey={active} onChange={key => navigate(key)} onEdit={onEdit}>
+        <Tabs hideAdd 
+          type='editable-card' 
+          activeKey={active} 
+          onChange={key => navigate(key)} 
+          onEdit={onEdit}>
           {tabs.map(tab_name => (
-            <TabPane closable={tabs.length > 1} key={toSlug(tab_name)} tab={tab_name}>
+            <TabPane 
+              closable={tabs.length > 1} 
+              key={toSlug(tab_name)} 
+              tab={tab_name}>
               <PageHeader title={tab_name} ghost={false} />
             </TabPane>
           ))}
