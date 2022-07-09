@@ -130,6 +130,7 @@ const Container = styled(AntLayout)`
 
   div.ant-tabs-nav {
     margin-bottom: 0;
+    user-select: none;
   }
 
   div.ant-page-header {

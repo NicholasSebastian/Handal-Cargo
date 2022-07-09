@@ -1,8 +1,21 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Form, Input, Button } from "antd";
+import { Form, Input, InputNumber, Switch, Button } from "antd";
 
 const { Item } = Form;
+
+// Creates a basic, minimally stylized form out of the given props.
+
+function renderInput(type: InputType | undefined) {
+  switch (type) {
+    case 'number':
+      return <InputNumber />
+    case 'boolean':
+      return <Switch />
+    default:
+      return <Input />
+  }
+}
 
 const BasicForm: FC<IFormProps> = (props) => {
   const { formItems, initialValues, onSubmit } = props;
@@ -16,8 +29,9 @@ const BasicForm: FC<IFormProps> = (props) => {
           key={item.key} 
           name={item.key} 
           label={item.label} 
-          rules={[{ required: true, message: `${item.label} harus diisi.` }]}>
-          <Input />
+          rules={[{ required: true, message: `${item.label} harus diisi.` }]}
+          valuePropName={item.type === 'boolean' ? 'checked' : 'value'}>
+          {renderInput(item.type)}
         </Item>
       ))}
       <Item><Button type="primary" htmlType="submit">Simpan</Button></Item>
@@ -25,7 +39,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   );
 }
 
-export type { IFormItem };
+export type { IFormProps, IFormItem };
 export default BasicForm;
 
 const Container = styled(Form)`
@@ -47,4 +61,7 @@ interface IFormProps {
 interface IFormItem {
   key: string
   label: string
+  type?: InputType
 }
+
+type InputType = 'string' | 'number' | 'boolean';

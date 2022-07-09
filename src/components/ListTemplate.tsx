@@ -1,20 +1,29 @@
-import { FC, useState, useEffect } from "react";
+import { FC, ComponentType, useState, useEffect, useId } from "react";
 import { BSON } from 'realm-web';
 import styled from "styled-components";
 import { List, Button, Modal, Input, message, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { v4 as generateKey } from 'uuid';
 import useDatabase from "../data/useDatabase";
 import useRoute from "../data/useRoute";
-import { IFormItem } from "./BasicForm";
-import DynamicForm from "./DynamicForm";
+import BasicForm, { IFormProps, IFormItem } from "./BasicForm";
+import withFormHandling from "./withFormHandling";
 
 const { Item } = List;
 const { Search } = Input;
 
-const ListTemplate: FC<ITemplateProps> = ({ collectionName, nameLabel, extra }) => {
+// TODO: Abstract away the data handlers to another component.
+//       This component should only be responsible for the layout of a 'List Template' specifically.
+//       This way, another template (e.g. TableTemplate) can share the same data handlers.
+
+// TODO: Advanced search options.
+//       useDeferredValue and AutoComplete for search.
+
+const ListTemplate: FC<ITemplateProps> = props => {
+  const { collectionName, itemSubtext, form, nameLabel, extraFields } = props;
   const database = useDatabase();
   const { title } = useRoute()!;
+  const FormComponent = withFormHandling(form ?? BasicForm);
+
   const [data, setData] = useState<Array<IData>>();
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState<ModalState>(null);
@@ -94,12 +103,8 @@ const ListTemplate: FC<ITemplateProps> = ({ collectionName, nameLabel, extra }) 
             </Popconfirm>
           ]}>
             <ItemContainer>
-              {Object.entries(entry).map(([key, value]) => {
-                if (key === '_id') return;
-                return (
-                  <div key={key}>{value}</div>
-                );
-              })}
+              <div>{entry.name}</div>
+              {itemSubtext && itemSubtext(entry)}
             </ItemContainer>
           </Item>
         )} />
@@ -110,14 +115,10 @@ const ListTemplate: FC<ITemplateProps> = ({ collectionName, nameLabel, extra }) 
         footer={null}
         width={600} 
         bodyStyle={{ padding: '30px 0' }}>
-        <DynamicForm 
+        <FormComponent 
+          key={modal?.id?.toString() ?? useId()} // Will only reuse forms for the same items.
           collectionName={collectionName}
-          formItems={(() => {
-            // Either it has only one field being of key 'name', or it has another extra field too.
-            const nameField = { key: 'name', label: nameLabel };
-            return extra ? [nameField, extra] : [nameField];
-          })()}
-          key={modal?.id?.toString() ?? generateKey()} // Will only reuse forms for the same items.
+          formItems={[{ key: 'name', label: nameLabel }, ...(extraFields ?? [])]}
           id={modal?.id} 
           handleAdd={handleAdd} 
           handleEdit={handleEdit} />
@@ -158,10 +159,12 @@ interface IData {
   name: string
 }
 
-type ModalState = null | { id?: BSON.ObjectId }
-
 interface ITemplateProps {
   collectionName: string
+  itemSubtext?: (entry: any) => React.ReactNode
+  form?: ComponentType<IFormProps>
   nameLabel: string
-  extra?: IFormItem
+  extraFields?: Array<IFormItem>
 }
+
+type ModalState = null | { id?: BSON.ObjectId }

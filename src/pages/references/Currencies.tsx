@@ -6,10 +6,11 @@ const Currencies: FC = () => {
     <ListTemplate 
       collectionName="Currencies"
       nameLabel="Mata Uang"
-      extra={{
+      extraFields={[{
         key: 'symbol',
         label: "Symbol"
-      }} />
+      }]}
+      itemSubtext={entry => entry.symbol} />
   );
 }
 
