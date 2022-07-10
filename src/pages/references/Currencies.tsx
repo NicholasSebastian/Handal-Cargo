@@ -6,7 +6,7 @@ const Currencies: FC = () => {
     <ListTemplate 
       collectionName="Currencies"
       nameLabel="Mata Uang"
-      extraFields={[{
+      form={[{
         key: 'symbol',
         label: "Symbol"
       }]}

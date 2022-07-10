@@ -1,75 +1,51 @@
-import { FC, ComponentType, useState, useEffect, useId } from "react";
-import { BSON } from 'realm-web';
+import { FC, ComponentType, useId } from "react";
 import styled from "styled-components";
-import { List, Button, Modal, Input, message, Popconfirm } from 'antd';
+import { List, Button, Modal, Input, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import useDatabase from "../data/useDatabase";
 import useRoute from "../data/useRoute";
-import BasicForm, { IFormProps, IFormItem } from "./BasicForm";
-import withFormHandling from "./withFormHandling";
+import BasicForm, { IFormItem } from "./BasicForm";
+import withDataHandlers, { IHandledProps } from "./withDataHandlers";
+import withFormHandling, { IInjectedProps } from "./withFormHandling";
 
 const { Item } = List;
 const { Search } = Input;
 
-// TODO: Abstract away the data handlers to another component.
-//       This component should only be responsible for the layout of a 'List Template' specifically.
-//       This way, another template (e.g. TableTemplate) can share the same data handlers.
-
-// TODO: Advanced search options.
-//       useDeferredValue and AutoComplete for search.
-
 const ListTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, itemSubtext, form, nameLabel, extraFields } = props;
-  const database = useDatabase();
+  const { collectionName, itemSubtext, form, nameLabel } = props;
   const { title } = useRoute()!;
-  const FormComponent = withFormHandling(form ?? BasicForm);
 
-  const [data, setData] = useState<Array<IData>>();
-  const [search, setSearch] = useState('');
-  const [modal, setModal] = useState<ModalState>(null);
+  // From the 'withDataHandlers' higher-order function.
+  const { data, modal, handleAdd, handleEdit, handleDelete, setSearch, setModal } = props;
 
-  const refreshData = () => {
-    const query = (search.length > 0) 
-      ? { name: { $regex: search, $options: 'i' } } 
-      : {};
+  // The form will be rendered depending on the given 'form' prop.
+  const renderForm = () => {
+    const isBlank = form === undefined;
+    const isArray = Array.isArray(form);
+    const formProps = { 
+      key: modal?.id?.toString() ?? useId(), // Will only reuse forms for the same items. 
+      collectionName, 
+      id: modal?.id, 
+      handleAdd, 
+      handleEdit 
+    };
 
-    database?.collection(collectionName)
-      .find(query)
-      .then(results => {
-        if (results) setData(results);
-      });
-  };
-  
-  const handleAdd = (values: any) => {
-    database?.collection(collectionName)
-      .insertOne(values)
-      .then(() => {
-        message.success(`${values.name} telah disimpan.`);
-        setModal(null);
-        refreshData();
-      });
-  };
-
-  const handleEdit = (entryId: BSON.ObjectId, values: any) => {
-    database?.collection(collectionName)
-      .updateOne({ _id: entryId }, { $set: values })
-      .then(() => {
-        message.success(`${values.name} telah diubah.`);
-        setModal(null);
-        refreshData();
-      });
+    if (isBlank || isArray) {
+      const FormComponent = withFormHandling(BasicForm);
+      const item1 = { key: 'name', label: nameLabel };
+      return isArray ? (
+        <FormComponent {...formProps} formItems={[item1, ...form]} />
+      ) : (
+        <FormComponent {...formProps} formItems={[item1]} />
+      );
+    }
+    else {
+      const FormComponent = withFormHandling(form);
+      return (
+        <FormComponent {...formProps} />
+      );
+    }
   };
 
-  const handleDelete = (entryId: BSON.ObjectId) => {
-    database?.collection(collectionName)
-      .deleteOne({ _id: entryId })
-      .then(() => {
-        message.success("Item telah dihapus.");
-        refreshData();
-      });
-  };
-
-  useEffect(refreshData, [search]);
   return (
     <Container>
       <div>
@@ -114,21 +90,14 @@ const ListTemplate: FC<ITemplateProps> = props => {
         onCancel={() => setModal(null)}
         footer={null}
         width={600} 
-        bodyStyle={{ padding: '30px 0' }}>
-        <FormComponent 
-          key={modal?.id?.toString() ?? useId()} // Will only reuse forms for the same items.
-          collectionName={collectionName}
-          formItems={[{ key: 'name', label: nameLabel }, ...(extraFields ?? [])]}
-          id={modal?.id} 
-          handleAdd={handleAdd} 
-          handleEdit={handleEdit} />
+        bodyStyle={{ padding: '30px 0', display: 'flex', justifyContent: 'center' }}>
+        {renderForm()}
       </Modal>
     </Container>
   );
 }
 
-export type { IData };
-export default ListTemplate;
+export default withDataHandlers(ListTemplate);
 
 const Container = styled.div`
   background-color: #fff;
@@ -154,17 +123,8 @@ const ItemContainer = styled.div`
   }
 `;
 
-interface IData {
-  _id: BSON.ObjectId
-  name: string
-}
-
-interface ITemplateProps {
-  collectionName: string
+interface ITemplateProps extends IHandledProps {
   itemSubtext?: (entry: any) => React.ReactNode
-  form?: ComponentType<IFormProps>
+  form?: ComponentType<IInjectedProps> | Array<IFormItem>
   nameLabel: string
-  extraFields?: Array<IFormItem>
 }
-
-type ModalState = null | { id?: BSON.ObjectId }

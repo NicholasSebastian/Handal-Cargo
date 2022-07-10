@@ -2,13 +2,14 @@ import { FC, ComponentType, useState, useEffect } from "react";
 import { BSON } from "realm-web";
 import { Spin } from "antd";
 import useDatabase from "../data/useDatabase";
-import { IFormProps, IFormItem } from "./BasicForm";
+import { Subtract } from "../utils";
 
 // Abstracts over the BasicForm component to handle either 'Add' or 'Edit' forms.
 
-function withFormHandling(FormComponent: ComponentType<IFormProps>): FC<IDynamicFormProps> {
+function withFormHandling<P extends IInjectedProps>(FormComponent: ComponentType<P>): 
+  FC<IEnhancedProps & Subtract<P, IInjectedProps>> {
   return props => {
-    const { collectionName, formItems, id, handleAdd, handleEdit } = props;
+    const { collectionName, id, handleAdd, handleEdit, ...otherProps } = props;
     const database = useDatabase();
     const [initialValues, setInitialValues] = useState<any>();
 
@@ -29,7 +30,7 @@ function withFormHandling(FormComponent: ComponentType<IFormProps>): FC<IDynamic
       // Wait for the initial values to finish being loaded before rendering.
       if (initialValues) return (
         <FormComponent 
-          formItems={formItems} 
+          {...otherProps as unknown as P}
           initialValues={initialValues} 
           onSubmit={values => handleEdit(id, values)} />
       );
@@ -38,18 +39,23 @@ function withFormHandling(FormComponent: ComponentType<IFormProps>): FC<IDynamic
     // If an id is not given, it is therefore just an empty 'add' form.
     return (
       <FormComponent 
-        formItems={formItems} 
+        {...otherProps as unknown as P}
         onSubmit={handleAdd} />
     );
   }
 }
 
+export type { IInjectedProps };
 export default withFormHandling;
 
-interface IDynamicFormProps {
+interface IEnhancedProps {
   collectionName: string
-  formItems: Array<IFormItem>
   handleAdd: (values: any) => void
   handleEdit: (id: BSON.ObjectId, values: any) => void
   id?: BSON.ObjectId
+}
+
+interface IInjectedProps {
+  initialValues?: Record<string, any>
+  onSubmit: (values: any) => void
 }

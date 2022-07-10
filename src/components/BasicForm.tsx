@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { Form, Input, InputNumber, Switch, Button } from "antd";
+import { IInjectedProps } from "./withFormHandling";
 
 const { Item } = Form;
 
@@ -22,7 +23,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   return (
     <Container 
       initialValues={initialValues} 
-      onFinish={onSubmit as never} 
+      onFinish={onSubmit} 
       labelCol={{ span: 7 }}>
       {formItems.map(item => (
         <Item 
@@ -39,7 +40,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   );
 }
 
-export type { IFormProps, IFormItem };
+export type { IFormItem };
 export default BasicForm;
 
 const Container = styled(Form)`
@@ -52,10 +53,8 @@ const Container = styled(Form)`
   }
 `;
 
-interface IFormProps {
+interface IFormProps extends IInjectedProps {
   formItems: Array<IFormItem>
-  initialValues?: { [key: string]: any }
-  onSubmit: (values: any) => void
 }
 
 interface IFormItem {
