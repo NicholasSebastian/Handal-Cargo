@@ -35,6 +35,7 @@ const AccessLevels: FC = () => {
               <Group style={{ width: '100%', textAlign: 'center' }}>
                 {Object.values(pages).map((category, i) => {
                   const pages = Object.keys(category);
+                  const middle = Math.floor(pages.length / 2);
                   return (
                     <Fragment>
                       {i > 0 && <Divider />}
@@ -42,7 +43,7 @@ const AccessLevels: FC = () => {
                         const page_slug = toSlug(page_name);
                         return (
                           <Fragment>
-                            {Math.floor(pages.length / 2) === j && <br />}
+                            {j === middle && <br />}
                             <Checkbox value={page_slug}>{page_name}</Checkbox>
                           </Fragment>
                         );
@@ -63,7 +64,6 @@ export default AccessLevels;
 
 const Container = styled(Form)`
   width: 500px;
-  margin: 0 auto;
 
   div.ant-checkbox-group > label {
     line-height: 30px;

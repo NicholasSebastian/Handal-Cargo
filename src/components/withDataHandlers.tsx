@@ -4,6 +4,8 @@ import { message } from 'antd';
 import useDatabase from "../data/useDatabase";
 import { Subtract } from '../utils';
 
+// Abstracts over TableTemplate and ListTemplate to handle data manipulation.
+
 // TODO: Advanced search modes. (partial, full-match, from-beginning)
 
 function withDataHandlers<P extends IInjectedProps>(Component: ComponentType<P>): 
@@ -71,7 +73,7 @@ function withDataHandlers<P extends IInjectedProps>(Component: ComponentType<P>)
   }
 }
 
-export type { IHandledProps };
+export type { IHandledProps, IData };
 export default withDataHandlers;
 
 interface ISharedProps {
@@ -94,4 +96,4 @@ interface IData {
 }
 
 type IHandledProps = ISharedProps & IInjectedProps;
-type ModalState = null | { id?: BSON.ObjectId }
+type ModalState = null | { mode: 'add' } | { mode: 'view', id: BSON.ObjectId } | { mode: 'edit', id: BSON.ObjectId };

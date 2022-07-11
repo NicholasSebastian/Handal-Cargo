@@ -1,11 +1,11 @@
-import { FC, ComponentType, useId } from "react";
+import { FC, ComponentType, CSSProperties, useId } from "react";
 import styled from "styled-components";
 import { List, Button, Modal, Input, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import useRoute from "../data/useRoute";
-import BasicForm, { IFormItem } from "./BasicForm";
 import withDataHandlers, { IHandledProps } from "./withDataHandlers";
 import withFormHandling, { IInjectedProps } from "./withFormHandling";
+import BasicForm, { IFormItem } from "./BasicForm";
 
 const { Item } = List;
 const { Search } = Input;
@@ -16,19 +16,21 @@ const ListTemplate: FC<ITemplateProps> = props => {
 
   // From the 'withDataHandlers' higher-order function.
   const { data, modal, handleAdd, handleEdit, handleDelete, setSearch, setModal } = props;
+  const modalHasId = (modal !== null && modal.mode !== 'add');
 
   // The form will be rendered depending on the given 'form' prop.
   const renderForm = () => {
     const isBlank = form === undefined;
     const isArray = Array.isArray(form);
     const formProps = { 
-      key: modal?.id?.toString() ?? useId(), // Will only reuse forms for the same items. 
+      key: modalHasId ? modal.id.toString() : useId(), // Will only reuse forms for the same items. 
       collectionName, 
-      id: modal?.id, 
       handleAdd, 
-      handleEdit 
+      handleEdit, 
+      id: modalHasId ? modal.id : undefined
     };
 
+    // Render a BasicForm component if the given form prop is undefined or an array of items.
     if (isBlank || isArray) {
       const FormComponent = withFormHandling(BasicForm);
       const item1 = { key: 'name', label: nameLabel };
@@ -38,6 +40,7 @@ const ListTemplate: FC<ITemplateProps> = props => {
         <FormComponent {...formProps} formItems={[item1]} />
       );
     }
+    // Render the given form component instead if specified.
     else {
       const FormComponent = withFormHandling(form);
       return (
@@ -56,7 +59,7 @@ const ListTemplate: FC<ITemplateProps> = props => {
         <Button block 
           type='dashed' 
           icon={<PlusOutlined />} 
-          onClick={() => setModal({})}>
+          onClick={() => setModal({ mode: 'add' })}>
           New
         </Button>
       </div>
@@ -66,7 +69,7 @@ const ListTemplate: FC<ITemplateProps> = props => {
         loading={data === undefined}
         renderItem={entry => (
           <Item actions={[
-            <Button onClick={() => setModal({ id: entry._id })}>Edit</Button>,
+            <Button onClick={() => setModal({ mode: 'edit', id: entry._id })}>Edit</Button>,
             <Popconfirm 
               title="Yakin di hapus?" 
               placement="left"
@@ -85,12 +88,12 @@ const ListTemplate: FC<ITemplateProps> = props => {
           </Item>
         )} />
       <Modal centered maskClosable 
-        title={(modal?.id ? 'Edit ' : 'New ') + title}
+        title={(modalHasId ? 'Edit ' : 'New ') + title}
         visible={modal !== null} 
         onCancel={() => setModal(null)}
         footer={null}
         width={600} 
-        bodyStyle={{ padding: '30px 0', display: 'flex', justifyContent: 'center' }}>
+        bodyStyle={ModalStyles}>
         {renderForm()}
       </Modal>
     </Container>
@@ -122,6 +125,12 @@ const ItemContainer = styled.div`
     width: 20vw;
   }
 `;
+
+const ModalStyles: CSSProperties = { 
+  padding: '30px 0', 
+  display: 'flex', 
+  justifyContent: 'center' 
+};
 
 interface ITemplateProps extends IHandledProps {
   itemSubtext?: (entry: any) => React.ReactNode

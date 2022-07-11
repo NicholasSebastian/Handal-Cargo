@@ -40,3 +40,4 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
   - Advanced Search
   - Autocomplete on Search
   - Limit table height, add pagination
+  - Show MongoDB monthly usage.

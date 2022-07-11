@@ -45,7 +45,6 @@ export default BasicForm;
 
 const Container = styled(Form)`
   width: 500px;
-  margin: 0 auto;
   
   > div:last-child {
     text-align: right;
