@@ -4,6 +4,8 @@ import { IInjectedProps } from './withViewHandling';
 
 const { Item } = Descriptions;
 
+// Creates a basic view out of the given data values.
+
 const BasicView: FC<IViewProps> = (props) => {
   const { title, viewItems, values } = props;
   return (

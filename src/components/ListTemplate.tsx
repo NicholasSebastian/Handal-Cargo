@@ -10,6 +10,9 @@ import BasicForm, { IFormItem } from "./BasicForm";
 const { Item } = List;
 const { Search } = Input;
 
+// NOTE: Unlike TableTemplate, where in a form component has to be explicitly given,
+//       ListTemplate automatically fallbacks to the BasicForm component if one isn't specified.
+
 const ListTemplate: FC<ITemplateProps> = props => {
   const { collectionName, itemSubtext, form, nameLabel } = props;
   const { title } = useRoute()!;
