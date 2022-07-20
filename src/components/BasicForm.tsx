@@ -7,6 +7,9 @@ const { Item } = Form;
 
 // Creates a basic, minimally stylized form out of the given props.
 
+// TODO: Add support for Select types; fetch the reference values on mount.
+// TODO: Add support for Steps.
+
 function renderInput(type: InputType | undefined) {
   switch (type) {
     case 'number':

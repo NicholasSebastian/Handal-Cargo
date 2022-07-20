@@ -5,7 +5,7 @@ const Handlers: FC = () => {
   return (
     <ListTemplate 
       collectionName="Handlers"
-      nameLabel="Nama Pengurus" />
+      form={{ nameLabel: "Nama Pengurus" }} />
   );
 }
 

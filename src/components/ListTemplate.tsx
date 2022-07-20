@@ -1,56 +1,22 @@
-import { FC, ComponentType, CSSProperties, useId } from "react";
+import { FC, CSSProperties } from "react";
 import styled from "styled-components";
 import { List, Button, Modal, Input, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import useRoute from "../data/useRoute";
-import withDataHandlers, { IHandledProps } from "./withDataHandlers";
-import withFormHandling, { IInjectedProps } from "./withFormHandling";
-import BasicForm, { IFormItem } from "./BasicForm";
+import useDataHandlers from "./useDataHandlers";
+import FallbackForm, { FormPropType } from "./FallbackForm";
 
 const { Item } = List;
 const { Search } = Input;
 
-// NOTE: Unlike TableTemplate, where in a form component has to be explicitly given,
-//       ListTemplate automatically fallbacks to the BasicForm component if one isn't specified.
-
 const ListTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, itemSubtext, form, nameLabel } = props;
+  const { collectionName, itemSubtext, form } = props;
   const { title } = useRoute()!;
 
   // From the 'withDataHandlers' higher-order function.
-  const { data, modal, handleAdd, handleEdit, handleDelete, setSearch, setModal } = props;
+  const { data, modal, setSearch, setModal, handlers } = useDataHandlers(collectionName);
+  const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && modal.mode !== 'add');
-
-  // The form will be rendered depending on the given 'form' prop.
-  const renderForm = () => {
-    const isBlank = form === undefined;
-    const isArray = Array.isArray(form);
-    const formProps = { 
-      key: modalHasId ? modal.id.toString() : useId(), // Will only reuse forms for the same items. 
-      collectionName, 
-      handleAdd, 
-      handleEdit, 
-      id: modalHasId ? modal.id : undefined
-    };
-
-    // Render a BasicForm component if the given form prop is undefined or an array of items.
-    if (isBlank || isArray) {
-      const FormComponent = withFormHandling(BasicForm);
-      const item1 = { key: 'name', label: nameLabel };
-      return isArray ? (
-        <FormComponent {...formProps} formItems={[item1, ...form]} />
-      ) : (
-        <FormComponent {...formProps} formItems={[item1]} />
-      );
-    }
-    // Render the given form component instead if specified.
-    else {
-      const FormComponent = withFormHandling(form);
-      return (
-        <FormComponent {...formProps} />
-      );
-    }
-  };
 
   return (
     <Container>
@@ -97,13 +63,18 @@ const ListTemplate: FC<ITemplateProps> = props => {
         footer={null}
         width={600} 
         bodyStyle={ModalStyles}>
-        {renderForm()}
+        <FallbackForm 
+          collectionName={collectionName}
+          form={form}
+          handleAdd={handleAdd}
+          handleEdit={handleEdit}
+          id={modalHasId ? modal.id : undefined} />
       </Modal>
     </Container>
   );
 }
 
-export default withDataHandlers(ListTemplate);
+export default ListTemplate;
 
 const Container = styled.div`
   background-color: #fff;
@@ -135,8 +106,8 @@ const ModalStyles: CSSProperties = {
   justifyContent: 'center' 
 };
 
-interface ITemplateProps extends IHandledProps {
+interface ITemplateProps {
+  collectionName: string
   itemSubtext?: (entry: any) => React.ReactNode
-  form?: ComponentType<IInjectedProps> | Array<IFormItem>
-  nameLabel: string
+  form: FormPropType
 }

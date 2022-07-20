@@ -37,7 +37,7 @@ const pages: Paths = {
   'Admin': {
     'Staff': <Staff />,
     'Staff Groups': <StaffGroup />,
-    'Access Levels': <AccessLevels />,
+    'Level Akses': <AccessLevels />,
     'Company Setup': <div>empty</div>,
     'Backup and Restore': <div>empty</div>
   }

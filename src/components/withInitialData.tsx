@@ -4,7 +4,7 @@ import { BSON } from 'realm-web';
 import useDatabase from "../data/useDatabase";
 import { Subtract } from '../utils';
 
-function withViewHandling<P extends IInjectedProps>(Component: ComponentType<P>): 
+function withInitialData<P extends IInjectedProps>(Component: ComponentType<P>): 
   FC<IEnhancedProps & Subtract<P, IInjectedProps>> {
   return props => {
     const { collectionName, id, ...otherProps } = props;
@@ -29,7 +29,7 @@ function withViewHandling<P extends IInjectedProps>(Component: ComponentType<P>)
 }
 
 export type { IInjectedProps };
-export default withViewHandling;
+export default withInitialData;
 
 interface IEnhancedProps {
   collectionName: string

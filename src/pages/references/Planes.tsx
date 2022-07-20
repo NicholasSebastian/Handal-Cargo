@@ -5,7 +5,7 @@ const Planes: FC = () => {
   return (
     <ListTemplate 
       collectionName="Planes"
-      nameLabel="Nama Pesawat" />
+      form={{ nameLabel: "Nama Pesawat" }} />
   );
 }
 

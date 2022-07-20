@@ -5,7 +5,7 @@ const Routes: FC = () => {
   return (
     <ListTemplate 
       collectionName="Routes"
-      nameLabel="Nama Rute" />
+      form={{ nameLabel: "Nama Rute" }} />
   );
 }
 

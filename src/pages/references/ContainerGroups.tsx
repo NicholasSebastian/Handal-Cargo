@@ -5,7 +5,7 @@ const ContainerGroups: FC = () => {
   return (
     <ListTemplate 
       collectionName="ContainerGroups"
-      nameLabel="Nama Kelompok" />
+      form={{ nameLabel: "Nama Kelompok" }} />
   );
 }
 

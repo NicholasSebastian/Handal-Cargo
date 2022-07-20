@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Descriptions } from 'antd';
-import { IInjectedProps } from './withViewHandling';
+import { IInjectedProps } from './withInitialData';
 
 const { Item } = Descriptions;
 

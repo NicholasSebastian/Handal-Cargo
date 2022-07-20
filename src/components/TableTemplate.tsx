@@ -4,8 +4,8 @@ import { Typography, Table, Input, Button, Modal, Space, Popconfirm } from 'antd
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
 import useRoute from "../data/useRoute";
-import withDataHandlers, { IHandledProps, IData } from './withDataHandlers';
-import withViewHandling from './withViewHandling';
+import useDataHandlers, { IData } from './useDataHandlers';
+import withViewHandling from './withInitialData';
 import withFormHandling, { IInjectedProps as IFormProps } from "./withFormHandling";
 import BasicView, { IViewItem } from './BasicView';
 
@@ -13,6 +13,7 @@ const { Text } = Typography;
 const { Search } = Input;
 
 // TODO: Pagination and add table height limit. 
+// TODO: Add BasicForm fallback support.
 
 const TableTemplate: FC<ITemplateProps> = props => {
   const { collectionName, columns, viewItems, form, modalWidth } = props;
@@ -21,7 +22,8 @@ const TableTemplate: FC<ITemplateProps> = props => {
   const FormComponent = withFormHandling(form);
 
   // From the 'withDataHandlers' higher-order function.
-  const { data, modal, handleAdd, handleEdit, handleDelete, setSearch, setModal } = props;
+  const { data, modal, setSearch, setModal, handlers } = useDataHandlers(collectionName);
+  const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && modal.mode !== 'add');
 
   // The title of the modal will be rendered depending on the current modal state.
@@ -100,7 +102,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
   );
 }
 
-export default withDataHandlers(TableTemplate);
+export default TableTemplate;
 
 const Container = styled.div`
   background-color: #fff;
@@ -130,7 +132,8 @@ const ModalStyles: CSSProperties = {
   justifyContent: 'center' 
 };
 
-interface ITemplateProps extends IHandledProps {
+interface ITemplateProps {
+  collectionName: string
   columns: ColumnsType<IData>
   viewItems?: Array<IViewItem>
   form: ComponentType<IFormProps>

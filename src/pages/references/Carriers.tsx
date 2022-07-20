@@ -5,7 +5,7 @@ const Carriers: FC = () => {
   return (
     <ListTemplate 
       collectionName="Carriers"
-      nameLabel="Nama Kurir" />
+      form={{ nameLabel: "Nama Kurir" }} />
   );
 }
 

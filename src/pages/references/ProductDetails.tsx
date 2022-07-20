@@ -5,7 +5,7 @@ const ProductDetails: FC = () => {
   return (
     <ListTemplate 
       collectionName="ProductDetails"
-      nameLabel="Keterangan Barang" />
+      form={{ nameLabel: "Keterangan Barang" }} />
   );
 }
 

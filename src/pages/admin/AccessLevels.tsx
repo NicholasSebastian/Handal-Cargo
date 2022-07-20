@@ -18,7 +18,6 @@ const AccessLevels: FC = () => {
   return (
     <ListTemplate
       collectionName="AccessLevels"
-      nameLabel="Nama Level"
       itemSubtext={entry => '★'.repeat(entry.access_level.length)}
       form={props => {
         const { initialValues, onSubmit } = props;

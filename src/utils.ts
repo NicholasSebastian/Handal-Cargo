@@ -1,3 +1,5 @@
+import { ComponentType, FC, Component } from "react";
+
 export function toSlug(text: string) {
   return text
     .toLowerCase()
