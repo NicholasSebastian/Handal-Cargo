@@ -1,14 +1,17 @@
-import { FC, ComponentType, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BSON } from 'realm-web';
 import { message } from 'antd';
 import useDatabase from "../data/useDatabase";
+import useRoute from '../data/useRoute';
 
 // Abstracts over TableTemplate and ListTemplate to handle data manipulation.
 
 // TODO: Advanced search modes. (partial, full-match, from-beginning)
 
-function useDataHandlers(collectionName: string) {
+function useTemplateHandlers(collectionName: string) {
   const database = useDatabase();
+  const { title } = useRoute()!;
+
   const [data, setData] = useState<Array<IData>>();
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState<ModalState>(null);
@@ -54,9 +57,15 @@ function useDataHandlers(collectionName: string) {
       });
   };
 
+  const getTitle = () => {
+    if (modal?.mode === 'add') return 'New ' + title;
+    if (modal?.mode === 'edit') return 'Edit ' + title;
+    return title;
+  }
+
   useEffect(refreshData, [search]);
   return {
-    data, modal, setSearch, setModal,
+    data, modal, setSearch, setModal, getTitle,
     handlers: {
       handleAdd, handleEdit, handleDelete
     }
@@ -64,12 +73,12 @@ function useDataHandlers(collectionName: string) {
 }
 
 export type { IData, DataHandlers };
-export default useDataHandlers;
+export default useTemplateHandlers;
 
 interface IData {
   _id: BSON.ObjectId
   name: string
 }
 
-type DataHandlers = ReturnType<typeof useDataHandlers>['handlers'];
+type DataHandlers = ReturnType<typeof useTemplateHandlers>['handlers'];
 type ModalState = null | { mode: 'add' } | { mode: 'view', id: BSON.ObjectId } | { mode: 'edit', id: BSON.ObjectId };

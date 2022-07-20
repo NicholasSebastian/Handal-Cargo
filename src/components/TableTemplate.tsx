@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { Typography, Table, Input, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
-import useRoute from "../data/useRoute";
-import useDataHandlers, { IData } from './useDataHandlers';
+import useTemplateHandlers, { IData } from './useTemplateHandlers';
 import withViewHandling from './withInitialData';
 import withFormHandling, { IInjectedProps as IFormProps } from "./withFormHandling";
 import BasicView, { IViewItem } from './BasicView';
@@ -17,23 +16,13 @@ const { Search } = Input;
 
 const TableTemplate: FC<ITemplateProps> = props => {
   const { collectionName, columns, viewItems, form, modalWidth } = props;
-  const { title } = useRoute()!;
   const ViewComponent = withViewHandling(BasicView);
   const FormComponent = withFormHandling(form);
 
-  // From the 'withDataHandlers' higher-order function.
-  const { data, modal, setSearch, setModal, handlers } = useDataHandlers(collectionName);
+  // From the 'useDataHandlers' hook.
+  const { data, modal, setSearch, setModal, getTitle, handlers } = useTemplateHandlers(collectionName);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && modal.mode !== 'add');
-
-  // The title of the modal will be rendered depending on the current modal state.
-  const renderTitle = () => {
-    if (modalHasId) {
-      if (modal.mode === 'edit') return 'Edit ' + title;
-      return title;
-    }
-    return 'New ' + title;
-  }
 
   return (
     <Container>
@@ -77,7 +66,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
           }
         }]} />
       <Modal centered maskClosable 
-        title={renderTitle()}
+        title={getTitle()}
         visible={modal !== null} 
         onCancel={() => setModal(null)}
         footer={null}

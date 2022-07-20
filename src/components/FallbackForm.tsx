@@ -1,7 +1,7 @@
 import { FC, ComponentType, useId } from 'react';
 import { BSON } from 'realm-web';
 import withFormHandling, { IInjectedProps } from './withFormHandling';
-import { DataHandlers } from './useDataHandlers';
+import { DataHandlers } from './useTemplateHandlers';
 import BasicForm, { IFormItem } from './BasicForm';
 
 const isComponent = (component: any): component is FormComponentType => typeof component === 'function';
