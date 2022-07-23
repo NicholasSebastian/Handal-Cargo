@@ -12,9 +12,9 @@ const ListTemplate: FC<ITemplateProps> = props => {
   const { collectionName, itemSubtext, form } = props;
 
   // From the 'useDataHandlers' hook.
-  const { data, modal, setSearch, setModal, getTitle, handlers } = useTemplateHandlers(collectionName);
+  const { data, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName);
   const { handleAdd, handleEdit, handleDelete } = handlers;
-  const modalHasId = (modal !== null && modal.mode !== 'add');
+  const modalHasId = (modal !== null && 'id' in modal);
 
   return (
     <Container>
@@ -36,7 +36,10 @@ const ListTemplate: FC<ITemplateProps> = props => {
         loading={data === undefined}
         renderItem={entry => (
           <Item actions={[
-            <Button onClick={() => setModal({ mode: 'edit', id: entry._id })}>Edit</Button>,
+            <Button 
+              onClick={() => setModal({ mode: 'edit', id: entry._id })}>
+              Edit
+            </Button>,
             <Popconfirm 
               title="Yakin di hapus?" 
               placement="left"
@@ -55,7 +58,7 @@ const ListTemplate: FC<ITemplateProps> = props => {
           </Item>
         )} />
       <Modal centered maskClosable 
-        title={getTitle()}
+        title={getFormTitle()}
         visible={modal !== null} 
         onCancel={() => setModal(null)}
         footer={null}

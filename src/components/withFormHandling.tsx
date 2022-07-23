@@ -4,7 +4,7 @@ import { Spin } from "antd";
 import useDatabase from "../data/useDatabase";
 import { Subtract } from "../utils";
 
-// Abstracts over the BasicForm component to handle either 'Add' or 'Edit' forms.
+// Abstracts over the components to handle either 'Add' or 'Edit' cases.
 
 function withFormHandling<P extends IInjectedProps>(FormComponent: ComponentType<P>): 
   FC<IEnhancedProps & Subtract<P, IInjectedProps>> {

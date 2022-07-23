@@ -4,7 +4,7 @@ import { message } from 'antd';
 import useDatabase from "../data/useDatabase";
 import useRoute from '../data/useRoute';
 
-// Abstracts over TableTemplate and ListTemplate to handle data manipulation.
+// Abstracts over TableTemplate and ListTemplate to handle common logic.
 
 // TODO: Advanced search modes. (partial, full-match, from-beginning)
 
@@ -57,7 +57,7 @@ function useTemplateHandlers(collectionName: string) {
       });
   };
 
-  const getTitle = () => {
+  const getFormTitle = () => {
     if (modal?.mode === 'add') return 'New ' + title;
     if (modal?.mode === 'edit') return 'Edit ' + title;
     return title;
@@ -65,9 +65,15 @@ function useTemplateHandlers(collectionName: string) {
 
   useEffect(refreshData, [search]);
   return {
-    data, modal, setSearch, setModal, getTitle,
+    data, 
+    modal, 
+    setSearch, 
+    setModal, 
+    getFormTitle,
     handlers: {
-      handleAdd, handleEdit, handleDelete
+      handleAdd, 
+      handleEdit, 
+      handleDelete
     }
   };
 }

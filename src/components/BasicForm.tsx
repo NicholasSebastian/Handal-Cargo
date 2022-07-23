@@ -1,21 +1,26 @@
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
-import { Form, Input, InputNumber, Switch, Button } from "antd";
+import { Form, Input, InputNumber, Switch, Select, Button } from "antd";
+import useDatabase from "../data/useDatabase";
 import { IInjectedProps } from "./withFormHandling";
 
 const { Item } = Form;
+const { Option } = Select;
 
 // Creates a basic, minimally stylized form out of the given props.
 
-// TODO: Add support for Select types; fetch the reference values on mount.
 // TODO: Add support for Steps.
 
-function renderInput(type: InputType | undefined) {
+function renderInput(type: InputType | undefined, items?: Array<string>) {
   switch (type) {
     case 'number':
       return <InputNumber />
     case 'boolean':
       return <Switch />
+    case 'select':
+      return <Select>{items?.map(item => <Option value={item}>{item}</Option>)}</Select>
+    case 'password':
+      return <Input.Password />
     default:
       return <Input />
   }
@@ -23,6 +28,27 @@ function renderInput(type: InputType | undefined) {
 
 const BasicForm: FC<IFormProps> = (props) => {
   const { formItems, initialValues, onSubmit } = props;
+  const database = useDatabase()!;
+  
+  const [referenceValues, setReferenceValues] = useState<Record<string, Array<string>>>();
+  useEffect(() => {
+    const referenceItems = formItems.filter(item => item.type === 'select' && typeof item.items === 'string');
+    Promise.all(
+      referenceItems.map(item => {
+        const collectionName = item.items as string;
+        return database
+          .collection(collectionName)
+          .find({}, { projection: { name: 1 } });
+      }))
+    .then(references => {
+      const values = Object.fromEntries(references.map((values, i) => {
+        const collectionName = referenceItems[i].items;
+        return [collectionName, values.map(v => v.name)];
+      }));
+      setReferenceValues(values);
+    });
+  }, []);
+
   return (
     <Container 
       initialValues={initialValues} 
@@ -33,9 +59,19 @@ const BasicForm: FC<IFormProps> = (props) => {
           key={item.key} 
           name={item.key} 
           label={item.label} 
-          rules={[{ required: true, message: `${item.label} harus diisi.` }]}
+          rules={item.required === false ? undefined : 
+            [{ required: true, message: `${item.label} harus diisi.` }]}
           valuePropName={item.type === 'boolean' ? 'checked' : 'value'}>
-          {renderInput(item.type)}
+          {renderInput(
+            item.type, 
+            (item.type === 'select') &&   // If 'select' type
+            (item.items !== undefined) && // and items exist
+            (Array.isArray(item.items)
+              ? item.items                // Use the items as they are if already an array
+              : referenceValues && referenceValues[item.items] // else its loaded in the state.
+            ) 
+            || undefined // Default to undefined if falsy.
+          )}
         </Item>
       ))}
       <Item><Button type="primary" htmlType="submit">Simpan</Button></Item>
@@ -63,6 +99,8 @@ interface IFormItem {
   key: string
   label: string
   type?: InputType
+  items?: string | Array<string> // For only 'select' types.
+  required?: boolean
 }
 
-type InputType = 'string' | 'number' | 'boolean';
+type InputType = 'string' | 'password' | 'number' | 'boolean' | 'select';

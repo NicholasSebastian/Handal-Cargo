@@ -1,28 +1,26 @@
-import { FC, ComponentType, CSSProperties, useId } from 'react';
+import { FC, CSSProperties } from 'react';
 import styled from 'styled-components';
 import { Typography, Table, Input, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
 import useTemplateHandlers, { IData } from './useTemplateHandlers';
-import withViewHandling from './withInitialData';
-import withFormHandling, { IInjectedProps as IFormProps } from "./withFormHandling";
-import BasicView, { IViewItem } from './BasicView';
+import withInitialData from './withInitialData';
+import BasicView, { IViewItem } from './BasicView'
+import FallbackForm, { FormPropType } from "./FallbackForm";
 
 const { Text } = Typography;
 const { Search } = Input;
 
-// TODO: Pagination and add table height limit. 
-// TODO: Add BasicForm fallback support.
+// TODO: Pagination and add table height limit.
 
 const TableTemplate: FC<ITemplateProps> = props => {
   const { collectionName, columns, viewItems, form, modalWidth } = props;
-  const ViewComponent = withViewHandling(BasicView);
-  const FormComponent = withFormHandling(form);
+  const ViewComponent = withInitialData(BasicView);
 
   // From the 'useDataHandlers' hook.
-  const { data, modal, setSearch, setModal, getTitle, handlers } = useTemplateHandlers(collectionName);
+  const { data, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName);
   const { handleAdd, handleEdit, handleDelete } = handlers;
-  const modalHasId = (modal !== null && modal.mode !== 'add');
+  const modalHasId = (modal !== null && 'id' in modal);
 
   return (
     <Container>
@@ -32,7 +30,11 @@ const TableTemplate: FC<ITemplateProps> = props => {
         onSearch={val => setSearch(val)} />
       <div>
         <Text>Menemukan {data?.length} hasil.</Text>
-        <Button icon={<PlusOutlined />} onClick={() => setModal({ mode: 'add' })}>New</Button>
+        <Button 
+          icon={<PlusOutlined />} 
+          onClick={() => setModal({ mode: 'add' })}>
+          New
+        </Button>
       </div>
       <Table 
         size='small' 
@@ -66,7 +68,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
           }
         }]} />
       <Modal centered maskClosable 
-        title={getTitle()}
+        title={getFormTitle()}
         visible={modal !== null} 
         onCancel={() => setModal(null)}
         footer={null}
@@ -74,14 +76,14 @@ const TableTemplate: FC<ITemplateProps> = props => {
         bodyStyle={ModalStyles}>
         {modalHasId && modal.mode === 'view' ? (
           <ViewComponent
-            key={useId()}
+            key={modal.id.toString()}
             collectionName={collectionName}
             id={modal.id}   // Use the 'columns' prop instead to build the view if not provided.
             viewItems={viewItems ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
         ) : (
-          <FormComponent
-            key={modalHasId ? modal.id.toString() : useId()}
+          <FallbackForm
             collectionName={collectionName}
+            form={form}
             handleAdd={handleAdd}
             handleEdit={handleEdit}
             id={modalHasId ? modal.id : undefined} />
@@ -125,7 +127,7 @@ interface ITemplateProps {
   collectionName: string
   columns: ColumnsType<IData>
   viewItems?: Array<IViewItem>
-  form: ComponentType<IFormProps>
+  form: FormPropType
   modalWidth?: number
 }
 

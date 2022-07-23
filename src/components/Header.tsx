@@ -38,7 +38,7 @@ const Container = styled(AntHeader)`
   height: 50px;
   padding: 0 20px;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
 
   button:last-child {
