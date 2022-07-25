@@ -52,7 +52,9 @@ const AccessLevels: FC = () => {
                 })}
               </Group>
             </Item>
-            <Item><Button type="primary" htmlType="submit">Simpan</Button></Item>
+            <Item>
+              <Button type="primary" htmlType="submit">Simpan</Button>
+            </Item>
           </Container>
         );
       }} />

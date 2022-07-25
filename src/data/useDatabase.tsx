@@ -6,6 +6,10 @@ const REALM_APP_ID = "application-0-frqqk";
 const CLUSTER_NAME = "mongodb-atlas";
 const DATABASE_NAME = "Primary";
 
+const DEFAULT_WINDOW_SIZE = new LogicalSize(1280, 720);
+const MIN_WINDOW_SIZE = new LogicalSize(1000, 640);
+const TIME_TO_CENTER = 100;
+
 const instance = new Realm.App({ id: REALM_APP_ID });
 const DatabaseContext = createContext<Realm.App|undefined>(undefined);
 
@@ -33,9 +37,9 @@ class DatabaseProvider extends Component<PropsWithChildren<IProps>> {
     if (instance.currentUser) {
       // If a database session user exists, unlock the window.
       appWindow.setResizable(true);
-      appWindow.setSize(new LogicalSize(1280, 720));
-      appWindow.setMinSize(new LogicalSize(1000, 640));
-      setTimeout(() => appWindow.center(), 50);
+      appWindow.setSize(DEFAULT_WINDOW_SIZE);
+      appWindow.setMinSize(MIN_WINDOW_SIZE);
+      setTimeout(() => appWindow.center(), TIME_TO_CENTER);
       
       // Make sure to clear the authentication data when the app is closed.
       appWindow.once('tauri://close-requested', logoutAndClose);
