@@ -3,6 +3,7 @@ import { BSON } from 'realm-web';
 import { message } from 'antd';
 import useDatabase from "../data/useDatabase";
 import useRoute from '../data/useRoute';
+import { momentsToDates } from '../utils';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
 
@@ -30,7 +31,7 @@ function useTemplateHandlers(collectionName: string) {
   
   const handleAdd = (values: any) => {
     database?.collection(collectionName)
-      .insertOne(values)
+      .insertOne(momentsToDates(values))
       .then(() => {
         message.success(`${values.name} telah disimpan.`);
         setModal(null);
@@ -40,7 +41,7 @@ function useTemplateHandlers(collectionName: string) {
 
   const handleEdit = (entryId: BSON.ObjectId, values: any) => {
     database?.collection(collectionName)
-      .updateOne({ _id: entryId }, { $set: values })
+      .updateOne({ _id: entryId }, { $set: momentsToDates(values) })
       .then(() => {
         message.success(`${values.name} telah diubah.`);
         setModal(null);
@@ -78,7 +79,7 @@ function useTemplateHandlers(collectionName: string) {
   };
 }
 
-export type { IData, DataHandlers };
+export type { IData };
 export default useTemplateHandlers;
 
 interface IData {
@@ -86,5 +87,7 @@ interface IData {
   name: string
 }
 
-type DataHandlers = ReturnType<typeof useTemplateHandlers>['handlers'];
-type ModalState = null | { mode: 'add' } | { mode: 'view', id: BSON.ObjectId } | { mode: 'edit', id: BSON.ObjectId };
+type ModalState = null 
+  | { mode: 'add' } 
+  | { mode: 'view', id: BSON.ObjectId } 
+  | { mode: 'edit', id: BSON.ObjectId };

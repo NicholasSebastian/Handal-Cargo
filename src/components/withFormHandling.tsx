@@ -45,7 +45,7 @@ function withFormHandling<P extends IInjectedProps>(FormComponent: ComponentType
   }
 }
 
-export type { IInjectedProps };
+export type { IEnhancedProps, IInjectedProps };
 export default withFormHandling;
 
 interface IEnhancedProps {

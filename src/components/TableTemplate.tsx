@@ -5,7 +5,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
 import useTemplateHandlers, { IData } from './useTemplateHandlers';
 import withInitialData from './withInitialData';
-import BasicView, { IViewItem } from './BasicView'
+import BasicView, { IViewItem } from './BasicView';
 import FallbackForm, { FormPropType } from "./FallbackForm";
 
 const { Text } = Typography;
@@ -126,8 +126,8 @@ const ModalStyles: CSSProperties = {
 interface ITemplateProps {
   collectionName: string
   columns: ColumnsType<IData>
-  viewItems?: Array<IViewItem>
-  form: FormPropType
+  viewItems?: Array<IViewItem> // TODO: Rename to view.
+  form: FormPropType           // TODO: Make view to just accept Array<string> to exclude.
   modalWidth?: number
 }
 

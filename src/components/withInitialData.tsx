@@ -28,7 +28,7 @@ function withInitialData<P extends IInjectedProps>(Component: ComponentType<P>):
   }
 }
 
-export type { IInjectedProps };
+export type { IEnhancedProps, IInjectedProps };
 export default withInitialData;
 
 interface IEnhancedProps {

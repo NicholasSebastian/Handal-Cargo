@@ -9,12 +9,12 @@ const { Item } = Descriptions;
 const BasicView: FC<IViewProps> = (props) => {
   const { title, viewItems, values } = props;
   return (
-    <Descriptions bordered title={title}>
+    <Descriptions bordered title={title} column={1}>
       {viewItems.map(item => (
         <Item 
           key={item.key}
           label={item.label}>
-          {values[item.key]}
+          {values[item.key]?.toString()}
         </Item>
       ))}
     </Descriptions>

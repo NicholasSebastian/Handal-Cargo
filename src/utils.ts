@@ -1,3 +1,5 @@
+import moment, { isMoment } from 'moment';
+
 export function toSlug(text: string) {
   return text
     .toLowerCase()
@@ -8,12 +10,24 @@ export function toSlug(text: string) {
 }
 
 export function fromSlug(slug: string) {
-  const words = slug.split('-');
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i];
-    words[i] = word.charAt(0).toUpperCase() + word.slice(1);
-  }
-  return words.join(' ');
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+export function momentsToDates(values: any): any {
+  if (!values) return values;
+  return Object.fromEntries(
+    Object.entries(values)
+      .map(([key, value]) => [key, isMoment(value) ? value.toDate() : value]));
+}
+
+export function datesToMoments(values: any): any {
+  if (!values) return values;
+  return Object.fromEntries(
+    Object.entries(values)
+      .map(([key, value]) => [key, (value instanceof Date) ? moment(value) : value]));
 }
 
 export type Subtract<T extends T1, T1 extends object> = Pick<T, SetComplement<keyof T, keyof T1>>;

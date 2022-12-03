@@ -1,11 +1,13 @@
 import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
-import { Form, Input, InputNumber, Switch, Select, Button } from "antd";
+import { Form, Input, InputNumber, Switch, Select, Button, DatePicker } from "antd";
 import useDatabase from "../data/useDatabase";
 import { IInjectedProps } from "./withFormHandling";
+import { datesToMoments } from "../utils";
 
 const { Item } = Form;
 const { Option } = Select;
+const { Password } = Input;
 
 // Creates a basic, minimally stylized form out of the given props.
 
@@ -18,9 +20,11 @@ function renderInput(type: InputType | undefined, items?: Array<string>) {
     case 'boolean':
       return <Switch />
     case 'select':
-      return <Select>{items?.map(item => <Option value={item}>{item}</Option>)}</Select>
+      return <Select>{items?.map((item, i) => <Option key={i} value={item}>{item}</Option>)}</Select>
+    case 'date': 
+      return <DatePicker />
     case 'password':
-      return <Input.Password />
+      return <Password />
     default:
       return <Input />
   }
@@ -51,7 +55,7 @@ const BasicForm: FC<IFormProps> = (props) => {
 
   return (
     <Container 
-      initialValues={initialValues} 
+      initialValues={datesToMoments(initialValues)} 
       onFinish={onSubmit} 
       labelCol={{ span: 7 }}>
       {formItems.map(item => (
@@ -103,4 +107,4 @@ interface IFormItem {
   required?: boolean
 }
 
-type InputType = 'string' | 'password' | 'number' | 'boolean' | 'select';
+type InputType = 'string' | 'password' | 'number' | 'boolean' | 'select' | 'date';

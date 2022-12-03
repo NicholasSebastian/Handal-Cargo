@@ -1,7 +1,5 @@
 import { FC, ComponentType, useId } from 'react';
-import { BSON } from 'realm-web';
-import withFormHandling, { IInjectedProps } from './withFormHandling';
-import { DataHandlers } from './useTemplateHandlers';
+import withFormHandling, { IEnhancedProps, IInjectedProps } from './withFormHandling';
 import BasicForm, { IFormItem } from './BasicForm';
 
 const isComponent = (component: any): component is FormComponentType => typeof component === 'function';
@@ -42,12 +40,8 @@ const FallbackForm: FC<IFormProps> = props => {
 export type { FormPropType };
 export default FallbackForm;
 
-interface IFormProps {
+interface IFormProps extends IEnhancedProps {
   form: FormPropType;
-  collectionName: string
-  handleAdd: DataHandlers['handleAdd']
-  handleEdit: DataHandlers['handleEdit']
-  id?: BSON.ObjectId
 }
 
 interface IFormData { 
