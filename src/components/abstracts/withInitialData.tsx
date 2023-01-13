@@ -1,8 +1,8 @@
 import { FC, ComponentType, useState, useEffect } from 'react';
 import { Spin } from 'antd';
 import { BSON } from 'realm-web';
-import useDatabase from "../data/useDatabase";
-import { Subtract } from '../utils';
+import useDatabase from "../../data/useDatabase";
+import { Subtract } from '../../utils';
 
 function withInitialData<P extends IInjectedProps>(Component: ComponentType<P>): 
   FC<IEnhancedProps & Subtract<P, IInjectedProps>> {

@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { Typography, Table, Input, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
-import useTemplateHandlers, { IData } from './useTemplateHandlers';
-import withInitialData from './withInitialData';
-import BasicView, { IViewItem } from './BasicView';
+import useTemplateHandlers, { IData } from '../abstracts/useTemplateHandlers';
+import FallbackView, { ViewPropType } from './FallbackView';
 import FallbackForm, { FormPropType } from "./FallbackForm";
 
 const { Text } = Typography;
@@ -14,10 +13,7 @@ const { Search } = Input;
 // TODO: Pagination and add table height limit.
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, columns, viewItems, form, modalWidth } = props;
-  const ViewComponent = withInitialData(BasicView);
-
-  // From the 'useDataHandlers' hook.
+  const { collectionName, columns, view, form, modalWidth } = props;
   const { data, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
@@ -75,18 +71,17 @@ const TableTemplate: FC<ITemplateProps> = props => {
         width={modalWidth ?? 600} 
         bodyStyle={ModalStyles}>
         {modalHasId && modal.mode === 'view' ? (
-          <ViewComponent
-            key={modal.id.toString()}
-            collectionName={collectionName}
+          <FallbackView
             id={modal.id}   // Use the 'columns' prop instead to build the view if not provided.
-            viewItems={viewItems ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
+            collectionName={collectionName}
+            view={view ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
         ) : (
           <FallbackForm
+            id={modalHasId ? modal.id : undefined}
             collectionName={collectionName}
-            form={form}
             handleAdd={handleAdd}
             handleEdit={handleEdit}
-            id={modalHasId ? modal.id : undefined} />
+            form={form} />
         )}
       </Modal>
     </Container>
@@ -126,8 +121,8 @@ const ModalStyles: CSSProperties = {
 interface ITemplateProps {
   collectionName: string
   columns: ColumnsType<IData>
-  viewItems?: Array<IViewItem> // TODO: Rename to view.
-  form: FormPropType           // TODO: Make view to just accept Array<string> to exclude.
+  view: ViewPropType
+  form: FormPropType
   modalWidth?: number
 }
 

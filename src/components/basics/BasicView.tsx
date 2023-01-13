@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Descriptions } from 'antd';
-import { IInjectedProps } from './withInitialData';
+import { IInjectedProps } from '../abstracts/withInitialData';
 
 const { Item } = Descriptions;
 
@@ -16,7 +16,7 @@ const BasicView: FC<IViewProps> = (props) => {
           label={item.label}>
           {values[item.key]?.toString()}
         </Item>
-      ))}
+      ))} 
     </Descriptions>
   );
 }

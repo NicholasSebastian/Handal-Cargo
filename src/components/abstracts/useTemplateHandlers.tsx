@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { BSON } from 'realm-web';
 import { message } from 'antd';
-import useDatabase from "../data/useDatabase";
-import useRoute from '../data/useRoute';
-import { momentsToDates } from '../utils';
+import useDatabase from "../../data/useDatabase";
+import useRoute from '../../data/useRoute';
+import { momentsToDates } from '../../utils';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
 

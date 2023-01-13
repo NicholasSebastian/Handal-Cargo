@@ -1,5 +1,5 @@
 import { FC } from "react";
-import ListTemplate from "../../components/ListTemplate";
+import ListTemplate from "../../components/compounds/ListTemplate";
 
 const Handlers: FC = () => {
   return (

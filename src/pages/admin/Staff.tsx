@@ -1,5 +1,5 @@
 import { FC } from "react";
-import TableTemplate from "../../components/TableTemplate";
+import TableTemplate from "../../components/compounds/TableTemplate";
 
 const Staff: FC = () => {
   return (
@@ -11,7 +11,7 @@ const Staff: FC = () => {
         { dataIndex: 'staff_group', title: 'Kelompok Staff' },
         { dataIndex: 'status', title: 'Aktif', render: (value) => value ? 'Iya' : 'Tidak' }
       ]}
-      viewItems={[
+      view={[
         { key: 'username', label: 'Nama Pengguna' },
         { key: 'access_level', label: 'Level Akses' },
         { key: 'staff_group', label: 'Kelompok Staff' },

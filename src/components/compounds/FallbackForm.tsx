@@ -1,21 +1,21 @@
 import { FC, ComponentType, useId } from 'react';
-import withFormHandling, { IEnhancedProps, IInjectedProps } from './withFormHandling';
-import BasicForm, { IFormItem } from './BasicForm';
+import withFormHandling, { IEnhancedProps, IInjectedProps } from '../abstracts/withFormHandling';
+import BasicForm, { IFormItem } from '../basics/BasicForm';
 
 const isComponent = (component: any): component is FormComponentType => typeof component === 'function';
 
 const FallbackForm: FC<IFormProps> = props => {
-  const { form, collectionName, handleAdd, handleEdit, id } = props;
+  const { form, id, collectionName, handleAdd, handleEdit } = props;
 
   const formProps = { 
     key: id ? id.toString() : useId(), // Will only reuse forms for the same items. 
+    id,
     collectionName, 
     handleAdd, 
-    handleEdit,
-    id
+    handleEdit
   };
 
-  // Render the given form component if specified.
+  // Render the given form component if given a component.
   if (isComponent(form)) {
     const FormComponent = withFormHandling(form);
     return (
@@ -25,7 +25,7 @@ const FallbackForm: FC<IFormProps> = props => {
   // Render a BasicForm component if the given form prop is undefined or an array of items.
   else {
     const FormComponent = withFormHandling(BasicForm);
-    const { nameLabel, items } = form as IFormData;
+    const { nameLabel, items } = form;
     const item1 = { key: 'name', label: nameLabel };
 
     if (items) return (

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Layout as AntLayout, Dropdown, Button, Avatar, Menu, message } from 'antd';
 import { UserOutlined, FontColorsOutlined, LogoutOutlined } from "@ant-design/icons";
-import { useUser, logoutAndClose } from '../data/useDatabase';
+import { useUser, logoutAndClose } from '../../data/useDatabase';
 
 const { Header: AntHeader } = AntLayout;
 

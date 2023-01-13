@@ -1,7 +1,7 @@
 import { FC, Fragment } from "react";
 import styled from "styled-components";
 import { Form, Input, Checkbox, Button, Divider } from "antd";
-import ListTemplate from "../../components/ListTemplate";
+import ListTemplate from "../../components/compounds/ListTemplate";
 import pages from '../../navigation';
 import { toSlug } from "../../utils";
 

@@ -3,9 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Layout as AntLayout, Menu, MenuProps, Tabs, TabsProps, PageHeader, Typography } from 'antd';
 import { AppstoreOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
-import pages from '../navigation';
-import { toSlug, fromSlug } from '../utils';
-import Header from './Header';
+import pages from '../../navigation';
+import { toSlug, fromSlug } from '../../utils';
+import Header from '../basics/Header';
 
 type MenuItem = Required<MenuProps>['items'][number];
 type TabsCallback = Required<TabsProps>['onEdit'];

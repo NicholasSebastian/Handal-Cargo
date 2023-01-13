@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DatabaseProvider } from './data/useDatabase';
 import { routes } from './data/useRoute';
-import Layout from './components/Layout';
+import Layout from './components/compounds/Layout';
 import Login from './pages/Login';
 import './normalize.css';
 import Profile from './pages/Profile';

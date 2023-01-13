@@ -1,9 +1,9 @@
 import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Form, Input, InputNumber, Switch, Select, Button, DatePicker } from "antd";
-import useDatabase from "../data/useDatabase";
-import { IInjectedProps } from "./withFormHandling";
-import { datesToMoments } from "../utils";
+import useDatabase from "../../data/useDatabase";
+import { IInjectedProps } from "../abstracts/withFormHandling";
+import { datesToMoments } from "../../utils";
 
 const { Item } = Form;
 const { Option } = Select;

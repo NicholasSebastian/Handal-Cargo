@@ -1,8 +1,8 @@
 import { FC, ComponentType, useState, useEffect } from "react";
 import { BSON } from "realm-web";
 import { Spin } from "antd";
-import useDatabase from "../data/useDatabase";
-import { Subtract } from "../utils";
+import useDatabase from "../../data/useDatabase";
+import { Subtract } from "../../utils";
 
 // Abstracts over the components to handle either 'Add' or 'Edit' cases.
 
