@@ -102,7 +102,9 @@ const ItemContainer = styled.div`
 const ModalStyles: CSSProperties = { 
   padding: '30px 0', 
   display: 'flex', 
-  justifyContent: 'center' 
+  justifyContent: 'center',
+  maxHeight: '80vh',
+  overflowY: 'scroll'
 };
 
 interface ITemplateProps {
