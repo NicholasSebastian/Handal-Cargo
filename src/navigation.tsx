@@ -1,3 +1,6 @@
+import InvoiceEntry from './pages/shipping/InvoiceEntry';
+import Payment from './pages/shipping/Payment';
+import Customers from './pages/shipping/Customers';
 import ContainerGroups from './pages/references/ContainerGroups';
 import Carriers from './pages/references/Carriers';
 import Routes from './pages/references/Rutes';
@@ -20,9 +23,9 @@ const pages: Paths = {
   'Shipping': {
     'Sea Freight': <div>empty</div>,
     'Air Cargo': <div>empty</div>,
-    'Entri Faktur': <div>empty</div>,
-    'Pembayaran': <div>empty</div>,
-    'Customers': <div>empty</div>
+    'Entri Faktur': <InvoiceEntry />,
+    'Pembayaran': <Payment />,
+    'Customers': <Customers />
   },
   'References': {
     'Kelompok Container': <ContainerGroups />,
