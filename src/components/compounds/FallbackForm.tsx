@@ -1,6 +1,6 @@
 import { FC, ComponentType, useId } from 'react';
 import withFormHandling, { IEnhancedProps, IInjectedProps } from '../abstracts/withFormHandling';
-import BasicForm, { IFormItem } from '../basics/BasicForm';
+import BasicForm, { FormItem } from '../basics/BasicForm';
 
 const isComponent = (component: any): component is FormComponentType => typeof component === 'function';
 
@@ -46,7 +46,7 @@ interface IFormProps extends IEnhancedProps {
 
 interface IFormData { 
   nameLabel: string
-  items?: Array<IFormItem> 
+  items?: Array<FormItem> 
 }
 
 type FormComponentType = ComponentType<IInjectedProps>;

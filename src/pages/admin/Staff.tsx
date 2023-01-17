@@ -46,6 +46,7 @@ const Staff: FC = () => {
           { key: 'phone_number', label: 'Nomor HP' },
           { key: 'birthplace', label: 'Tempat Lahir' },
           { key: 'birthday', label: 'Tanggal Lahir', type: 'date' },
+          'pagebreak',
           { key: 'salary', label: 'Gaji', type: 'number' },
           { key: 'overtime_pay', label: 'Lembur / Jam', type: 'number' },
           { key: 'allowance', label: 'Uang Makan', type: 'number' },
