@@ -33,4 +33,5 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 - Other small shit
   - Advanced Search
   - Limit table height, add pagination
+  - Sort tables by clicking on the column header
   - Show MongoDB monthly usage.
