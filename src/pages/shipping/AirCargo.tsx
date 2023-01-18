@@ -1,10 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Form, Input, Button, Steps } from "antd";
+import {} from "antd";
 import TableTemplate from "../../components/compounds/TableTemplate";
-
-const { Item } = Form;
-const { Step } = Steps;
 
 const AirCargo: FC = () => {
   return (
