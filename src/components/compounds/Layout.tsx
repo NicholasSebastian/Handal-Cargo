@@ -1,39 +1,20 @@
-import { FC, PropsWithChildren, useState, useEffect, isValidElement } from 'react';
+import { FC, PropsWithChildren, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Layout as AntLayout, Menu, MenuProps, Tabs, TabsProps, PageHeader, Typography } from 'antd';
-import { AppstoreOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
-import pages from '../../navigation';
+import { Layout as AntLayout, Tabs, TabsProps, PageHeader } from 'antd';
 import { toSlug, fromSlug } from '../../utils';
 import Header from '../basics/Header';
+import Sider from '../basics/Sider';
 
-type MenuItem = Required<MenuProps>['items'][number];
 type TabsCallback = Required<TabsProps>['onEdit'];
 
-const DEFAULT_GROUP = 'shipping';
-
-const { Sider, Content } = AntLayout;
+const { Content } = AntLayout;
 const { TabPane } = Tabs;
-const { Title } = Typography;
-const icons = [ AppstoreOutlined, PlusCircleOutlined, SettingOutlined ];
-
-const menuItems = Object.entries(pages).map(([name, component], i): MenuItem => {
-  const Icon = icons[i];
-  const item = { key: toSlug(name), label: name, icon: <Icon /> };
-  return isValidElement(component) ? item : (
-    { ...item,
-      children: Object.entries(component).map(([nested_name]) => (
-        { key: toSlug(nested_name), label: nested_name }
-      ))
-    }
-  );
-});
 
 const Layout: FC<PropsWithChildren<{}>> = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [open, setOpen] = useState(DEFAULT_GROUP);
   const [tabs, setTabs] = useState<Array<string>>([]);
   const [active, setActive] = useState('');
 
@@ -51,7 +32,6 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
       const newTab = fromSlug(newTabKey);
       setTabs([...tabs, newTab]);
     }
-
   }, [location]);
 
   const onEdit: TabsCallback = (key, action) => {
@@ -80,16 +60,7 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
 
   return (
     <Container>
-      <Sider trigger={null} width={220}>
-        <Title level={3}>Handal Cargo</Title>
-        <Menu theme='dark' 
-          mode='inline' 
-          items={menuItems}
-          openKeys={[open]} 
-          onOpenChange={keys => setOpen(keys.find(key => key !== open)!)}
-          selectedKeys={[active]} 
-          onSelect={e => navigate(e.key)} />
-      </Sider>
+      <Sider active={active} />
       <AntLayout>
         <Header />
         <Tabs hideAdd 
