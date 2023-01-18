@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useMemo } from "react";
+import { FC, useState, useEffect, useMemo, ComponentType } from "react";
 import styled from "styled-components";
 import { Form, Input, InputNumber, Switch, Select, Button, DatePicker, Steps } from "antd";
 import useDatabase from "../../data/useDatabase";
@@ -12,9 +12,10 @@ const { Step } = Steps;
 
 // Creates a basic, minimally stylized form out of the given props.
 
-const isItem = (item: FormItem): item is IFormItem => item !== 'pagebreak';
-const isSelect = (item: IFormItem) => item.type === 'select';
-const requireFetch = (item: IFormItem) => typeof item.items === 'string';
+const isItem = (item: FormItem): item is (IFormItem | ISelectItem | ICustomItem) => item !== 'pagebreak';
+const isSelect = (item: IFormItem | ISelectItem | ICustomItem): item is ISelectItem => item.type === 'select';
+const isCustom = (item: IFormItem | ISelectItem | ICustomItem): item is ICustomItem => item.type === 'custom';
+const requireFetch = (item: ISelectItem) => typeof item.items === 'string';
 
 const BasicForm: FC<IFormProps> = (props) => {
   const database = useDatabase()!;
@@ -22,14 +23,14 @@ const BasicForm: FC<IFormProps> = (props) => {
   const [referenceValues, setReferenceValues] = useState<Record<string, Array<string>>>();
   const [currentPage, setCurrentPage] = useState(0);
 
-  const pages = useMemo(() => formItems.reduce((accumulator: Array<Array<IFormItem>>, item) => {
+  const pages = useMemo(() => formItems.reduce((accumulator: Array<Array<IFormItem | ISelectItem | ICustomItem>>, item) => {
     if (item === 'pagebreak') accumulator.push([]);
     else accumulator.at(-1)?.push(item);
     return accumulator;
   }, [[]]), [formItems]);
 
   useEffect(() => {
-    const referenceItems = formItems.filter(item => isItem(item) && isSelect(item) && requireFetch(item)) as Array<IFormItem>;
+    const referenceItems = formItems.filter(item => isItem(item) && isSelect(item) && requireFetch(item)) as Array<ISelectItem>;
     Promise.all(
       referenceItems.map(item => {
         const collectionName = item.items as string;
@@ -55,7 +56,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       return undefined;
   }
 
-  const renderInput = (item: IFormItem) => {
+  const renderInput = (item: IFormItem | ISelectItem) => {
     switch (item.type) {
       case 'number':
         return <InputNumber />
@@ -88,16 +89,23 @@ const BasicForm: FC<IFormProps> = (props) => {
       )}
       {pages.map((page, index) => (
         <div key={index} style={{ display: (index === currentPage) ? 'block' : 'none' }}>
-          {page.map(item => (
-            <Item
-              key={item.key} 
-              name={item.key} 
-              label={item.label} 
-              rules={item.required === false ? undefined : [{ required: true, message: `${item.label} harus diisi.` }]}
-              valuePropName={item.type === 'boolean' ? 'checked' : 'value'}>
-              {renderInput(item)}
-            </Item>
-          ))}
+          {page.map(item => {
+            if (isCustom(item)) {
+              const CustomComponent = item.render;
+              if (CustomComponent !== undefined) 
+                return <CustomComponent />;
+            }
+            else return (
+              <Item
+                key={item.key} 
+                name={item.key} 
+                label={item.label} 
+                rules={item.required === false ? undefined : [{ required: true, message: `${item.label} harus diisi.` }]}
+                valuePropName={item.type === 'boolean' ? 'checked' : 'value'}>
+                {renderInput(item)}
+              </Item>
+            );
+          })}
         </div>
       ))}
       <Item>
@@ -156,9 +164,21 @@ interface IFormItem {
   key: string
   label: string
   type?: InputType
+  required?: boolean
+}
+
+interface ISelectItem {
+  key: string
+  label: string
+  type?: 'select'
   items?: string | Array<string> // For only 'select' types.
   required?: boolean
 }
 
-type InputType = 'string' | 'password' | 'number' | 'boolean' | 'select' | 'date';
-type FormItem = IFormItem | 'pagebreak';
+interface ICustomItem {
+  type: 'custom'
+  render: ComponentType // For only 'custom' types.
+}
+
+type InputType = 'string' | 'password' | 'number' | 'boolean' | 'date';
+type FormItem = IFormItem | ISelectItem | ICustomItem | 'pagebreak';

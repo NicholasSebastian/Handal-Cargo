@@ -22,26 +22,17 @@ const SeaFreight: FC = () => {
           </ViewContainer>
         );
       }}
-      form={props => {
-        const { initialValues, onSubmit } = props;
-        return (
-          <FormContainer
-            initialValues={initialValues}
-            onFinish={onSubmit}
-            labelCol={{ span: 7 }}>
-            {/* TODO */}
-          </FormContainer>
-        );
-      }} />
+      form={[
+        { key: 'name', label: 'Nama' },
+        { type: 'custom', render: () => (
+          <div>test component</div>
+        )}
+      ]} />
   );
 }
 
 export default SeaFreight;
 
 const ViewContainer = styled.div`
-  // TODO
-`;
-
-const FormContainer = styled(Form)`
   // TODO
 `;
