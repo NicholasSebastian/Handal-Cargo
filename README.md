@@ -2,7 +2,7 @@
 
 ## NOTES
 
-If getting errors saying that the module 'crypto' cannot be found, add the following snippet:
+If you're getting errors saying that the module 'crypto' cannot be found, add the following snippet:
 
 ```json
 fallback: {
