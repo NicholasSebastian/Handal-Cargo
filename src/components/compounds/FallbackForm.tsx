@@ -19,20 +19,14 @@ const FallbackForm: FC<IFormProps> = props => {
   if (isComponent(form)) {
     const FormComponent = withFormHandling(form);
     return (
-      <FormComponent {...formProps as any} />
+      <FormComponent {...formProps} />
     );
   }
   // Render a BasicForm component if the given form prop is undefined or an array of items.
   else {
     const FormComponent = withFormHandling(BasicForm);
-    const { nameLabel, items } = form;
-    const item1 = { key: 'name', label: nameLabel };
-
-    if (items) return (
-      <FormComponent {...formProps} formItems={[item1, ...items]} />
-    );
-    else return (
-      <FormComponent {...formProps} formItems={[item1]} />
+    return (
+      <FormComponent {...formProps} formItems={form} />
     );
   }
 }
@@ -44,10 +38,5 @@ interface IFormProps extends IEnhancedProps {
   form: FormPropType;
 }
 
-interface IFormData { 
-  nameLabel: string
-  items?: Array<FormItem> 
-}
-
 type FormComponentType = ComponentType<IInjectedProps>;
-type FormPropType = FormComponentType | IFormData;
+type FormPropType = FormComponentType | Array<FormItem>;

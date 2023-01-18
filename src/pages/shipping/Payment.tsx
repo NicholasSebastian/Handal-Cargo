@@ -5,18 +5,16 @@ const Payment: FC = () => {
   return (
     <TableTemplate // TODO
       collectionName="Payments"
+      searchBy="name"
       columns={[
         { dataIndex: "", title: "" }
       ]}
       view={[
         { key: "", label: "" }
       ]}
-      form={{
-        nameLabel: "Nama",
-        items: [
-          { key: "", label: "" }
-        ]
-      }} />
+      form={[
+        { key: "", label: "" }
+      ]} />
   );
 }
 

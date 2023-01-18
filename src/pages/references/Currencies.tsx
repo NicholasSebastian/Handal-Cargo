@@ -5,13 +5,11 @@ const Currencies: FC = () => {
   return (
     <ListTemplate 
       collectionName="Currencies"
-      form={{
-        nameLabel: "Mata Uang",
-        items: [{
-          key: 'symbol',
-          label: "Symbol"
-        }]
-      }}
+      searchBy="name"
+      form={[
+        { key: 'name', label: 'Mata Uang' },
+        { key: 'symbol', label: "Symbol" }
+      ]}
       itemSubtext={entry => entry.symbol} />
   );
 }

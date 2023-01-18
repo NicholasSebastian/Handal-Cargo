@@ -13,8 +13,8 @@ const { Search } = Input;
 // TODO: Pagination and add table height limit.
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, columns, view, form, modalWidth } = props;
-  const { data, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName);
+  const { collectionName, searchBy, columns, view, form, modalWidth } = props;
+  const { data, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, searchBy);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
@@ -122,6 +122,7 @@ const ModalStyles: CSSProperties = {
 
 interface ITemplateProps {
   collectionName: string
+  searchBy: string
   columns: ColumnsType<IData>
   view: ViewPropType
   form: FormPropType

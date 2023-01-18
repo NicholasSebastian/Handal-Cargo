@@ -5,7 +5,10 @@ const Carriers: FC = () => {
   return (
     <ListTemplate 
       collectionName="Carriers"
-      form={{ nameLabel: "Nama Kurir" }} />
+      searchBy="name"
+      form={[
+        { key: 'name', label: 'Nama Kurir' }
+      ]} />
   );
 }
 

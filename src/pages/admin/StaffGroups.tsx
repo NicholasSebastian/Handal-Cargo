@@ -5,7 +5,10 @@ const StaffGroups: FC = () => {
   return (
     <ListTemplate 
       collectionName="StaffGroups"
-      form={{ nameLabel: "Nama Grup" }} />
+      searchBy="name"
+      form={[
+        { key: 'name', label: 'Nama Grup' }
+      ]} />
   );
 }
 

@@ -5,18 +5,16 @@ const InvoiceEntry: FC = () => {
   return (
     <TableTemplate // TODO
       collectionName="Invoices"
+      searchBy="name"
       columns={[
         { dataIndex: "", title: "" }
       ]}
       view={[
         { key: "", label: "" }
       ]}
-      form={{
-        nameLabel: "Nama",
-        items: [
-          { key: "", label: "" }
-        ]
-      }} />
+      form={[
+        { key: "", label: "" }
+      ]} />
   );
 }
 

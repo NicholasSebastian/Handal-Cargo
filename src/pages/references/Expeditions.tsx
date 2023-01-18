@@ -5,7 +5,10 @@ const Expeditions: FC = () => {
   return (
     <ListTemplate 
       collectionName="Expeditions"
-      form={{ nameLabel: "Nama Expedisi" }} />
+      searchBy="name"
+      form={[
+        { key: 'name', label: 'Nama Ekspedisi' }
+      ]} />
   );
 }
 

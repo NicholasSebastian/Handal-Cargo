@@ -5,6 +5,7 @@ const Staff: FC = () => {
   return (
     <TableTemplate 
       collectionName="Staff"
+      searchBy="name"
       columns={[
         { dataIndex: 'name', title: 'Nama' },
         { dataIndex: 'access_level', title: 'Level Akses' },
@@ -31,31 +32,29 @@ const Staff: FC = () => {
         { key: 'status', label: 'Aktif' },
         { key: 'employment_date', label: 'Tanggal Kerja' }
       ]}
-      form={{
-        nameLabel: 'Nama',
-        items: [
-          { key: 'username', label: 'Nama Pengguna' },
-          { key: 'password', label: 'Kata Sandi', type: 'password' },
-          { key: 'access_level', label: 'Level Akses', type: 'select', items: 'AccessLevels' },
-          { key: 'staff_group', label: 'Kelompok Staff', type: 'select', items: 'StaffGroups' },
-          { key: 'gender', label: 'Kelamin', type: 'select', items: ['Laki-laki', 'Perempuan'] },
-          { key: 'address', label: 'Alamat' },
-          { key: 'ward', label: 'Kecamatan' },
-          { key: 'city', label: 'Kota' },
-          { key: 'home_number', label: 'Nomor Telepon' },
-          { key: 'phone_number', label: 'Nomor HP' },
-          { key: 'birthplace', label: 'Tempat Lahir' },
-          { key: 'birthday', label: 'Tanggal Lahir', type: 'date' },
-          'pagebreak',
-          { key: 'salary', label: 'Gaji', type: 'number' },
-          { key: 'overtime_pay', label: 'Lembur / Jam', type: 'number' },
-          { key: 'allowance', label: 'Uang Makan', type: 'number' },
-          { key: 'holiday_pay', label: 'THR', type: 'number' },
-          { key: 'bonus', label: 'Uang Kerajinan', type: 'number' },
-          { key: 'status', label: 'Aktif', type: 'boolean' },
-          { key: 'employment_date', label: 'Tanggal Kerja', type: 'date' }
-        ]
-      }} />
+      form={[
+        { key: 'name', label: 'Nama' },
+        { key: 'username', label: 'Nama Pengguna' },
+        { key: 'password', label: 'Kata Sandi', type: 'password' },
+        { key: 'access_level', label: 'Level Akses', type: 'select', items: 'AccessLevels' },
+        { key: 'staff_group', label: 'Kelompok Staff', type: 'select', items: 'StaffGroups' },
+        { key: 'gender', label: 'Kelamin', type: 'select', items: ['Laki-laki', 'Perempuan'] },
+        { key: 'address', label: 'Alamat' },
+        { key: 'ward', label: 'Kecamatan' },
+        { key: 'city', label: 'Kota' },
+        { key: 'home_number', label: 'Nomor Telepon' },
+        { key: 'phone_number', label: 'Nomor HP' },
+        { key: 'birthplace', label: 'Tempat Lahir' },
+        { key: 'birthday', label: 'Tanggal Lahir', type: 'date' },
+        'pagebreak',
+        { key: 'salary', label: 'Gaji', type: 'number' },
+        { key: 'overtime_pay', label: 'Lembur / Jam', type: 'number' },
+        { key: 'allowance', label: 'Uang Makan', type: 'number' },
+        { key: 'holiday_pay', label: 'THR', type: 'number' },
+        { key: 'bonus', label: 'Uang Kerajinan', type: 'number' },
+        { key: 'status', label: 'Aktif', type: 'boolean' },
+        { key: 'employment_date', label: 'Tanggal Kerja', type: 'date' }
+      ]} />
   );
 }
 

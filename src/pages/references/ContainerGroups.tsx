@@ -5,7 +5,10 @@ const ContainerGroups: FC = () => {
   return (
     <ListTemplate 
       collectionName="ContainerGroups"
-      form={{ nameLabel: "Nama Kelompok" }} />
+      searchBy="name"
+      form={[
+        { key: 'name', label: 'Nama Kelompok' }
+      ]} />
   );
 }
 

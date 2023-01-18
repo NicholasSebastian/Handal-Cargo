@@ -5,7 +5,10 @@ const Handlers: FC = () => {
   return (
     <ListTemplate 
       collectionName="Handlers"
-      form={{ nameLabel: "Nama Pengurus" }} />
+      searchBy="name"
+      form={[
+        { key: 'name', label: 'Nama Pengurus' }
+      ]} />
   );
 }
 

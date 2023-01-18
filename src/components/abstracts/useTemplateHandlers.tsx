@@ -9,7 +9,7 @@ import { momentsToDates } from '../../utils';
 
 // TODO: Advanced search modes. (partial, full-match, from-beginning)
 
-function useTemplateHandlers(collectionName: string) {
+function useTemplateHandlers(collectionName: string, searchBy: string) {
   const database = useDatabase();
   const { title } = useRoute()!;
 
@@ -19,7 +19,7 @@ function useTemplateHandlers(collectionName: string) {
 
   const refreshData = () => {
     const query = (search.length > 0) 
-      ? { name: { $regex: search, $options: 'i' } } 
+      ? { [searchBy]: { $regex: search, $options: 'i' } } 
       : {};
 
     database?.collection(collectionName)

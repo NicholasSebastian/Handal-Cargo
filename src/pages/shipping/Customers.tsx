@@ -1,40 +1,38 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { Form, Input, Button, Steps } from "antd";
-import { IInjectedProps as ViewProps } from "../../components/abstracts/withInitialData";
-import { IInjectedProps as FormProps } from "../../components/abstracts/withFormHandling";
 import TableTemplate from "../../components/compounds/TableTemplate";
 
 const { Item } = Form;
 const { Step } = Steps;
 
-const CustomersView: FC<ViewProps> = props => {
-  const { values } = props;
-  return (
-    <ViewContainer>
-      {/* TODO */}
-    </ViewContainer>
-  );
-}
-
-const CustomersForm: FC<FormProps> = props => {
-  const { initialValues, onSubmit } = props;
-  return (
-    <FormContainer>
-      {/* TODO */}
-    </FormContainer>
-  );
-}
-
 const Customers: FC = () => {
   return (
     <TableTemplate // TODO
       collectionName="Customers"
+      searchBy="name"
       columns={[
         { dataIndex: "", title: "" }
       ]}
-      view={CustomersView}
-      form={CustomersForm} />
+      view={props => {
+        const { values } = props;
+        return (
+          <ViewContainer>
+            {/* TODO */}
+          </ViewContainer>
+        );
+      }}
+      form={props => {
+        const { initialValues, onSubmit } = props;
+        return (
+          <FormContainer
+            initialValues={initialValues}
+            onFinish={onSubmit}
+            labelCol={{ span: 7 }}>
+            {/* TODO */}
+          </FormContainer>
+        );
+      }} />
   );
 }
 
