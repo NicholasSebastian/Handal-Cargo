@@ -6,6 +6,7 @@ import Layout from './components/compounds/Layout';
 import Login from './pages/Login';
 import './normalize.css';
 import Profile from './pages/Profile';
+import Shortcuts from './pages/Shortcuts';
 
 const DEFAULT_PAGE = '/sea-freight';
 
@@ -15,7 +16,8 @@ const elements = (
       <Layout>
         <Routes>
           <Route path='/' element={<Navigate to={DEFAULT_PAGE} />} />
-          <Route path='/profil' element={<Profile />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/shortcuts' element={<Shortcuts />} />
           {routes}
         </Routes>
       </Layout>
