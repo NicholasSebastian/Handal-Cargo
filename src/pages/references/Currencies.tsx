@@ -10,7 +10,7 @@ const Currencies: FC = () => {
         { key: 'name', label: 'Mata Uang' },
         { key: 'symbol', label: "Symbol" }
       ]}
-      itemSubtext={entry => entry.symbol} />
+      secondaryColumn={entry => entry.symbol} />
   );
 }
 

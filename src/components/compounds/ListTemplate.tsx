@@ -9,7 +9,7 @@ const { Item } = List;
 const { Search } = Input;
 
 const ListTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, searchBy, itemSubtext, form } = props;
+  const { collectionName, searchBy, secondaryColumn, form } = props;
   const { data, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, searchBy);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
@@ -51,7 +51,7 @@ const ListTemplate: FC<ITemplateProps> = props => {
           ]}>
             <ItemContainer>
               <div>{entry.name}</div>
-              {itemSubtext && itemSubtext(entry)}
+              {secondaryColumn && secondaryColumn(entry)}
             </ItemContainer>
           </Item>
         )} />
@@ -110,6 +110,6 @@ const ModalStyles: CSSProperties = {
 interface ITemplateProps {
   collectionName: string
   searchBy: string
-  itemSubtext?: (entry: any) => React.ReactNode
+  secondaryColumn?: (entry: any) => React.ReactNode
   form: FormPropType
 }
