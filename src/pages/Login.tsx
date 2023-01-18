@@ -8,6 +8,8 @@ const { Title, Text } = Typography;
 const { Item } = Form;
 const { Password } = Input;
 
+const currentYear = new Date().getFullYear();
+
 const Login: FC<ILoginProps> = ({ login }) => {
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +34,7 @@ const Login: FC<ILoginProps> = ({ login }) => {
           </Item>
           <Button type="primary" loading={loading} htmlType="submit">Masuk</Button>
         </Form>
-        <Text>© Handal Cargo 2022, All rights reserved.</Text>
+        <Text>© Handal Cargo {currentYear}, All rights reserved.</Text>
       </div>
     </Container>
 	);
