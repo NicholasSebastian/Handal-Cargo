@@ -1,3 +1,5 @@
+import AirCargo from './pages/shipping/AirCargo';
+import SeaFreight from './pages/shipping/SeaFreight';
 import InvoiceEntry from './pages/shipping/InvoiceEntry';
 import Payment from './pages/shipping/Payment';
 import Customers from './pages/shipping/Customers';
@@ -21,8 +23,8 @@ type Paths = {
 
 const pages: Paths = {
   'Shipping': {
-    'Sea Freight': <div>empty</div>,
-    'Air Cargo': <div>empty</div>,
+    'Sea Freight': <SeaFreight />,
+    'Air Cargo': <AirCargo />,
     'Entri Faktur': <InvoiceEntry />,
     'Pembayaran': <Payment />,
     'Customers': <Customers />
