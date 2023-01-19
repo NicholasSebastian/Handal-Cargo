@@ -1,26 +1,23 @@
 import { FC, CSSProperties } from "react";
 import styled from "styled-components";
-import { List, Button, Modal, Input, Popconfirm } from 'antd';
+import { List, Button, Modal, Popconfirm, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import useTemplateHandlers from "../abstracts/useTemplateHandlers";
 import FallbackForm, { FormPropType } from "./FallbackForm";
+import Search from '../basics/Search';
 
 const { Item } = List;
-const { Search } = Input;
 
 const ListTemplate: FC<ITemplateProps> = props => {
   const { collectionName, searchBy, secondaryColumn, form } = props;
-  const { data, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, searchBy);
+  const { data, loading, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, searchBy);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
   return (
     <Container>
       <div>
-        <Search allowClear 
-          placeholder="Cari" 
-          style={{ width: 250 }} 
-          onSearch={val => setSearch(val)} />
+        <Search onSearch={setSearch} />
         <Button block 
           type='dashed' 
           icon={<PlusOutlined />} 
@@ -28,33 +25,35 @@ const ListTemplate: FC<ITemplateProps> = props => {
           New
         </Button>
       </div>
-      <List 
-        size='small' 
-        dataSource={data} 
-        loading={data === undefined}
-        renderItem={entry => (
-          <Item actions={[
-            <Button 
-              onClick={() => setModal({ mode: 'edit', id: entry._id })}>
-              Edit
-            </Button>,
-            <Popconfirm 
-              title="Yakin di hapus?" 
-              placement="left"
-              onCancel={e => e?.stopPropagation()}
-              onConfirm={e => {
-                e?.stopPropagation();
-                handleDelete(entry._id);
-              }}>
-              <Button onClick={e => e.stopPropagation()}>Delete</Button>
-            </Popconfirm>
-          ]}>
-            <ItemContainer>
-              <div>{entry.name}</div>
-              {secondaryColumn && secondaryColumn(entry)}
-            </ItemContainer>
-          </Item>
-        )} />
+      <Spin spinning={loading}>
+        <List 
+          size='small' 
+          dataSource={data} 
+          loading={data === undefined}
+          renderItem={entry => (
+            <Item actions={[
+              <Button 
+                onClick={() => setModal({ mode: 'edit', id: entry._id })}>
+                Edit
+              </Button>,
+              <Popconfirm 
+                title="Yakin di hapus?" 
+                placement="left"
+                onCancel={e => e?.stopPropagation()}
+                onConfirm={e => {
+                  e?.stopPropagation();
+                  handleDelete(entry._id);
+                }}>
+                <Button onClick={e => e.stopPropagation()}>Delete</Button>
+              </Popconfirm>
+            ]}>
+              <ItemContainer>
+                <div>{entry.name}</div>
+                {secondaryColumn && secondaryColumn(entry)}
+              </ItemContainer>
+            </Item>
+          )} />
+      </Spin>
       <Modal centered maskClosable 
         title={getFormTitle()}
         visible={modal !== null} 
@@ -85,7 +84,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: end;
 
-    > span:first-child {
+    > div:first-child {
       margin-bottom: 10px;
     }
   }

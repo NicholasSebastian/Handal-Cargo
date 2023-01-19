@@ -7,26 +7,24 @@ import { momentsToDates } from '../../utils';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
 
-// TODO: Advanced search modes. (partial, full-match, from-beginning)
-
 function useTemplateHandlers(collectionName: string, searchBy: string) {
   const database = useDatabase();
   const { title } = useRoute()!;
 
   const [data, setData] = useState<Array<IData>>();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<RegExp>();
   const [modal, setModal] = useState<ModalState>(null);
+  const [loading, setLoading] = useState(false);
 
   const refreshData = () => {
-    const query = (search.length > 0) 
-      ? { [searchBy]: { $regex: search, $options: 'i' } } 
-      : {};
-
+    setLoading(true);
+    const query = search ? { [searchBy]: { $regex: search, $options: 'i' } } : {};
     database?.collection(collectionName)
       .find(query)
       .then(results => {
         if (results) setData(results);
-      });
+      })
+      .finally(() => setLoading(false));
   };
   
   const handleAdd = (values: any) => {
@@ -67,6 +65,7 @@ function useTemplateHandlers(collectionName: string, searchBy: string) {
   useEffect(refreshData, [search]);
   return {
     data, 
+    loading,
     modal, 
     setSearch, 
     setModal, 

@@ -1,14 +1,14 @@
 import { FC, CSSProperties } from 'react';
 import styled from 'styled-components';
-import { Typography, Table, Input, Button, Modal, Space, Popconfirm } from 'antd';
+import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
 import useTemplateHandlers, { IData } from '../abstracts/useTemplateHandlers';
 import FallbackView, { ViewPropType } from './FallbackView';
 import FallbackForm, { FormPropType } from "./FallbackForm";
+import Search from '../basics/Search';
 
 const { Text } = Typography;
-const { Search } = Input;
 
 // TODO: Sorter.
 // TODO: Fixed header.
@@ -16,16 +16,13 @@ const { Search } = Input;
 
 const TableTemplate: FC<ITemplateProps> = props => {
   const { collectionName, searchBy, columns, view, form, modalWidth } = props;
-  const { data, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, searchBy);
+  const { data, loading, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, searchBy);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
   return (
     <Container>
-      <Search allowClear 
-        placeholder="Cari" 
-        style={{ width: 250 }} 
-        onSearch={val => setSearch(val)} />
+      <Search onSearch={setSearch} />
       <div>
         <Text>Menemukan {data?.length} hasil.</Text>
         <Button 
@@ -38,6 +35,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
         size='small' 
         pagination={false}
         dataSource={data}
+        loading={loading}
         onRow={entry => ({ 
           onClick: () => setModal({ mode: 'view', id: entry._id }) 
         })}
