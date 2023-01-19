@@ -30,7 +30,7 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
   - Faktur
 - Reports
 - Other small shit
-  - Advanced Search
-  - Limit table height, add pagination
-  - Sort tables by clicking on the column header
-  - Show MongoDB monthly usage.
+  - Search by specified column.
+  - Limit table height; pagination.
+  - Sort tables by specified column.
+  - Dashboard to show MongoDB monthly usage.
