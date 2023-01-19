@@ -30,7 +30,6 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
   - Faktur
 - Reports
 - Other small shit
-  - Shortcuts
   - Advanced Search
   - Limit table height, add pagination
   - Sort tables by clicking on the column header
