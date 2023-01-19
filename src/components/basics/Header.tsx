@@ -7,6 +7,9 @@ import { useUser, logoutAndClose } from '../../data/useDatabase';
 
 const { Header: AntHeader } = AntLayout;
 
+const currentDate = new Date()
+  .toLocaleDateString("id-ID", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
 const Header: FC = () => {
   const user = useUser();
   const navigate = useNavigate();
@@ -21,6 +24,7 @@ const Header: FC = () => {
 
   return (
     <Container>
+      <div>{currentDate}</div>
       <Dropdown overlay={overlay} placement='bottomRight'>
         <Button type='text'>
           {user?.profile.name}
@@ -38,8 +42,12 @@ const Container = styled(AntHeader)`
   height: 50px;
   padding: 0 20px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+
+  > div:first-child {
+    user-select: none;
+  }
 
   button:last-child {
     font-weight: 500;
