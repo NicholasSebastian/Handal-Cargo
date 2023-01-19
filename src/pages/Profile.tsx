@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import { Descriptions } from 'antd';
-import { useUser } from '../data/useDatabase';
+import useProfile from '../data/useProfile';
 
 const { Item } = Descriptions;
 
 const Profile: FC = () => {
-  const user = useUser();
+  const profile = useProfile();
   return (
-    <pre>{JSON.stringify(user?.customData, null, 2)}</pre>
+    <pre>{JSON.stringify(profile, null, 2)}</pre>
   );
 }
 

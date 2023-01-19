@@ -16,7 +16,6 @@ const DatabaseContext = createContext<Realm.App|undefined>(undefined);
 function useUser() {
 	const session = useContext(DatabaseContext);
 	const user = session?.currentUser;
-  user?.refreshCustomData();
   return user;
 }
 

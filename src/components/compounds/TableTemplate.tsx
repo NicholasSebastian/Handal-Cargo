@@ -10,7 +10,9 @@ import FallbackForm, { FormPropType } from "./FallbackForm";
 const { Text } = Typography;
 const { Search } = Input;
 
-// TODO: Pagination and add table height limit.
+// TODO: Sorter.
+// TODO: Fixed header.
+// TODO: Pagination.
 
 const TableTemplate: FC<ITemplateProps> = props => {
   const { collectionName, searchBy, columns, view, form, modalWidth } = props;
@@ -39,30 +41,37 @@ const TableTemplate: FC<ITemplateProps> = props => {
         onRow={entry => ({ 
           onClick: () => setModal({ mode: 'view', id: entry._id }) 
         })}
-        columns={[...columns, {
-          render: entry => {
-            const onEdit: ClickHandler1 = e => {
-              e.stopPropagation(); 
-              setModal({ mode: 'edit', id: entry._id });
-            };
-            const onDelete: ClickHandler2 = e => {
-              e?.stopPropagation(); 
-              handleDelete(entry._id);
+        columns={[
+          ...columns.map(column => {
+            column.ellipsis = true;
+            return column;
+          }), 
+          {
+            fixed: 'right',
+            render: entry => {
+              const onEdit: ClickHandler1 = e => {
+                e.stopPropagation(); 
+                setModal({ mode: 'edit', id: entry._id });
+              };
+              const onDelete: ClickHandler2 = e => {
+                e?.stopPropagation(); 
+                handleDelete(entry._id);
+              }
+              return (
+                <Space>
+                  <Button onClick={onEdit}>Edit</Button>
+                  <Popconfirm 
+                    title="Yakin di hapus?" 
+                    placement="left"
+                    onCancel={e => e?.stopPropagation()}
+                    onConfirm={onDelete}>
+                    <Button onClick={e => e.stopPropagation()}>Delete</Button>
+                  </Popconfirm>
+                </Space>
+              );
             }
-            return (
-              <Space>
-                <Button onClick={onEdit}>Edit</Button>
-                <Popconfirm 
-                  title="Yakin di hapus?" 
-                  placement="left"
-                  onCancel={e => e?.stopPropagation()}
-                  onConfirm={onDelete}>
-                  <Button onClick={e => e.stopPropagation()}>Delete</Button>
-                </Popconfirm>
-              </Space>
-            );
           }
-        }]} />
+        ]} />
       <Modal centered maskClosable 
         title={getFormTitle()}
         visible={modal !== null} 

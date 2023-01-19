@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Layout, Typography, Menu, MenuProps, Alert } from "antd";
 import { AppstoreOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
-import useDatabase, { useUser } from '../../data/useDatabase';
+import useDatabase from '../../data/useDatabase';
+import useProfile from '../../data/useProfile';
 import pages from '../../navigation';
 import { toSlug } from '../../utils';
 
@@ -15,9 +16,9 @@ const DEFAULT_GROUP = 'shipping';
 
 const Sider: FC<ISiderProps> = props => {
   const { active } = props;
-  const navigate = useNavigate();
+  const profile = useProfile();
   const database = useDatabase();
-  const user = useUser();
+  const navigate = useNavigate();
   
   const [open, setOpen] = useState(DEFAULT_GROUP);
   const [access, setAccess] = useState<Array<string>>();
@@ -42,12 +43,11 @@ const Sider: FC<ISiderProps> = props => {
 
   useEffect(() => {
     setLoading(true);
-    const accessLevel = user?.customData.access_level;
     database?.collection("AccessLevels")
-      .findOne({ name: accessLevel })
+      .findOne({ name: profile.access_level })
       .then(result => setAccess(result.access_level))
       .finally(() => setLoading(false));
-  }, [user]);
+  }, [profile]);
 
   return (
     <AntSider trigger={null} width={220}>
