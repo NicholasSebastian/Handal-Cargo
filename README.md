@@ -17,6 +17,7 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 ## TO DO LIST
 
 - Company Setup
+- Backup and Restore
 - Shipping
   - MarkingTemplate
     - Sisa
@@ -30,7 +31,6 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
   - Faktur
 - Reports
 - Other small shit
-  - Search by specified column.
   - Limit table height; pagination.
   - Sort tables by specified column.
   - Dashboard to show MongoDB monthly usage.
