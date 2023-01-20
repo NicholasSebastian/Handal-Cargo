@@ -44,7 +44,8 @@ const pages: Paths = {
     'Kelompok Staff': <StaffGroup />,
     'Level Akses': <AccessLevels />,
     'Company Setup': <div>empty</div>,
-    'Backup and Restore': <div>empty</div>
+    'Backup and Restore': <div>empty</div>,
+    'Status Server': <div>empty</div>
   }
 };
 
