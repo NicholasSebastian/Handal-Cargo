@@ -23,7 +23,7 @@ const Search: FC<ISearchProps> = props => {
           dropdownMatchSelectWidth={false} />
       )}
       {modes.map((mode, i) => (
-        <Tooltip title={mode.title}>
+        <Tooltip key={i} title={mode.title}>
           <Button 
             icon={mode.icon} 
             type={(currentMode === i) ? 'primary' : 'default'} 

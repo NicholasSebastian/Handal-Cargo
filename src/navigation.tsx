@@ -11,9 +11,10 @@ import Planes from './pages/references/Planes';
 import Currencies from './pages/references/Currencies';
 import ProductDetails from './pages/references/ProductDetails';
 import Expeditions from './pages/references/Expeditions';
-import AccessLevels from './pages/admin/AccessLevels';
 import Staff from './pages/admin/Staff';
 import StaffGroup from './pages/admin/StaffGroups';
+import AccessLevels from './pages/admin/AccessLevels';
+import BackupRestore from './pages/admin/BackupRestore';
 
 type Paths = { 
   [key: string]: JSX.Element | { 
@@ -44,7 +45,7 @@ const pages: Paths = {
     'Kelompok Staff': <StaffGroup />,
     'Level Akses': <AccessLevels />,
     'Company Setup': <div>empty</div>,
-    'Backup and Restore': <div>empty</div>,
+    'Backup and Restore': <BackupRestore />,
     'Status Server': <div>empty</div>
   }
 };
