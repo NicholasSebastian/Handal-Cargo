@@ -7,7 +7,6 @@ const SeaFreight: FC = () => {
   return (
     <TableTemplate // TODO
       collectionName="SeaFreight"
-      searchBy="name"
       columns={[
         { dataIndex: "", title: "" }
       ]}

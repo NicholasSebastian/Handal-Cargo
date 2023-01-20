@@ -15,16 +15,21 @@ const { Text } = Typography;
 // TODO: Pagination.
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, searchBy, columns, view, form, modalWidth } = props;
-  const { data, loading, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, searchBy);
+  const { collectionName, columns, view, form, modalWidth } = props;
+  const firstCol = (columns[0] as any).dataIndex;
+  const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, firstCol);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
   return (
     <Container>
-      <Search onSearch={setSearch} />
+      <Search 
+        onSearch={setSearch} 
+        searchBy={searchBy}
+        setSearchBy={setSearchBy} 
+        columns={columns} />
       <div>
-        <Text>Menemukan {data?.length} hasil.</Text>
+        <Text>Menampilkan {data?.length} hasil.</Text>
         <Button 
           icon={<PlusOutlined />} 
           onClick={() => setModal({ mode: 'add' })}>
@@ -129,7 +134,6 @@ const ModalStyles: CSSProperties = {
 
 interface ITemplateProps {
   collectionName: string
-  searchBy: string
   columns: ColumnsType<IData>
   view: ViewPropType
   form: FormPropType

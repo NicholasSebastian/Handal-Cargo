@@ -7,12 +7,13 @@ import { momentsToDates } from '../../utils';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
 
-function useTemplateHandlers(collectionName: string, searchBy: string) {
+function useTemplateHandlers(collectionName: string, defaultSearchBy: string) {
   const database = useDatabase();
   const { title } = useRoute()!;
 
   const [data, setData] = useState<Array<IData>>();
   const [search, setSearch] = useState<RegExp>();
+  const [searchBy, setSearchBy] = useState(defaultSearchBy);
   const [modal, setModal] = useState<ModalState>(null);
   const [loading, setLoading] = useState(false);
 
@@ -66,8 +67,10 @@ function useTemplateHandlers(collectionName: string, searchBy: string) {
   return {
     data, 
     loading,
+    searchBy,
     modal, 
     setSearch, 
+    setSearchBy,
     setModal, 
     getFormTitle,
     handlers: {

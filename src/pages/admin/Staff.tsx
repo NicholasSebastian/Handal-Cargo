@@ -5,7 +5,6 @@ const Staff: FC = () => {
   return (
     <TableTemplate 
       collectionName="Staff"
-      searchBy="name"
       columns={[
         { dataIndex: 'name', title: 'Nama' },
         { dataIndex: 'access_level', title: 'Level Akses' },
@@ -47,11 +46,11 @@ const Staff: FC = () => {
         { key: 'birthplace', label: 'Tempat Lahir' },
         { key: 'birthday', label: 'Tanggal Lahir', type: 'date' },
         'pagebreak',
-        { key: 'salary', label: 'Gaji', type: 'number' },
-        { key: 'overtime_pay', label: 'Lembur / Jam', type: 'number' },
-        { key: 'allowance', label: 'Uang Makan', type: 'number' },
-        { key: 'holiday_pay', label: 'THR', type: 'number' },
-        { key: 'bonus', label: 'Uang Kerajinan', type: 'number' },
+        { key: 'salary', label: 'Gaji', type: 'currency' },
+        { key: 'overtime_pay', label: 'Lembur / Jam', type: 'currency' },
+        { key: 'allowance', label: 'Uang Makan', type: 'currency' },
+        { key: 'holiday_pay', label: 'THR', type: 'currency' },
+        { key: 'bonus', label: 'Uang Kerajinan', type: 'currency' },
         { key: 'status', label: 'Aktif', type: 'boolean' },
         { key: 'employment_date', label: 'Tanggal Kerja', type: 'date' }
       ]} />

@@ -1,10 +1,8 @@
 import { FC, ReactNode, useState } from "react";
-import { Space, Input, Button, Tooltip } from "antd";
+import { Space, Input, Select, Button, Tooltip } from "antd";
 import { AlignCenterOutlined, AlignLeftOutlined, MenuOutlined } from "@ant-design/icons";
 
 const { Search: AntSearch } = Input;
-
-// TODO: Search by selected column.
 
 const modes: Array<IMode> = [
   { title: "Cocok Sebagian", icon: <AlignCenterOutlined /> }, // Partial Match
@@ -13,10 +11,17 @@ const modes: Array<IMode> = [
 ];
 
 const Search: FC<ISearchProps> = props => {
-  const { onSearch } = props;
+  const { onSearch, searchBy, setSearchBy, columns } = props;
   const [currentMode, setCurrentMode] = useState(0);
   return (
     <Space>
+      {(columns && searchBy && setSearchBy) && (
+        <Select 
+          defaultValue={searchBy}
+          options={columns.map((column: any) => ({ label: `Search by ${column.title}`, value: column.dataIndex }))}
+          onChange={value => setSearchBy(value)}
+          dropdownMatchSelectWidth={false} />
+      )}
       {modes.map((mode, i) => (
         <Tooltip title={mode.title}>
           <Button 
@@ -49,6 +54,9 @@ export default Search;
 
 interface ISearchProps {
   onSearch: (query: RegExp) => void
+  columns?: Array<any>
+  searchBy?: string
+  setSearchBy?: (searchBy: string) => void
 }
 
 interface IMode {

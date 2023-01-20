@@ -59,7 +59,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   const renderInput = (item: IFormItem | ISelectItem) => {
     switch (item.type) {
       case 'number':
-        return <InputNumber />
+        return <InputNumber style={{ width: '100%' }} />
       case 'boolean':
         return <Switch />
       case 'select':
@@ -69,6 +69,14 @@ const BasicForm: FC<IFormProps> = (props) => {
         return <DatePicker />
       case 'password':
         return <Password />
+      case 'currency':
+        return (
+          <InputNumber 
+            prefix="Rp." 
+            style={{ width: '100%' }} 
+            formatter={(value) => value!.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            parser={(value) => value!.replace(/,*/g, '')} />
+        );
       default:
         return <Input />
     }
@@ -180,5 +188,5 @@ interface ICustomItem {
   render: ComponentType // For only 'custom' types.
 }
 
-type InputType = 'string' | 'password' | 'number' | 'boolean' | 'date';
+type InputType = 'string' | 'password' | 'number' | 'currency' | 'boolean' | 'date';
 type FormItem = IFormItem | ISelectItem | ICustomItem | 'pagebreak';

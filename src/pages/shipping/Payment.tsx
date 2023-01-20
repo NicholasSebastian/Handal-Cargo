@@ -5,7 +5,6 @@ const Payment: FC = () => {
   return (
     <TableTemplate // TODO
       collectionName="Payments"
-      searchBy="name"
       columns={[
         { dataIndex: "", title: "" }
       ]}
