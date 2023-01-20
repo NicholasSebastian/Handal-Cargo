@@ -17,7 +17,6 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 ## TO DO LIST
 
 - Company Setup
-- Backup and Restore
 - Shipping
   - MarkingTemplate
     - Sisa
