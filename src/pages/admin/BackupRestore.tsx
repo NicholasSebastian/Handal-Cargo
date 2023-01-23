@@ -39,6 +39,7 @@ const BackupRestore: FC = () => {
   const database = useDatabase();
   const [targetKeys, setTargetKeys] = useState<Array<string>>([]);
   const [loading, setLoading] = useState(false);
+  const [current, setCurrent] = useState<string>();
   const [progress, setProgress] = useState(0);
   const progressMax = useRef(0);
 
@@ -52,11 +53,14 @@ const BackupRestore: FC = () => {
       .then(data => {
         // Increment the progress bar.
         setProgress(progress => progress + 1);
+        setCurrent(collection);
         return { collection, data } as IBackupData;
       }))
     )
     // Save the data into a file.
-    .then(results => save(options).then(filepath => ({ filepath, data: JSON.stringify(results) })))
+    .then(results => save(options)
+      .then(filepath => ({ filepath, data: JSON.stringify(results) }))
+    )
     .then(response => writeFile({ path: response.filepath, contents: response.data }))
 
     // User feedback.
@@ -65,6 +69,7 @@ const BackupRestore: FC = () => {
     .finally(() => {
       // Hide the modal and reset the progress bar.
       setLoading(false);
+      setCurrent(undefined);
       setProgress(0);
       progressMax.current = 0;
     });
@@ -77,6 +82,7 @@ const BackupRestore: FC = () => {
         if (filepath) return readTextFile(filepath as string);
         else throw new Error();
       })
+      .catch(() => message.error("Error terjadi ketika membaca backup data."))
       .then(contents => {
         const data = JSON.parse(contents);
 
@@ -85,21 +91,22 @@ const BackupRestore: FC = () => {
         setLoading(true);
 
         // Replace the data's associated collections with our own.
-        return Promise.all(data.map((item: IBackupData) => 
+        return Promise.all(data.map((item: IBackupData) => // TODO: test this.
           database?.collection(item.collection).deleteMany({})
-            .then(() => database.collection(item.collection).insertMany(item.data)))
-            .then(() => setProgress(progress + 1))
-            .catch(console.error)
-            // TODO: Fix errors.
-          )
+            .then(() => database.collection(item.collection).insertMany(item.data))
+            .then(() => {
+              // Increment the progress bar.
+              setCurrent(item.collection);
+              setProgress(progress + 1);
+          })))
           // User feedback.
           .then(() => message.success(`${data.length} koleksi telah diubah.`))
           .catch(() => message.error("Error terjadi ketika mengupload backup data."));
       })
-      .catch(() => message.error("Error terjadi ketika membaca backup data."))
       .finally(() => {
         // Hide the modal and reset the progress bar.
         setLoading(false);
+        setCurrent(undefined);
         setProgress(0);
         progressMax.current = 0;
       });
@@ -122,6 +129,7 @@ const BackupRestore: FC = () => {
         footer={null}
         closable={false} 
         maskClosable={false} >
+        {}
         <Progress 
           percent={(progress / progressMax.current) * 100} 
           status='active' />
