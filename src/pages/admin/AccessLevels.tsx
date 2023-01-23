@@ -5,12 +5,6 @@ import ListTemplate from "../../components/compounds/ListTemplate";
 import pages from '../../navigation';
 import { toSlug } from "../../utils";
 
-// TODO: Create a role for every single collection in the MongoDB App Services UI.
-//       Each collection should only grant read and write permissions to users with the corresponding access level.
-
-// NOTE: The staff collection is an exception. 
-//       It should also have document-level permissions; To give read permissions to users of with a matching name.
-
 const { Item } = Form;
 const { Group } = Checkbox;
 
