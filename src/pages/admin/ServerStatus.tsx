@@ -3,7 +3,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Button } from "antd";
 
-const MONGODB_REALM_URL = "";
+const MONGODB_REALM_URL = "https://realm.mongodb.com/";
 
 const ServerStatus: FC = () => {
   return (
