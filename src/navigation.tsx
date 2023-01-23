@@ -15,6 +15,7 @@ import Staff from './pages/admin/Staff';
 import StaffGroup from './pages/admin/StaffGroups';
 import AccessLevels from './pages/admin/AccessLevels';
 import BackupRestore from './pages/admin/BackupRestore';
+import ServerStatus from './pages/admin/ServerStatus';
 
 type Paths = { 
   [key: string]: JSX.Element | { 
@@ -46,7 +47,7 @@ const pages: Paths = {
     'Level Akses': <AccessLevels />,
     'Company Setup': <div>empty</div>,
     'Backup and Restore': <BackupRestore />,
-    'Status Server': <div>empty</div>
+    'Status Server': <ServerStatus />
   }
 };
 
