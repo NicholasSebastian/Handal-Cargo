@@ -91,7 +91,7 @@ const BackupRestore: FC = () => {
         setLoading(true);
 
         // Replace the data's associated collections with our own.
-        return Promise.all(data.map((item: IBackupData) => // TODO: test this.
+        return Promise.all(data.map((item: IBackupData) => 
           database?.collection(item.collection).deleteMany({})
             .then(() => database.collection(item.collection).insertMany(item.data))
             .then(() => {
@@ -129,9 +129,9 @@ const BackupRestore: FC = () => {
         footer={null}
         closable={false} 
         maskClosable={false} >
-        {}
+        {current && `Processing ${current}...`}
         <Progress 
-          percent={(progress / progressMax.current) * 100} 
+          percent={Math.round((progress / progressMax.current) * 100)} 
           status='active' />
       </Modal>
       <div>
