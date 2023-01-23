@@ -66,6 +66,7 @@ const BackupRestore: FC = () => {
       // Hide the modal and reset the progress bar.
       setLoading(false);
       setProgress(0);
+      progressMax.current = 0;
     });
   }
 
@@ -100,6 +101,7 @@ const BackupRestore: FC = () => {
         // Hide the modal and reset the progress bar.
         setLoading(false);
         setProgress(0);
+        progressMax.current = 0;
       });
   }
 
