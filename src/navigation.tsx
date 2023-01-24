@@ -3,6 +3,7 @@ import SeaFreight from './pages/shipping/SeaFreight';
 import InvoiceEntry from './pages/shipping/InvoiceEntry';
 import Payment from './pages/shipping/Payment';
 import Customers from './pages/shipping/Customers';
+import GenerateReports from './pages/reports/GenerateReports';
 import ContainerGroups from './pages/references/ContainerGroups';
 import Carriers from './pages/references/Carriers';
 import Routes from './pages/references/Rutes';
@@ -30,6 +31,9 @@ const pages: Paths = {
     'Entri Faktur': <InvoiceEntry />,
     'Pembayaran': <Payment />,
     'Customers': <Customers />
+  },
+  'Reports': {
+    'Laporan': <GenerateReports />
   },
   'References': {
     'Kelompok Container': <ContainerGroups />,
