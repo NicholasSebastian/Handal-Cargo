@@ -10,19 +10,19 @@ const MONGODB_ATLAS_URL = "https://cloud.mongodb.com/";
 
 const collections = [
   "AccessLevels",
-  // "AirCargo",
+  "AirCargo",
   "Carriers",
   "ContainerGroups",
   "Currencies",
   "Customers",
   "Expeditions",
   "Handlers",
-  // "Invoices",
-  // "Payments",
+  "Invoices",
+  "Payments",
   "Planes",
   "ProductDetails",
   "Routes",
-  // "SeaFreight",
+  "SeaFreight",
   "Singletons",
   "Staff",
   "StaffGroups"
