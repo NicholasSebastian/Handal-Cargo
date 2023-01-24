@@ -10,7 +10,7 @@ import { toSlug } from '../../utils';
 
 const { Sider: AntSider } = Layout;
 const { Title } = Typography;
-const icons = [ AppstoreOutlined, PlusCircleOutlined, SettingOutlined ];
+const icons = [ AppstoreOutlined, AppstoreOutlined, PlusCircleOutlined, SettingOutlined ];
 
 const DEFAULT_GROUP = 'shipping';
 

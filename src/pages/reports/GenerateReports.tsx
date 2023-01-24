@@ -16,5 +16,6 @@ const GenerateReports: FC = () => {
 export default GenerateReports;
 
 const Container = styled.div`
+  margin: 20px;
   // TODO
 `;

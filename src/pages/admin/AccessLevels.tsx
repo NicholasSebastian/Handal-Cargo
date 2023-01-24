@@ -37,7 +37,7 @@ const AccessLevels: FC = () => {
                         const page_slug = toSlug(page_name);
                         return (
                           <Fragment>
-                            {j === middle && <br />}
+                            {(pages.length > 1) && (j === middle) && <br />}
                             <Checkbox value={page_slug}>{page_name}</Checkbox>
                           </Fragment>
                         );
