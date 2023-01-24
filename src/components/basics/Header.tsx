@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Layout as AntLayout, Dropdown, Button, Avatar, Menu } from 'antd';
 import { UserOutlined, FontColorsOutlined, LogoutOutlined, UpSquareOutlined } from "@ant-design/icons";
 import { useUser, logoutAndClose } from '../../data/useDatabase';
+import { dateToString } from '../../utils';
 
 const { Header: AntHeader } = AntLayout;
 const MONGODB_REALM_URL = "https://realm.mongodb.com/";
@@ -16,8 +17,7 @@ const serverButton = {
   onClick: () => open(MONGODB_REALM_URL) 
 };
 
-const currentDate = new Date()
-  .toLocaleDateString("id-ID", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+const currentDate = dateToString(new Date());
 
 const Header: FC<IHeaderProps> = props => {
   const { showServerButton } = props;

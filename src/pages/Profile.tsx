@@ -20,8 +20,8 @@ const Profile: FC = () => {
         <Item label="Nomor Rumah">{profile.home_number}</Item>
         <Item label="Nomor HP">{profile.phone_number}</Item>
         <Item label="Tempat Lahir">{profile.birthplace}</Item>
-        <Item label="Tanggal Lahir">{profile.birthday.toLocaleDateString()}</Item>
-        <Item label="Tanggal Kerja">{profile.employment_date.toLocaleDateString()}</Item>
+        <Item label="Tanggal Lahir">{profile.birthday?.toLocaleDateString()}</Item>
+        <Item label="Tanggal Kerja">{profile.employment_date?.toLocaleDateString()}</Item>
       </Descriptions>
     </Container>
   );
