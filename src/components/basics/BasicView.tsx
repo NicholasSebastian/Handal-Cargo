@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import styled from 'styled-components';
 import { Descriptions } from 'antd';
 import { IInjectedProps } from '../abstracts/withInitialData';
 import { dateToString } from '../../utils';
@@ -21,9 +22,9 @@ const BasicView: FC<IViewProps> = (props) => {
   }
 
   return (
-    <Descriptions 
+    <Container 
       title={title} 
-      column={1} 
+      column={1}
       labelStyle={{ fontWeight: 500 }}>
       {viewItems.map(item => (
         <Item 
@@ -32,12 +33,20 @@ const BasicView: FC<IViewProps> = (props) => {
           {getValue(item.key)}
         </Item>
       ))} 
-    </Descriptions>
+    </Container>
   );
 }
 
 export type { IViewItem };
 export default BasicView;
+
+const Container = styled(Descriptions)`
+  width: 75%;
+
+  > div {
+    padding-bottom: 50px;
+  }
+`;
 
 interface IViewProps extends IInjectedProps {
   title?: string
