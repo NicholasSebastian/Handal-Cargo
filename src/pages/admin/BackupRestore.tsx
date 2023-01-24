@@ -117,7 +117,7 @@ const BackupRestore: FC = () => {
       <div>
         <Alert showIcon 
           type="info" 
-          message="Tanya Ifat kalau perlu bantuan." />
+          message="Tanya Nico atau Ifat kalau perlu bantuan." />
         <Button 
           type="primary" 
           onClick={() => open(MONGODB_ATLAS_URL)}>

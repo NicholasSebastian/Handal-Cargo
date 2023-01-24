@@ -53,9 +53,11 @@ const CompanySetup: FC = () => {
         <BasicView
           viewItems={items}
           values={values} />
-        <Card title="Via Transfer">
-          <pre>{values.via_transfer}</pre>
-        </Card>
+        {values.via_transfer && (
+          <Card title="Via Transfer">
+            <pre>{values.via_transfer}</pre>
+          </Card>
+        )}
       </div>
       <Modal centered maskClosable
         title="Edit Detail Perusahaan"
