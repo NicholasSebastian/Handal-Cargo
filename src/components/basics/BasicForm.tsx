@@ -7,7 +7,7 @@ import { datesToMoments } from "../../utils";
 
 const { Item } = Form;
 const { Option } = Select;
-const { Password } = Input;
+const { Password, TextArea } = Input;
 const { Step } = Steps;
 
 // Creates a basic, minimally stylized form out of the given props.
@@ -60,6 +60,8 @@ const BasicForm: FC<IFormProps> = (props) => {
     switch (item.type) {
       case 'number':
         return <InputNumber style={{ width: '100%' }} />
+      case 'textarea':
+        return <TextArea />
       case 'boolean':
         return <Switch />
       case 'select':
@@ -188,5 +190,5 @@ interface ICustomItem {
   render: ComponentType // For only 'custom' types.
 }
 
-type InputType = 'string' | 'password' | 'number' | 'currency' | 'boolean' | 'date';
+type InputType = 'string' | 'textarea' | 'password' | 'number' | 'currency' | 'boolean' | 'date';
 type FormItem = IFormItem | ISelectItem | ICustomItem | 'pagebreak';

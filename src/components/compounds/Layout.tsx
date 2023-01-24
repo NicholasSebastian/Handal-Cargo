@@ -17,6 +17,7 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
 
   const [tabs, setTabs] = useState<Array<string>>([]);
   const [active, setActive] = useState('');
+  const [access, setAccess] = useState<Array<string>>();
 
   // Executes when the location changes.
   useEffect(() => {
@@ -60,9 +61,12 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
 
   return (
     <Container>
-      <Sider active={active} />
+      <Sider 
+        active={active} 
+        access={access} 
+        setAccess={setAccess} />
       <AntLayout>
-        <Header />
+        <Header showServerButton={access?.includes('backup-and-restore') ?? false} />
         <Tabs hideAdd 
           type='editable-card' 
           activeKey={active} 

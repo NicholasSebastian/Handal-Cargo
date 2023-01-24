@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { List, Button, Modal, Popconfirm, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import useTemplateHandlers from "../abstracts/useTemplateHandlers";
+import { ModalStyles } from "./TableTemplate";
 import FallbackForm, { FormPropType } from "./FallbackForm";
 import Search from '../basics/Search';
 
@@ -97,14 +98,6 @@ const ItemContainer = styled.div`
     width: 20vw;
   }
 `;
-
-const ModalStyles: CSSProperties = { 
-  padding: '30px 0', 
-  display: 'flex', 
-  justifyContent: 'center',
-  maxHeight: '80vh',
-  overflowY: 'scroll'
-};
 
 interface ITemplateProps {
   collectionName: string

@@ -15,13 +15,12 @@ const icons = [ AppstoreOutlined, PlusCircleOutlined, SettingOutlined ];
 const DEFAULT_GROUP = 'shipping';
 
 const Sider: FC<ISiderProps> = props => {
-  const { active } = props;
+  const { active, access, setAccess } = props;
   const profile = useProfile();
   const database = useDatabase();
   const navigate = useNavigate();
   
   const [open, setOpen] = useState(DEFAULT_GROUP);
-  const [access, setAccess] = useState<Array<string>>();
   const [loading, setLoading] = useState(false);
 
   const menuItems = useMemo(() => Object.entries(pages)
@@ -74,6 +73,8 @@ const Message = styled(Alert)`
 
 interface ISiderProps {
   active: string
+  access: Array<string> | undefined
+  setAccess: React.Dispatch<React.SetStateAction<Array<string> | undefined>>
 }
 
 type MenuItem = Required<MenuProps>['items'][number];

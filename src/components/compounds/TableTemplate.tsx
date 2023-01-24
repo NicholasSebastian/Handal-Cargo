@@ -100,6 +100,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
   );
 }
 
+export { ModalStyles };
 export default TableTemplate;
 
 const Container = styled.div`
