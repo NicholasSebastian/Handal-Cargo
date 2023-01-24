@@ -16,10 +16,7 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 
 ## TO DO LIST
 
-- Company Setup
 - Shipping
-  - MarkingTemplate
-    - Sisa
   - SeaFreight
   - AirCargo
   - Customers
@@ -29,7 +26,6 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
   - Surat Jalan
   - Faktur
 - Reports
-- Other small shit
+- Minor features
   - Limit table height; pagination.
   - Sort tables by specified column.
-  - Dashboard to show MongoDB monthly usage.
