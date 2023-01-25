@@ -1,6 +1,6 @@
 import { FC, useState, useEffect, useMemo, ComponentType } from "react";
 import styled from "styled-components";
-import { Form, Input, InputNumber, Switch, Select, Button, DatePicker, Steps } from "antd";
+import { Form, Input, InputNumber, Switch, Select, Button, DatePicker, Steps, Divider } from "antd";
 import useDatabase from "../../data/useDatabase";
 import { IInjectedProps } from "../abstracts/withFormHandling";
 import { datesToMoments } from "../../utils";
@@ -12,9 +12,9 @@ const { Step } = Steps;
 
 // Creates a basic, minimally stylized form out of the given props.
 
-const isItem = (item: FormItem): item is (IFormItem | ISelectItem | ICustomItem) => item !== 'pagebreak';
-const isSelect = (item: IFormItem | ISelectItem | ICustomItem): item is ISelectItem => item.type === 'select';
-const isCustom = (item: IFormItem | ISelectItem | ICustomItem): item is ICustomItem => item.type === 'custom';
+const isItem = (item: FormItem): item is RenderItem => item !== 'pagebreak';
+const isSelect = (item: RenderItem): item is ISelectItem => item.type === 'select';
+const isCustom = (item: RenderItem): item is ICustomItem => item.type === 'custom';
 const requireFetch = (item: ISelectItem) => typeof item.items === 'string';
 
 const BasicForm: FC<IFormProps> = (props) => {
@@ -23,7 +23,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   const [referenceValues, setReferenceValues] = useState<Record<string, Array<string>>>();
   const [currentPage, setCurrentPage] = useState(0);
 
-  const pages = useMemo(() => formItems.reduce((accumulator: Array<Array<IFormItem | ISelectItem | ICustomItem>>, item) => {
+  const pages = useMemo(() => formItems.reduce((accumulator: Array<Array<RenderItem>>, item) => {
     if (item === 'pagebreak') accumulator.push([]);
     else accumulator.at(-1)?.push(item);
     return accumulator;
@@ -56,7 +56,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       return undefined;
   }
 
-  const renderInput = (item: IFormItem | ISelectItem) => {
+  const renderInput = (item: DefinedItem) => {
     switch (item.type) {
       case 'number':
         return <InputNumber style={{ width: '100%' }} />
@@ -66,7 +66,13 @@ const BasicForm: FC<IFormProps> = (props) => {
         return <Switch />
       case 'select':
         const items = getSelectItems(item.items);
-        return <Select>{items?.map((item, i) => <Option key={i} value={item}>{item}</Option>)}</Select>
+        return (
+          <Select>
+            {items?.map((item, i) => (
+              <Option key={i} value={item}>{item}</Option>
+            ))}
+          </Select>
+        );
       case 'date': 
         return <DatePicker />
       case 'password':
@@ -86,6 +92,7 @@ const BasicForm: FC<IFormProps> = (props) => {
 
   return (
     <Container 
+      size="small"
       initialValues={datesToMoments(initialValues)} 
       onFinish={onSubmit} 
       labelCol={{ span: 7 }}>
@@ -105,16 +112,28 @@ const BasicForm: FC<IFormProps> = (props) => {
               if (CustomComponent !== undefined) 
                 return <CustomComponent />;
             }
-            else return (
-              <Item
-                key={item.key} 
-                name={item.key} 
-                label={item.label} 
-                rules={item.required === false ? undefined : [{ required: true, message: `${item.label} harus diisi.` }]}
-                valuePropName={item.type === 'boolean' ? 'checked' : 'value'}>
-                {renderInput(item)}
-              </Item>
-            );
+            else if (item.type === 'divider') {
+              return (
+                <Divider 
+                  plain={item.plain} 
+                  orientation={item.orientation}>
+                  {item.label}
+                </Divider>
+              );
+            }
+            else {
+              const isRequired = ('required' in item && item.required);
+              return (
+                <Item
+                  key={item.key} 
+                  name={item.key} 
+                  label={item.label} 
+                  rules={isRequired ? [{ required: true, message: `${item.label} harus diisi.` }] : undefined}
+                  valuePropName={item.type === 'boolean' ? 'checked' : 'value'}>
+                  {renderInput(item)}
+                </Item>
+              );
+            }
           })}
         </div>
       ))}
@@ -180,9 +199,16 @@ interface IFormItem {
 interface ISelectItem {
   key: string
   label: string
-  type?: 'select'
+  type: 'select'
   items?: string | Array<string> // For only 'select' types.
   required?: boolean
+}
+
+interface IDividerItem {
+  type: 'divider'
+  label?: string
+  plain?: boolean
+  orientation?: "left" | "right" | "center"
 }
 
 interface ICustomItem {
@@ -191,4 +217,6 @@ interface ICustomItem {
 }
 
 type InputType = 'string' | 'textarea' | 'password' | 'number' | 'currency' | 'boolean' | 'date';
-type FormItem = IFormItem | ISelectItem | ICustomItem | 'pagebreak';
+type DefinedItem = IFormItem | ISelectItem;
+type RenderItem = DefinedItem | IDividerItem | ICustomItem;
+type FormItem = RenderItem | 'pagebreak';
