@@ -32,7 +32,7 @@ const AccessLevels: FC = () => {
                   const middle = Math.floor(pages.length / 2);
                   return (
                     <Fragment>
-                      {i > 0 && <Divider />}
+                      {i > 0 && <Divider style={{ margin: '20px 0' }} />}
                       {pages.map((page_name, j) => {
                         const page_slug = toSlug(page_name);
                         return (

@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Layout as AntLayout, Tabs, TabsProps, PageHeader } from 'antd';
 import { toSlug, fromSlug } from '../../utils';
 import Header from '../basics/Header';
@@ -61,6 +61,7 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
 
   return (
     <Container>
+      <GlobalStyles />
       <Sider 
         active={active} 
         access={access} 
@@ -88,6 +89,12 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
 }
 
 export default Layout;
+
+const GlobalStyles = createGlobalStyle`
+  div.ant-form-item {
+    margin-bottom: 15px;
+  }
+`;
 
 const Container = styled(AntLayout)`
   min-height: 100vh;

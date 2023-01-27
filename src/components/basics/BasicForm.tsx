@@ -61,7 +61,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       case 'number':
         return <InputNumber style={{ width: '100%' }} />
       case 'textarea':
-        return <TextArea />
+        return <TextArea rows={4} />
       case 'boolean':
         return <Switch />
       case 'select':
@@ -92,7 +92,6 @@ const BasicForm: FC<IFormProps> = (props) => {
 
   return (
     <Container 
-      size="small"
       initialValues={datesToMoments(initialValues)} 
       onFinish={onSubmit} 
       labelCol={{ span: 7 }}>
