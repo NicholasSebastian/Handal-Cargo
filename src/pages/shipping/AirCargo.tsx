@@ -19,10 +19,7 @@ const AirCargo: FC = () => {
         );
       }}
       form={[
-        { key: 'name', label: 'Nama' },
-        { type: 'custom', render: () => (
-          <div>test component</div>
-        )}
+        { key: 'name', label: 'Nama' }
       ]} />
   );
 }

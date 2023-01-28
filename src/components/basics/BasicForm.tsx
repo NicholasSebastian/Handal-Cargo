@@ -107,9 +107,13 @@ const BasicForm: FC<IFormProps> = (props) => {
         <div key={index} style={{ display: (index === currentPage) ? 'block' : 'none' }}>
           {page.map(item => {
             if (isCustom(item)) {
-              const CustomComponent = item.render;
-              if (CustomComponent !== undefined) 
-                return <CustomComponent />;
+              return (
+                <Item 
+                  key={item.key}
+                  name={item.key}>
+                  <item.render />
+                </Item>
+              );
             }
             else if (item.type === 'divider') {
               return (
@@ -143,7 +147,7 @@ const BasicForm: FC<IFormProps> = (props) => {
             htmlType="button" 
             onClick={() => setCurrentPage(page => page - 1)} 
             style={{ marginRight: 10 }}>
-            Previous
+            Kembali
           </Button>
         )}
         {(currentPage < pages.length - 1) && (
@@ -151,7 +155,7 @@ const BasicForm: FC<IFormProps> = (props) => {
             type="primary" 
             htmlType="button" 
             onClick={() => setCurrentPage(page => page + 1)}>
-            Next
+            Berikut
           </Button>
         )}
         {(currentPage === pages.length - 1) && (
@@ -166,7 +170,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   );
 }
 
-export type { FormItem };
+export type { FormItem, ICustomComponentProps };
 export default BasicForm;
 
 const Container = styled(Form)`
@@ -211,8 +215,14 @@ interface IDividerItem {
 }
 
 interface ICustomItem {
+  key: string
   type: 'custom'
-  render: ComponentType // For only 'custom' types.
+  render: ComponentType<ICustomComponentProps> // For only 'custom' types.
+}
+
+interface ICustomComponentProps {
+  value?: any
+  onChange?: (value: any) => void
 }
 
 type InputType = 'string' | 'textarea' | 'password' | 'number' | 'currency' | 'boolean' | 'date';

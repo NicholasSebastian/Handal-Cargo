@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Table, List, Input, Button, Popconfirm, Select } from "antd";
 import { PlusOutlined } from '@ant-design/icons';
 import TableTemplate from "../../components/compounds/TableTemplate";
+import { ICustomComponentProps } from "../../components/basics/BasicForm";
 
 const { Item } = List;
 const { Search } = Input;
@@ -34,19 +35,20 @@ const Customers: FC = () => {
         { key: 'home_number', label: 'Nomor Telepon' },
         { key: 'contact_person', label: 'Orang Kontak' },
         { key: 'email', label: 'Email' },
-        'pagebreak',
+        { type: 'divider' },
         { key: 'measurement_details', label: 'Keterangan Ukuran' },
         { key: 'transport_details', label: 'Keterangan Kirim', type: 'select', items: 'Expeditions' },
         { key: 'others', label: 'Lain-Lain' },
-        { type: 'divider' },
-        { type: 'custom', render: MarkingTable},
         'pagebreak',
-        { type: 'custom', render: DetailsTable}
+        { key: 'markings', type: 'custom', render: MarkingTable },
+        'pagebreak',
+        { key: 'details', type: 'custom', render: DetailsTable }
       ]} />
   );
 }
 
-const MarkingTable: FC = () => {
+const MarkingTable: FC<ICustomComponentProps> = props => {
+  const { value, onChange } = props; // treat this as the state of the component.
   const [showHistory, setShowHistory] = useState(false);
   const [searchBy, setSearchBy] = useState('container');
   return (
@@ -72,7 +74,7 @@ const MarkingTable: FC = () => {
                 placeholder="Marking"
                 style={{ width: '118px' }} />
               <Button 
-                icon={<PlusOutlined />} // TODO: add the new marking item.
+                icon={<PlusOutlined />} // TODO: add the new local marking item.
                 onClick={() => console.log('TODO')}> 
                 Add
               </Button>
@@ -98,7 +100,7 @@ const MarkingTable: FC = () => {
                 onCancel={e => e?.stopPropagation()}
                 onConfirm={e => {
                   e?.stopPropagation();
-                  // TODO: delete the marking item.
+                  // TODO: delete the local marking item.
                 }}>
                 <Button onClick={e => e.stopPropagation()}>Delete</Button>
               </Popconfirm>
@@ -111,7 +113,8 @@ const MarkingTable: FC = () => {
   );
 }
 
-const DetailsTable: FC = () => {
+const DetailsTable: FC<ICustomComponentProps> = props => {
+  const { value, onChange } = props;
   return (
     <DetailsContainer>
       <div>
