@@ -3,7 +3,7 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Layout as AntLayout, Dropdown, Button, Avatar, Menu } from 'antd';
-import { UserOutlined, FontColorsOutlined, LogoutOutlined, UpSquareOutlined } from "@ant-design/icons";
+import { UserOutlined, FontColorsOutlined, ReadOutlined, UpSquareOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useUser, logoutAndClose } from '../../data/useDatabase';
 import { dateToString } from '../../utils';
 
@@ -36,6 +36,12 @@ const Header: FC<IHeaderProps> = props => {
       label: 'Shortcuts', 
       icon: <FontColorsOutlined />, 
       onClick: () => navigate('/shortcuts') 
+    },
+    {
+      key: 'news',
+      label: 'Berita',
+      icon: <ReadOutlined />,
+      onClick: () => navigate('/news')
     },
     ...(showServerButton ? [serverButton] : []),
     { 
@@ -77,7 +83,7 @@ const Container = styled(AntHeader)`
     user-select: none;
   }
 
-  button:last-child {
+  button {
     font-weight: 500;
 
     > span:first-child {

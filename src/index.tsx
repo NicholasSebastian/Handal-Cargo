@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import './normalize.css';
 import Profile from './pages/Profile';
 import Shortcuts from './pages/Shortcuts';
+import News from './pages/News';
 
 const DEFAULT_PAGE = '/sea-freight';
 
@@ -20,6 +21,7 @@ const elements = (
             <Route path='/' element={<Navigate to={DEFAULT_PAGE} />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/shortcuts' element={<Shortcuts />} />
+            <Route path='/news' element={<News />} />
             {routes}
           </Routes>
         </Layout>

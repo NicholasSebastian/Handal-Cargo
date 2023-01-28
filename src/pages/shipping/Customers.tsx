@@ -49,66 +49,37 @@ const Customers: FC = () => {
 
 const MarkingTable: FC<ICustomComponentProps> = props => {
   const { value, onChange } = props; // treat this as the state of the component.
-  const [showHistory, setShowHistory] = useState(false);
   const [searchBy, setSearchBy] = useState('container');
   return (
     <MarkingContainer>
       <div>
-        <div>
-          {showHistory ? (
-            <Fragment>
-              <Search allowClear 
-                placeholder="Cari" 
-                onSearch={val => console.log(val)}
-                style={{ width: '150px' }} />
-              <Select 
-                value={searchBy} 
-                onChange={val => setSearchBy(val)}>
-                <Option value='container'>Search by Container</Option>
-                <Option value='marking'>Search by Marking</Option>
-              </Select>
-            </Fragment>
-          ) : (
-            <Fragment>
-              <Input 
-                placeholder="Marking"
-                style={{ width: '118px' }} />
-              <Button 
-                icon={<PlusOutlined />} // TODO: add the new local marking item.
-                onClick={() => console.log('TODO')}> 
-                Add
-              </Button>
-            </Fragment>
-          )}
-        </div>
-        <Button onClick={() => setShowHistory(state => !state)}>
-          {showHistory ? 'Lihat Marking Saat Ini' : 'Lihat Riwayat Marking'}
+        <Input placeholder="Marking" />
+        <Button 
+          icon={<PlusOutlined />} // TODO: add the new local marking item.
+          onClick={() => console.log('TODO')}> 
+          Add
         </Button>
       </div>
-      {showHistory ? (
-        <Table /* TODO: display past markings */ />
-      ) : (
-        <List
-          size="small"
-          dataSource={[]}
-          loading={false}
-          renderItem={item => (
-            <Item actions={[
-              <Popconfirm 
-                title='Yakin di hapus?'
-                placement="left"
-                onCancel={e => e?.stopPropagation()}
-                onConfirm={e => {
-                  e?.stopPropagation();
-                  // TODO: delete the local marking item.
-                }}>
-                <Button onClick={e => e.stopPropagation()}>Delete</Button>
-              </Popconfirm>
-            ]}>
-              {/* TODO: render list items. */}
-            </Item>
-          )} />
-      )}
+      <List
+        size="small"
+        dataSource={[]}
+        loading={false}
+        renderItem={item => (
+          <Item actions={[
+            <Popconfirm 
+              title='Yakin di hapus?'
+              placement="left"
+              onCancel={e => e?.stopPropagation()}
+              onConfirm={e => {
+                e?.stopPropagation();
+                // TODO: delete the local marking item.
+              }}>
+              <Button onClick={e => e.stopPropagation()}>Delete</Button>
+            </Popconfirm>
+          ]}>
+            {/* TODO: render list items. */}
+          </Item>
+        )} />
     </MarkingContainer>
   );
 }
@@ -135,11 +106,6 @@ const ViewContainer = styled.div`
 const MarkingContainer = styled.div`
   > div:first-child {
     display: flex;
-    justify-content: space-between;
-
-    > div:first-child {
-      display: flex;
-    }
   }
 `;
 
