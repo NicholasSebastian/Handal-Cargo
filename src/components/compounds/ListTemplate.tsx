@@ -31,8 +31,8 @@ const ListTemplate: FC<ITemplateProps> = props => {
           size='small' 
           dataSource={data} 
           loading={data === undefined}
-          renderItem={entry => (
-            <Item actions={[
+          renderItem={(entry, i) => (
+            <Item key={i} actions={[
               <Button 
                 onClick={() => setModal({ mode: 'edit', id: entry._id })}>
                 Edit

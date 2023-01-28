@@ -1,10 +1,11 @@
-import { FC, Fragment, useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
-import { Table, List, Input, Button, Popconfirm, Select } from "antd";
+import { Form, List, Input, Button, Popconfirm, Select } from "antd";
 import { PlusOutlined } from '@ant-design/icons';
 import TableTemplate from "../../components/compounds/TableTemplate";
 import { ICustomComponentProps } from "../../components/basics/BasicForm";
 
+const { useFormInstance } = Form; // https://ant.design/components/form#formuseforminstance
 const { Item } = List;
 const { Search } = Input;
 const { Option } = Select;
@@ -48,36 +49,48 @@ const Customers: FC = () => {
 }
 
 const MarkingTable: FC<ICustomComponentProps> = props => {
-  const { value, onChange } = props; // treat this as the state of the component.
-  const [searchBy, setSearchBy] = useState('container');
+  const { value } = props;
+  const form = useFormInstance();
+  const [markingInput, setMarkingInput] = useState('');
+
+  const handleChange = (markings: Array<string>) => {
+    form.setFieldsValue({ ...form.getFieldsValue(true), markings });
+  }
+
+  // TODO: Fix in the case where the initialValues is 'undefined' instead 
+  //       of an object with a key of 'marking' and a value of empty array.
+
   return (
     <MarkingContainer>
       <div>
-        <Input placeholder="Marking" />
+        <Input 
+          placeholder="Marking" 
+          value={markingInput} 
+          onChange={e => setMarkingInput(e.target.value)} />
         <Button 
-          icon={<PlusOutlined />} // TODO: add the new local marking item.
-          onClick={() => console.log('TODO')}> 
+          icon={<PlusOutlined />}
+          onClick={() => handleChange([...value, markingInput])}> 
           Add
         </Button>
       </div>
       <List
         size="small"
-        dataSource={[]}
-        loading={false}
-        renderItem={item => (
-          <Item actions={[
+        dataSource={value}
+        loading={value === undefined}
+        renderItem={(item, i) => (
+          <Item key={i} actions={[
             <Popconfirm 
               title='Yakin di hapus?'
               placement="left"
               onCancel={e => e?.stopPropagation()}
               onConfirm={e => {
                 e?.stopPropagation();
-                // TODO: delete the local marking item.
+                handleChange(value.filter((i: string) => i !== item));
               }}>
               <Button onClick={e => e.stopPropagation()}>Delete</Button>
             </Popconfirm>
           ]}>
-            {/* TODO: render list items. */}
+            {item as string}
           </Item>
         )} />
     </MarkingContainer>
@@ -85,7 +98,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
 }
 
 const DetailsTable: FC<ICustomComponentProps> = props => {
-  const { value, onChange } = props;
+  const { value } = props;
   return (
     <DetailsContainer>
       <div>

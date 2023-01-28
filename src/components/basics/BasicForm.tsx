@@ -5,7 +5,7 @@ import useDatabase from "../../data/useDatabase";
 import { IInjectedProps } from "../abstracts/withFormHandling";
 import { datesToMoments } from "../../utils";
 
-const { Item } = Form;
+const { Item, useForm } = Form;
 const { Option } = Select;
 const { Password, TextArea } = Input;
 const { Step } = Steps;
@@ -19,6 +19,7 @@ const requireFetch = (item: ISelectItem) => typeof item.items === 'string';
 
 const BasicForm: FC<IFormProps> = (props) => {
   const database = useDatabase()!;
+  const [form] = useForm();
   const { formItems, initialValues, onSubmit } = props;
   const [referenceValues, setReferenceValues] = useState<Record<string, Array<string>>>();
   const [currentPage, setCurrentPage] = useState(0);
@@ -92,6 +93,7 @@ const BasicForm: FC<IFormProps> = (props) => {
 
   return (
     <Container 
+      form={form}
       initialValues={datesToMoments(initialValues)} 
       onFinish={onSubmit} 
       labelCol={{ span: 7 }}>
@@ -105,7 +107,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       )}
       {pages.map((page, index) => (
         <div key={index} style={{ display: (index === currentPage) ? 'block' : 'none' }}>
-          {page.map(item => {
+          {page.map((item, i) => {
             if (isCustom(item)) {
               return (
                 <Item 
@@ -118,6 +120,7 @@ const BasicForm: FC<IFormProps> = (props) => {
             else if (item.type === 'divider') {
               return (
                 <Divider 
+                  key={i}
                   plain={item.plain} 
                   orientation={item.orientation}>
                   {item.label}
@@ -222,7 +225,6 @@ interface ICustomItem {
 
 interface ICustomComponentProps {
   value?: any
-  onChange?: (value: any) => void
 }
 
 type InputType = 'string' | 'textarea' | 'password' | 'number' | 'currency' | 'boolean' | 'date';
