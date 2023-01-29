@@ -9,7 +9,10 @@ const Customers: FC = () => {
     <TableTemplate 
       collectionName="Customers"
       columns={[
-        { dataIndex: "", title: "" }
+        { dataIndex: "name", title: "Customer" },
+        // TODO: Implement override for column items;
+        //       Each row in the table should be for each marking instead of each customer.
+        //       Basically, this table is more of a Customer Markings table than a Customers table.
       ]}
       view={props => {
         const { values } = props;
@@ -30,11 +33,11 @@ const Customers: FC = () => {
         { key: 'home_number', label: 'Nomor Telepon' },
         { key: 'contact_person', label: 'Orang Kontak' },
         { key: 'email', label: 'Email' },
-        { type: 'divider' },
+        'pagebreak',
         { key: 'measurement_details', label: 'Keterangan Ukuran' },
         { key: 'transport_details', label: 'Keterangan Kirim', type: 'select', items: 'Expeditions' },
         { key: 'others', label: 'Lain-Lain' },
-        'pagebreak',
+        { type: 'divider' },
         { key: 'markings', type: 'custom', render: MarkingTable },
         'pagebreak',
         { key: 'details', type: 'custom', render: DetailsTable }

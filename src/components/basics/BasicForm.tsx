@@ -4,6 +4,7 @@ import { Form, Input, InputNumber, Switch, Select, Button, DatePicker, Steps, Di
 import useDatabase from "../../data/useDatabase";
 import { IInjectedProps } from "../abstracts/withFormHandling";
 import { datesToMoments } from "../../utils";
+import InputCurrency from "./InputCurrency";
 
 const { Item, useForm } = Form;
 const { Option } = Select;
@@ -79,13 +80,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       case 'password':
         return <Password />
       case 'currency':
-        return (
-          <InputNumber 
-            prefix="Rp." 
-            style={{ width: '100%' }} 
-            formatter={(value) => value!.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            parser={(value) => value!.replace(/,*/g, '')} />
-        );
+        return <InputCurrency />
       default:
         return <Input />
     }

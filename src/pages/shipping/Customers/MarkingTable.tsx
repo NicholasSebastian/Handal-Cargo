@@ -17,7 +17,10 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
   }
 
   const handleAdd = () => {
-    if (value) {
+    if (markingInput.length === 0) {
+      message.error("Marking belum diisi.");
+    }
+    else if (value) {
       const exists = value.some((marking: string) => marking === markingInput);
       if (exists) 
         message.error(`Marking '${markingInput}' sudah ada.`);
@@ -62,7 +65,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
               <Button onClick={e => e.stopPropagation()}>Delete</Button>
             </Popconfirm>
           ]}>
-            {item as string}
+            {item}
           </Item>
         )} />
     </MarkingContainer>
