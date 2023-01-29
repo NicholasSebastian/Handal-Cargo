@@ -3,7 +3,7 @@ import TableTemplate from "../../components/compounds/TableTemplate";
 
 const Payment: FC = () => {
   return (
-    <TableTemplate // TODO
+    <TableTemplate // TODO: Refer to page 39 on the design document.
       collectionName="Payments"
       columns={[
         { dataIndex: "", title: "" }

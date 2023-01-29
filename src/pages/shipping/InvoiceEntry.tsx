@@ -3,7 +3,7 @@ import TableTemplate from "../../components/compounds/TableTemplate";
 
 const InvoiceEntry: FC = () => {
   return (
-    <TableTemplate // TODO
+    <TableTemplate // TODO: Refer to page 36 on the design document.
       collectionName="Invoices"
       columns={[
         { dataIndex: "", title: "" }

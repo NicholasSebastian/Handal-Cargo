@@ -18,7 +18,9 @@ const Customers: FC = () => {
         const { values } = props;
         return (
           <ViewContainer>
-            {/* TODO */}
+            {/* TODO: Display all the fields, including the list of markings and table of details. */}
+            {/* TODO: Customer History table that can be viewed optionally, to display all the past markings.
+              Includes an advanced search feature by Customer or by Markings. */}
           </ViewContainer>
         );
       }}
