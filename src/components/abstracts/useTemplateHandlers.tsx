@@ -17,12 +17,24 @@ function useTemplateHandlers(collectionName: string, defaultSearchBy: string) {
   const [modal, setModal] = useState<ModalState>(null);
   const [loading, setLoading] = useState(false);
 
+  const query = () => {
+    if (!search) return database?.collection(collectionName).find();
+    if ((searchBy === '_id')) {
+      return database?.collection(collectionName).aggregate([
+        { $addFields: { id: { $toString: '$_id' }}},
+        { $match: { id: { $regex: search }}}
+      ]);
+    }
+    else 
+      return database?.collection(collectionName).find({ 
+        [searchBy]: { $regex: search, $options: 'i' } 
+      });
+  } 
+
   const refreshData = () => {
     setLoading(true);
-    const query = search ? { [searchBy]: { $regex: search, $options: 'i' } } : {};
-    database?.collection(collectionName)
-      .find(query)
-      .then(results => {
+    query()
+      ?.then(results => {
         if (results) setData(results);
       })
       .finally(() => setLoading(false));
@@ -87,6 +99,7 @@ export default useTemplateHandlers;
 interface IData {
   _id: BSON.ObjectId
   name: string
+  [key: string]: any
 }
 
 type ModalState = null 

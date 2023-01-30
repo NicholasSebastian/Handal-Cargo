@@ -35,11 +35,11 @@ const Customers: FC = () => {
         { key: 'home_number', label: 'Nomor Telepon' },
         { key: 'contact_person', label: 'Orang Kontak' },
         { key: 'email', label: 'Email' },
-        'pagebreak',
+        { type: 'divider' },
         { key: 'measurement_details', label: 'Keterangan Ukuran' },
         { key: 'transport_details', label: 'Keterangan Kirim', type: 'select', items: 'Expeditions' },
         { key: 'others', label: 'Lain-Lain' },
-        { type: 'divider' },
+        'pagebreak',
         { key: 'markings', type: 'custom', render: MarkingTable },
         'pagebreak',
         { key: 'details', type: 'custom', render: DetailsTable }

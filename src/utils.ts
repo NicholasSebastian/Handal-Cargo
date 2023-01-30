@@ -40,7 +40,7 @@ export function dateToString(date: Date) {
 }
 
 export function formatCurrency(value: string) {
-  return 'Rp. ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export type Subtract<T extends T1, T1 extends object> = Pick<T, SetComplement<keyof T, keyof T1>>;

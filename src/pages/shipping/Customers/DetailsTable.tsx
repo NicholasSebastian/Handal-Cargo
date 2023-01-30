@@ -135,6 +135,7 @@ const DetailsContainer = styled.div`
   > div:first-child {
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
     margin-bottom: 10px;
 
     > div {

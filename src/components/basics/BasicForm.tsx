@@ -1,11 +1,12 @@
 import { FC, useState, useEffect, useMemo, ComponentType } from "react";
 import styled from "styled-components";
-import { Form, Input, InputNumber, Switch, Select, Button, DatePicker, Steps, Divider } from "antd";
+import { Typography, Form, Input, InputNumber, Switch, Select, Button, DatePicker, Steps, Divider } from "antd";
 import useDatabase from "../../data/useDatabase";
 import { IInjectedProps } from "../abstracts/withFormHandling";
 import { datesToMoments } from "../../utils";
 import InputCurrency from "./InputCurrency";
 
+const { Title } = Typography;
 const { Item, useForm } = Form;
 const { Option } = Select;
 const { Password, TextArea } = Input;
@@ -122,6 +123,16 @@ const BasicForm: FC<IFormProps> = (props) => {
                 </Divider>
               );
             }
+            else if (item.type === 'header') {
+              return (
+                <Title 
+                  key={i} 
+                  level={4}
+                  style={{ textAlign: 'center', marginBottom: '20px' }}>
+                  {item.label}
+                </Title>
+              );
+            }
             else {
               const isRequired = ('required' in item && item.required);
               return (
@@ -212,6 +223,11 @@ interface IDividerItem {
   orientation?: "left" | "right" | "center"
 }
 
+interface IHeaderItem {
+  type: 'header'
+  label: string
+}
+
 interface ICustomItem {
   key: string
   type: 'custom'
@@ -224,5 +240,5 @@ interface ICustomComponentProps {
 
 type InputType = 'string' | 'textarea' | 'password' | 'number' | 'currency' | 'boolean' | 'date';
 type DefinedItem = IFormItem | ISelectItem;
-type RenderItem = DefinedItem | IDividerItem | ICustomItem;
+type RenderItem = DefinedItem | IDividerItem | IHeaderItem | ICustomItem;
 type FormItem = RenderItem | 'pagebreak';
