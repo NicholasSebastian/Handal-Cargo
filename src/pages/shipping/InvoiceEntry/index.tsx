@@ -1,5 +1,5 @@
 import { FC } from "react";
-import TableTemplate from "../../components/compounds/TableTemplate";
+import TableTemplate from "../../../components/compounds/TableTemplate";
 
 const InvoiceEntry: FC = () => {
   return (

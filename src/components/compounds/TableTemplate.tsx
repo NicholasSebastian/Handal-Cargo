@@ -15,7 +15,7 @@ const { Text } = Typography;
 // TODO: Pagination.
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, columns, view, form, modalWidth } = props;
+  const { collectionName, columns, view, form, modalWidth, processData } = props;
   const firstCol = (columns[0] as any).dataIndex;
   const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, firstCol);
   const { handleAdd, handleEdit, handleDelete } = handlers;
@@ -39,7 +39,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
       <Table 
         size='small' 
         pagination={false}
-        dataSource={data}
+        dataSource={processData ? processData(data) : data}
         loading={loading}
         onRow={entry => ({ 
           onClick: () => setModal({ mode: 'view', id: entry._id }) 
@@ -51,6 +51,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
           }), 
           {
             fixed: 'right',
+            width: 150,
             render: entry => {
               const onEdit: ClickHandler1 = e => {
                 e.stopPropagation(); 
@@ -139,6 +140,7 @@ interface ITemplateProps {
   view: ViewPropType
   form: FormPropType
   modalWidth?: number
+  processData?: (data: Array<IData> | undefined) => Array<IData> | undefined
 }
 
 type ClickHandler1 = React.MouseEventHandler<HTMLElement>;
