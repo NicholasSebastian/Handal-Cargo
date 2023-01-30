@@ -6,14 +6,17 @@ const Payment: FC = () => {
     <TableTemplate // TODO: Refer to page 39 on the design document.
       collectionName="Payments"
       columns={[
-        { dataIndex: "", title: "" }
+        { dataIndex: "_id", title: "Kode Pembayaran" },
+        { dataIndex: "", title: "Total Pembayaran" } // TODO: This should be calculated from the other fields.
       ]}
       view={[
         { key: "", label: "" }
       ]}
-      form={[
-        { key: "", label: "" }
-      ]} />
+      form={() => {
+        return (
+          <div></div>
+        );
+      }} />
   );
 }
 

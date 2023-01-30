@@ -6,6 +6,7 @@ import { useUser } from "../../../data/useDatabase";
 import useDatabase from "../../../data/useDatabase";
 import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 import InputCurrency from "../../../components/basics/InputCurrency";
+import { formatCurrency } from "../../../utils";
 
 const { useFormInstance } = Form;
 const { Option } = Select;
@@ -105,7 +106,7 @@ const DetailsTable: FC<ICustomComponentProps> = props => {
           { 
             dataIndex: 'price', 
             title: 'Harga', 
-            render: value => 'Rp. ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') 
+            render: value => formatCurrency(value) 
           },
           { dataIndex: 'user', title: 'User' },
           {
