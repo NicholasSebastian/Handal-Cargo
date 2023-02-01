@@ -34,7 +34,17 @@ const BasicForm: FC<IFormProps> = (props) => {
     return accumulator;
   }, [[]]), [formItems]);
 
-  useEffect(() => {
+  const initializeDefaultValues = () => {
+    if (!initialValues) {
+      formItems.forEach(item => {
+        if ((typeof item === 'object') && ('defaultValue' in item)) {
+          form.setFieldsValue({ [item.key]: item.defaultValue });
+        }
+      });
+    }
+  }
+
+  const loadReferenceData = () => {
     const referenceItems = getReferenceItems(formItems);
     Promise.all(
       referenceItems.map(item => {
@@ -50,6 +60,11 @@ const BasicForm: FC<IFormProps> = (props) => {
       }));
       setReferenceValues(values);
     });
+  }
+
+  useEffect(() => {
+    initializeDefaultValues();
+    loadReferenceData();
   }, [formItems]);
 
   const getSelectItems = (arg: string | string[] | undefined) => {
@@ -135,6 +150,35 @@ const BasicForm: FC<IFormProps> = (props) => {
     }
   }
 
+  const buttons = (
+    <Item>
+      {(currentPage > 0) && (
+        <Button 
+          type="primary" 
+          htmlType="button" 
+          onClick={() => setCurrentPage(page => page - 1)} 
+          style={{ marginRight: 10 }}>
+          Kembali
+        </Button>
+      )}
+      {(currentPage < pages.length - 1) && (
+        <Button 
+          type="primary" 
+          htmlType="button" 
+          onClick={() => setCurrentPage(page => page + 1)}>
+          Berikut
+        </Button>
+      )}
+      {(currentPage === pages.length - 1) && (
+        <Button 
+          type="primary" 
+          htmlType="submit">
+          Simpan
+        </Button>
+      )}
+    </Item>
+  );
+
   return (
     <Container 
       form={form}
@@ -158,32 +202,7 @@ const BasicForm: FC<IFormProps> = (props) => {
           {page.map((item, i) => renderItem(item, i))}
         </div>
       ))}
-      <Item>
-        {(currentPage > 0) && (
-          <Button 
-            type="primary" 
-            htmlType="button" 
-            onClick={() => setCurrentPage(page => page - 1)} 
-            style={{ marginRight: 10 }}>
-            Kembali
-          </Button>
-        )}
-        {(currentPage < pages.length - 1) && (
-          <Button 
-            type="primary" 
-            htmlType="button" 
-            onClick={() => setCurrentPage(page => page + 1)}>
-            Berikut
-          </Button>
-        )}
-        {(currentPage === pages.length - 1) && (
-          <Button 
-            type="primary" 
-            htmlType="submit">
-            Simpan
-          </Button>
-        )}
-      </Item>
+      {buttons}
     </Container>
   );
 }
@@ -192,7 +211,7 @@ export type { FormItem, ICustomComponentProps };
 export default BasicForm;
 
 const Container = styled(Form)`
-  width: 500px;
+  width: calc(100% - 100px);
   
   > div:last-child {
     text-align: right;
@@ -215,6 +234,7 @@ interface IFormItem {
   label: string
   type?: InputType
   required?: boolean
+  defaultValue?: any
 }
 
 interface ISelectItem {

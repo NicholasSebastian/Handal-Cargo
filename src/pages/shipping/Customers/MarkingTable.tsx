@@ -24,11 +24,14 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
       const exists = value.some((marking: string) => marking === markingInput);
       if (exists) 
         message.error(`Marking '${markingInput}' sudah ada.`);
-      else 
+      else {
         handleChange([...value, markingInput]);
+        setMarkingInput('');
+      }
     }
     else {
       handleChange([markingInput]);
+      setMarkingInput('');
     }
   }
 

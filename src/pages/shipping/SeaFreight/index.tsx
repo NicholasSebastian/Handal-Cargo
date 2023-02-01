@@ -2,6 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import TableTemplate from "../../../components/compounds/TableTemplate";
 import createDependentValue from "../../../components/basics/DependentValue";
+import { formatCurrency } from "../../../utils";
 
 // TODO: Add a Surat Jalan table to view all Surat Jalan, including an Advanced Search feature, 
 //       whether it gets its own page, or just a modal accessible through this page.
@@ -19,6 +20,7 @@ const SeaFreight: FC = () => {
   return (
     <TableTemplate // TODO
       collectionName="SeaFreight"
+      modalWidth={650}
       columns={[
         { dataIndex: "", title: "" }
         // TODO: Display an indicator to signify if all the markings in the container is already paid for.
@@ -49,9 +51,9 @@ const SeaFreight: FC = () => {
         );
       }}
       form={[
-        { key: 'container_number', label: 'Nomor Container' },
-        { key: 'muat_date', label: 'Tanggal Muat', type: 'date' },
-        { key: 'arrival_date', label: 'Tanggal Tiba', type: 'date' },
+        { key: 'container_number', label: 'Nomor Container', required: true },
+        { key: 'muat_date', label: 'Tanggal Muat', type: 'date', required: true },
+        { key: 'arrival_date', label: 'Tanggal Tiba', type: 'date', required: true },
         { key: 'bl_date', label: 'Tanggal BL', type: 'date' },
         { type: 'custom', render: createDependentValue({
           label: 'Hari Tiba Dari Muat',
@@ -64,7 +66,42 @@ const SeaFreight: FC = () => {
         { key: 'shipper', label: 'Shipper', type: 'select', items: 'Carriers' },
         { key: 'route', label: 'Rute', type: 'select', items: 'Routes' },
         { key: 'handler', label: 'Pengurus', type: 'select', items: 'Handlers' },
-        { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies' }
+        'pagebreak',
+        { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies', required: true },
+        { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1, required: true },
+        { key: 'clearance_fee', label: 'B. Custom Clearance', type: 'currency', defaultValue: 0, required: true },
+        { key: 'muat_fee', label: 'Biaya Muat', type: 'currency', defaultValue: 0, required: true },
+        { type: 'custom', render: createDependentValue({
+          label: 'Biaya Muat (Rp.)',
+          dependencies: ['muat_fee', 'exchange_rate'],
+          calculateValue: fields => formatCurrency((fields.muat_fee * fields.exchange_rate).toString()),
+          defaultValue: 0,
+          prefix: 'Rp.'
+        })},
+        { key: 'additional_fee', label: 'Biaya Tambahan', type: 'currency', defaultValue: 0, required: true },
+        { type: 'custom', render: createDependentValue({
+          label: 'Biaya Tambahan (Rp.)',
+          dependencies: ['additional_fee', 'exchange_rate'],
+          calculateValue: fields => formatCurrency((fields.additional_fee * fields.exchange_rate).toString()),
+          defaultValue: 0,
+          prefix: 'Rp.'
+        })},
+        { key: 'other_fee', label: 'Biaya Lain-Lain', type: 'currency', defaultValue: 0, required: true },
+        { type: 'custom', render: createDependentValue({
+          label: 'Biaya Lain-Lain (Rp.)',
+          dependencies: ['other_fee', 'exchange_rate'],
+          calculateValue: fields => formatCurrency((fields.other_fee * fields.exchange_rate).toString()),
+          defaultValue: 0,
+          prefix: 'Rp.'
+        })},
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Biaya (Rp.)',
+          dependencies: ['muat_fee', 'additional_fee', 'other_fee'],
+          calculateValue: fields => formatCurrency(((fields.muat_fee + fields.additional_fee + fields.other_fee) * fields.exchange_rate).toString()),
+          defaultValue: 0,
+          prefix: 'Rp.'
+        })},
+        // TODO
       ]} />
   );
 }

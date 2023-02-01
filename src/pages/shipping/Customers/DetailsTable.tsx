@@ -49,6 +49,9 @@ const DetailsTable: FC<ICustomComponentProps> = props => {
       else {
         handleChange([{ productDetail, route, transport, price, user: username }]);
       }
+      setProductDetail(undefined);
+      setRoute(undefined);
+      setPrice(undefined);
     }
   }
 

@@ -24,6 +24,9 @@ const PaymentForm: FC<IInjectedProps> = props => {
     }
     else {
       setItems([...items, { date, type, amount, description }]);
+      setType('');
+      setAmount('');
+      setDescription('');
     }
   }
 
