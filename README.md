@@ -19,9 +19,7 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 - Shipping
   - SeaFreight
   - AirCargo
-  - Customers
   - Invoice Entry
-  - Payments
 - Printing
   - Surat Jalan
   - Faktur
