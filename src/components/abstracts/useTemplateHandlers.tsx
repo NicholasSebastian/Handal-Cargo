@@ -7,7 +7,7 @@ import { momentsToDates } from '../../utils';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
 
-function useTemplateHandlers(collectionName: string, defaultSearchBy: string) {
+function useTemplateHandlers(collectionName: string, defaultSearchBy: string, customQuery ?: Query) {
   const database = useDatabase();
   const { title } = useRoute()!;
 
@@ -18,6 +18,7 @@ function useTemplateHandlers(collectionName: string, defaultSearchBy: string) {
   const [loading, setLoading] = useState(false);
 
   const query = () => {
+    if (customQuery) return customQuery(collectionName, search, searchBy);
     if (!search) return database?.collection(collectionName).find();
     if ((searchBy === '_id')) {
       return database?.collection(collectionName).aggregate([
@@ -93,7 +94,7 @@ function useTemplateHandlers(collectionName: string, defaultSearchBy: string) {
   };
 }
 
-export type { IData };
+export type { IData, Query };
 export default useTemplateHandlers;
 
 interface IData {
@@ -106,3 +107,5 @@ type ModalState = null
   | { mode: 'add' } 
   | { mode: 'view', id: BSON.ObjectId } 
   | { mode: 'edit', id: BSON.ObjectId };
+
+type Query = (collectionName: string, search: RegExp | undefined, searchBy: string) => Promise<any> | undefined

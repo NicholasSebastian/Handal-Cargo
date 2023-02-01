@@ -16,8 +16,9 @@ const { Step } = Steps;
 
 const isItem = (item: FormItem): item is RenderItem => item !== 'pagebreak';
 const isSelect = (item: RenderItem): item is ISelectItem => item.type === 'select';
-const isCustom = (item: RenderItem): item is ICustomItem => item.type === 'custom';
 const requireFetch = (item: ISelectItem) => typeof item.items === 'string';
+const getReferenceItems = (items: Array<FormItem>) => 
+  items.filter(item => isItem(item) && isSelect(item) && requireFetch(item)) as Array<ISelectItem>;
 
 const BasicForm: FC<IFormProps> = (props) => {
   const database = useDatabase()!;
@@ -25,6 +26,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   const { formItems, initialValues, onSubmit } = props;
   const [referenceValues, setReferenceValues] = useState<Record<string, Array<string>>>();
   const [currentPage, setCurrentPage] = useState(0);
+  const [fields, setFields] = useState<FieldsData>();
 
   const pages = useMemo(() => formItems.reduce((accumulator: Array<Array<RenderItem>>, item) => {
     if (item === 'pagebreak') accumulator.push([]);
@@ -33,7 +35,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   }, [[]]), [formItems]);
 
   useEffect(() => {
-    const referenceItems = formItems.filter(item => isItem(item) && isSelect(item) && requireFetch(item)) as Array<ISelectItem>;
+    const referenceItems = getReferenceItems(formItems);
     Promise.all(
       referenceItems.map(item => {
         const collectionName = item.items as string;
@@ -87,10 +89,60 @@ const BasicForm: FC<IFormProps> = (props) => {
     }
   };
 
+  const renderItem = (item: RenderItem, i: number) => {
+    switch (item.type) {
+      case 'custom':
+        if (item.key) return (
+          <Item 
+            key={item.key}
+            name={item.key}>
+            <item.render {...fields} />
+          </Item>
+        );
+        else return (
+          <item.render key={i} {...fields} />
+        );
+      case 'divider':
+        return (
+          <Divider 
+            key={i}
+            plain={item.plain} 
+            orientation={item.orientation}>
+            {item.label}
+          </Divider>
+        );
+      case 'header':
+        return (
+          <Title 
+            key={i} 
+            level={4}
+            style={{ textAlign: 'center', marginBottom: '20px' }}>
+            {item.label}
+          </Title>
+        );
+      default:
+        const isRequired = ('required' in item && item.required);
+        return (
+          <Item
+            key={item.key} 
+            name={item.key} 
+            label={item.label} 
+            rules={isRequired ? [{ required: true, message: `${item.label} harus diisi.` }] : undefined}
+            valuePropName={item.type === 'boolean' ? 'checked' : 'value'}>
+            {renderInput(item)}
+          </Item>
+        );
+    }
+  }
+
   return (
     <Container 
       form={form}
       initialValues={datesToMoments(initialValues)} 
+      onFieldsChange={(changedFields, fields) => setFields({ 
+        changedFields: changedFields.map(field => (field.name as never)[0]), 
+        fields: Object.fromEntries(fields.map(field => [(field.name as never)[0], field.value])) 
+      })}
       onFinish={onSubmit} 
       labelCol={{ span: 7 }}>
       {(pages.length > 1) && (
@@ -103,50 +155,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       )}
       {pages.map((page, index) => (
         <div key={index} style={{ display: (index === currentPage) ? 'block' : 'none' }}>
-          {page.map((item, i) => {
-            if (isCustom(item)) {
-              return (
-                <Item 
-                  key={item.key}
-                  name={item.key}>
-                  <item.render />
-                </Item>
-              );
-            }
-            else if (item.type === 'divider') {
-              return (
-                <Divider 
-                  key={i}
-                  plain={item.plain} 
-                  orientation={item.orientation}>
-                  {item.label}
-                </Divider>
-              );
-            }
-            else if (item.type === 'header') {
-              return (
-                <Title 
-                  key={i} 
-                  level={4}
-                  style={{ textAlign: 'center', marginBottom: '20px' }}>
-                  {item.label}
-                </Title>
-              );
-            }
-            else {
-              const isRequired = ('required' in item && item.required);
-              return (
-                <Item
-                  key={item.key} 
-                  name={item.key} 
-                  label={item.label} 
-                  rules={isRequired ? [{ required: true, message: `${item.label} harus diisi.` }] : undefined}
-                  valuePropName={item.type === 'boolean' ? 'checked' : 'value'}>
-                  {renderInput(item)}
-                </Item>
-              );
-            }
-          })}
+          {page.map((item, i) => renderItem(item, i))}
         </div>
       ))}
       <Item>
@@ -229,13 +238,18 @@ interface IHeaderItem {
 }
 
 interface ICustomItem {
-  key: string
+  key?: string
   type: 'custom'
   render: ComponentType<ICustomComponentProps> // For only 'custom' types.
 }
 
-interface ICustomComponentProps {
+interface ICustomComponentProps extends FieldsData {
   value?: any
+}
+
+interface FieldsData {
+  fields?: Record<string, any>
+  changedFields?: Array<string>
 }
 
 type InputType = 'string' | 'textarea' | 'password' | 'number' | 'currency' | 'boolean' | 'date';

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
-import useTemplateHandlers, { IData } from '../abstracts/useTemplateHandlers';
+import useTemplateHandlers, { IData, Query } from '../abstracts/useTemplateHandlers';
 import FallbackView, { ViewPropType } from './FallbackView';
 import FallbackForm, { FormPropType } from "./FallbackForm";
 import Search from '../basics/Search';
@@ -15,9 +15,10 @@ const { Text } = Typography;
 // TODO: Pagination.
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, columns, view, form, modalWidth, processData } = props;
+  const { collectionName, columns, view, form, modalWidth, query } = props;
   const firstCol = (columns[0] as any).dataIndex;
-  const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, firstCol);
+  const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } 
+  = useTemplateHandlers(collectionName, firstCol, query);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
@@ -39,7 +40,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
       <Table 
         size='small' 
         pagination={false}
-        dataSource={processData ? processData(data) : data}
+        dataSource={data}
         loading={loading}
         onRow={entry => ({ 
           onClick: () => setModal({ mode: 'view', id: entry._id }) 
@@ -140,7 +141,7 @@ interface ITemplateProps {
   view: ViewPropType
   form: FormPropType
   modalWidth?: number
-  processData?: (data: Array<IData> | undefined) => Array<IData> | undefined
+  query?: Query
 }
 
 type ClickHandler1 = React.MouseEventHandler<HTMLElement>;

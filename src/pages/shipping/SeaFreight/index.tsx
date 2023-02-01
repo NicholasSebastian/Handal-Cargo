@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import {} from "antd";
 import TableTemplate from "../../../components/compounds/TableTemplate";
+import createDependentValue from "../../../components/basics/DependentValue";
 
 // TODO: Add a Surat Jalan table to view all Surat Jalan, including an Advanced Search feature, 
 //       whether it gets its own page, or just a modal accessible through this page.
@@ -49,7 +49,22 @@ const SeaFreight: FC = () => {
         );
       }}
       form={[
-        { key: 'name', label: 'Nama' }
+        { key: 'container_number', label: 'Nomor Container' },
+        { key: 'muat_date', label: 'Tanggal Muat', type: 'date' },
+        { key: 'arrival_date', label: 'Tanggal Tiba', type: 'date' },
+        { key: 'bl_date', label: 'Tanggal BL', type: 'date' },
+        { type: 'custom', render: createDependentValue({
+          label: 'Hari Tiba Dari Muat',
+          dependencies: ['arrival_date', 'muat_date'], 
+          calculateValue: fields => fields.arrival_date.diff(fields.muat_date, "days"), 
+          defaultValue: 0,
+          suffix: 'hari'
+        })},
+        { key: 'container_group', label: 'Kelompok Container', type: 'select', items: 'ContainerGroups' },
+        { key: 'shipper', label: 'Shipper', type: 'select', items: 'Carriers' },
+        { key: 'route', label: 'Rute', type: 'select', items: 'Routes' },
+        { key: 'handler', label: 'Pengurus', type: 'select', items: 'Handlers' },
+        { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies' }
       ]} />
   );
 }
