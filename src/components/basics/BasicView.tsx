@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 import { Descriptions } from 'antd';
-import { IInjectedProps } from '../abstracts/withInitialData';
+import { IInjectedProps } from '../abstractions/withInitialData';
 import { dateToString } from '../../utils';
 
 const { Item } = Descriptions;

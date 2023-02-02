@@ -1,5 +1,5 @@
 import { FC, ComponentType, useId } from 'react';
-import withInitialData, { IEnhancedProps, IInjectedProps } from '../abstracts/withInitialData';
+import withInitialData, { IEnhancedProps, IInjectedProps } from '../abstractions/withInitialData';
 import BasicView, { IViewItem } from '../basics/BasicView';
 
 const isComponent = (component: any): component is ViewComponentType => typeof component === 'function';

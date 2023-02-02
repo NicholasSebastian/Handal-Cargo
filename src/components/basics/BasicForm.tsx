@@ -1,9 +1,10 @@
-import { FC, useState, useEffect, useMemo, ComponentType } from "react";
+import { FC, useState, useEffect, ComponentType } from "react";
 import styled from "styled-components";
-import { Typography, Form, Input, InputNumber, Select, Switch, Button, DatePicker, Steps, Divider } from "antd";
-import { IInjectedProps } from "../abstracts/withFormHandling";
-import useReferenceHandling, { getSelectItems } from "../abstracts/useReferenceHandling";
-import useCurrencyHandling from "../abstracts/useCurrencyHandling";
+import { Typography, Form, Input, InputNumber, Select, Switch, DatePicker, Divider } from "antd";
+import { IInjectedProps } from "../abstractions/withFormHandling";
+import usePageHandling from "../abstractions/usePageHandling";
+import useReferenceHandling, { getSelectItems } from "../abstractions/useReferenceHandling";
+import useCurrencyHandling from "../abstractions/useCurrencyHandling";
 import InputCurrency from "./InputCurrency";
 import { datesToMoments } from "../../utils";
 
@@ -11,23 +12,16 @@ const { Title } = Typography;
 const { Item, useForm } = Form;
 const { Password, TextArea } = Input;
 const { Option } = Select;
-const { Step } = Steps;
 
 // Creates a basic, minimally stylized form out of the given props.
 
 const BasicForm: FC<IFormProps> = (props) => {
   const [form] = useForm();
   const { formItems, initialValues, onSubmit } = props;
-  const [currentPage, setCurrentPage] = useState(0);
   const [fields, setFields] = useState<FieldsData>();
+  const { currentPage, pages, steps, buttons } = usePageHandling(formItems);
   const referenceValues = useReferenceHandling(formItems);
   const currency = useCurrencyHandling(formItems, fields);
-
-  const pages = useMemo(() => formItems.reduce((accumulator: Array<Array<RenderItem>>, item) => {
-    if (item === 'pagebreak') accumulator.push([]);
-    else accumulator.at(-1)?.push(item);
-    return accumulator;
-  }, [[]]), [formItems]);
 
   useEffect(() => {
     if (!initialValues) {
@@ -113,35 +107,6 @@ const BasicForm: FC<IFormProps> = (props) => {
     }
   }
 
-  const buttons = (
-    <Item>
-      {(currentPage > 0) && (
-        <Button 
-          type="primary" 
-          htmlType="button" 
-          onClick={() => setCurrentPage(page => page - 1)} 
-          style={{ marginRight: 10 }}>
-          Kembali
-        </Button>
-      )}
-      {(currentPage < pages.length - 1) && (
-        <Button 
-          type="primary" 
-          htmlType="button" 
-          onClick={() => setCurrentPage(page => page + 1)}>
-          Berikut
-        </Button>
-      )}
-      {(currentPage === pages.length - 1) && (
-        <Button 
-          type="primary" 
-          htmlType="submit">
-          Simpan
-        </Button>
-      )}
-    </Item>
-  );
-
   return (
     <Container 
       form={form}
@@ -152,14 +117,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       })}
       onFinish={onSubmit} 
       labelCol={{ span: 7 }}>
-      {(pages.length > 1) && (
-        <Overhead
-          size="small"
-          current={currentPage}
-          onChange={i => setCurrentPage(i)}>
-          {pages.map((_, i) => <Step key={i} />)}
-        </Overhead>
-      )}
+      {steps}
       {pages.map((page, index) => (
         <div key={index} style={{ display: (index === currentPage) ? 'block' : 'none' }}>
           {page.map((item, i) => renderItem(item, i))}
@@ -181,11 +139,6 @@ const Container = styled(Form)`
     margin-bottom: 0;
     padding-bottom: 30px;
   }
-`;
-
-const Overhead = styled(Steps)`
-  padding-top: 0;
-  margin-bottom: 30px;
 `;
 
 interface IFormProps extends IInjectedProps {

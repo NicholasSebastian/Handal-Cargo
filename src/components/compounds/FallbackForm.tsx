@@ -1,5 +1,5 @@
 import { FC, ComponentType, useId } from 'react';
-import withFormHandling, { IEnhancedProps, IInjectedProps } from '../abstracts/withFormHandling';
+import withFormHandling, { IEnhancedProps, IInjectedProps } from '../abstractions/withFormHandling';
 import BasicForm, { FormItem } from '../basics/BasicForm';
 
 const isComponent = (component: any): component is FormComponentType => typeof component === 'function';

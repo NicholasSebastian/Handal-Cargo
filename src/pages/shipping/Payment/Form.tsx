@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Typography, Table, Input, DatePicker, Button, Popconfirm, Divider, message } from "antd";
 import { PlusOutlined } from '@ant-design/icons';
 import moment from "moment";
-import { IInjectedProps } from "../../../components/abstracts/withFormHandling";
+import { IInjectedProps } from "../../../components/abstractions/withFormHandling";
 import InputCurrency from "../../../components/basics/InputCurrency";
 import { formatCurrency, dateToString } from "../../../utils";
 

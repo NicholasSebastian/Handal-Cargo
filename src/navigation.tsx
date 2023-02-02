@@ -1,22 +1,24 @@
-import AirCargo from './pages/shipping/AirCargo';
-import SeaFreight from './pages/shipping/SeaFreight';
-import InvoiceEntry from './pages/shipping/InvoiceEntry';
-import Payment from './pages/shipping/Payment';
-import Customers from './pages/shipping/Customers';
-import GenerateReports from './pages/reports/GenerateReports';
-import ContainerGroups from './pages/references/ContainerGroups';
-import Carriers from './pages/references/Carriers';
-import Routes from './pages/references/Rutes';
-import Handlers from './pages/references/Handlers';
-import Planes from './pages/references/Planes';
-import Currencies from './pages/references/Currencies';
-import ProductDetails from './pages/references/ProductDetails';
-import Expeditions from './pages/references/Expeditions';
-import Staff from './pages/admin/Staff';
-import StaffGroup from './pages/admin/StaffGroups';
-import AccessLevels from './pages/admin/AccessLevels';
-import CompanySetup from './pages/admin/CompanySetup';
-import BackupRestore from './pages/admin/BackupRestore';
+import { lazy } from "react";
+
+const AirCargo = lazy(() => import('./pages/shipping/AirCargo'));
+const SeaFreight = lazy(() => import('./pages/shipping/SeaFreight'));
+const InvoiceEntry = lazy(() => import('./pages/shipping/InvoiceEntry'));
+const Payment = lazy(() => import('./pages/shipping/Payment'));
+const Customers = lazy(() => import('./pages/shipping/Customers'));
+const GenerateReports = lazy(() => import('./pages/reports/GenerateReports'));
+const ContainerGroups = lazy(() => import('./pages/references/ContainerGroups'));
+const Carriers = lazy(() => import('./pages/references/Carriers'));
+const Routes = lazy(() => import('./pages/references/Rutes'));
+const Handlers = lazy(() => import('./pages/references/Handlers'));
+const Planes = lazy(() => import('./pages/references/Planes'));
+const Currencies = lazy(() => import('./pages/references/Currencies'));
+const ProductDetails = lazy(() => import('./pages/references/ProductDetails'));
+const Expeditions = lazy(() => import('./pages/references/Expeditions'));
+const Staff = lazy(() => import('./pages/admin/Staff'));
+const StaffGroup = lazy(() => import('./pages/admin/StaffGroups'));
+const AccessLevels = lazy(() => import('./pages/admin/AccessLevels'));
+const CompanySetup = lazy(() => import('./pages/admin/CompanySetup'));
+const BackupRestore = lazy(() => import('./pages/admin/BackupRestore'));
 
 type Paths = { 
   [key: string]: JSX.Element | { 
@@ -32,9 +34,7 @@ const pages: Paths = {
     'Pembayaran': <Payment />,
     'Customers': <Customers />
   },
-  'Reports': {
-    'Laporan': <GenerateReports />
-  },
+  'Reports': <GenerateReports />,
   'References': {
     'Kelompok Container': <ContainerGroups />,
     'Shipper': <Carriers />,

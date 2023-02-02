@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
-import useTemplateHandlers, { IData, Query } from '../abstracts/useTemplateHandlers';
+import useTemplateHandlers, { IData, Query } from '../abstractions/useTemplateHandlers';
 import FallbackView, { ViewPropType } from './FallbackView';
 import FallbackForm, { FormPropType } from "./FallbackForm";
 import Search from '../basics/Search';

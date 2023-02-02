@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { InputNumber } from "antd";
 import { formatCurrency } from "../../utils";
-import { DEFAULT_SYMBOL } from "../abstracts/useCurrencyHandling";
+import { DEFAULT_SYMBOL } from "../abstractions/useCurrencyHandling";
 
 const InputCurrency: FC<IInputProps> = props => {
   const { placeholder, value, onChange, prefix } = props;

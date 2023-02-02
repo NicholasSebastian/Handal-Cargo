@@ -2,7 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Descriptions, Table } from "antd";
 import { formatCurrency, dateToString } from "../../../utils";
-import { IInjectedProps } from "../../../components/abstracts/withInitialData";
+import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 
 const { Item } = Descriptions;
 
