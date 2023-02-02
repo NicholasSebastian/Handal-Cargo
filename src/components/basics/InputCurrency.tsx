@@ -1,15 +1,13 @@
 import { FC } from "react";
-import { Form, InputNumber } from "antd";
+import { InputNumber } from "antd";
 import { formatCurrency } from "../../utils";
-
-const { useFormInstance } = Form;
+import { DEFAULT_SYMBOL } from "../abstracts/useCurrencyHandling";
 
 const InputCurrency: FC<IInputProps> = props => {
-  const { placeholder, value, onChange } = props;
-  const form = useFormInstance();
+  const { placeholder, value, onChange, prefix } = props;
   return (
     <InputNumber 
-      prefix="Rp." // TODO: Check the form for a 'currency' value. The prefix should depend on that.
+      prefix={prefix ?? DEFAULT_SYMBOL}
       style={{ width: '100%' }} 
       formatter={value => formatCurrency(value!.toString())}
       parser={value => value!.replace(/,*/g, '')}
@@ -25,4 +23,5 @@ interface IInputProps {
   placeholder?: string
   value?: string
   onChange?: (value: string) => void
+  prefix?: string
 }

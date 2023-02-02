@@ -1,32 +1,27 @@
 import { FC, useState, useEffect, useMemo, ComponentType } from "react";
 import styled from "styled-components";
-import { Typography, Form, Input, InputNumber, Switch, Select, Button, DatePicker, Steps, Divider } from "antd";
-import useDatabase from "../../data/useDatabase";
+import { Typography, Form, Input, InputNumber, Select, Switch, Button, DatePicker, Steps, Divider } from "antd";
 import { IInjectedProps } from "../abstracts/withFormHandling";
-import { datesToMoments } from "../../utils";
+import useReferenceHandling, { getSelectItems } from "../abstracts/useReferenceHandling";
+import useCurrencyHandling from "../abstracts/useCurrencyHandling";
 import InputCurrency from "./InputCurrency";
+import { datesToMoments } from "../../utils";
 
 const { Title } = Typography;
 const { Item, useForm } = Form;
-const { Option } = Select;
 const { Password, TextArea } = Input;
+const { Option } = Select;
 const { Step } = Steps;
 
 // Creates a basic, minimally stylized form out of the given props.
 
-const isItem = (item: FormItem): item is RenderItem => item !== 'pagebreak';
-const isSelect = (item: RenderItem): item is ISelectItem => item.type === 'select';
-const requireFetch = (item: ISelectItem) => typeof item.items === 'string';
-const getReferenceItems = (items: Array<FormItem>) => 
-  items.filter(item => isItem(item) && isSelect(item) && requireFetch(item)) as Array<ISelectItem>;
-
 const BasicForm: FC<IFormProps> = (props) => {
-  const database = useDatabase()!;
   const [form] = useForm();
   const { formItems, initialValues, onSubmit } = props;
-  const [referenceValues, setReferenceValues] = useState<Record<string, Array<string>>>();
   const [currentPage, setCurrentPage] = useState(0);
   const [fields, setFields] = useState<FieldsData>();
+  const referenceValues = useReferenceHandling(formItems);
+  const currency = useCurrencyHandling(formItems, fields);
 
   const pages = useMemo(() => formItems.reduce((accumulator: Array<Array<RenderItem>>, item) => {
     if (item === 'pagebreak') accumulator.push([]);
@@ -34,7 +29,7 @@ const BasicForm: FC<IFormProps> = (props) => {
     return accumulator;
   }, [[]]), [formItems]);
 
-  const initializeDefaultValues = () => {
+  useEffect(() => {
     if (!initialValues) {
       formItems.forEach(item => {
         if ((typeof item === 'object') && ('defaultValue' in item)) {
@@ -42,39 +37,7 @@ const BasicForm: FC<IFormProps> = (props) => {
         }
       });
     }
-  }
-
-  const loadReferenceData = () => {
-    const referenceItems = getReferenceItems(formItems);
-    Promise.all(
-      referenceItems.map(item => {
-        const collectionName = item.items as string;
-        return database
-          .collection(collectionName)
-          .find({}, { projection: { name: 1 } });
-      }))
-    .then(references => {
-      const values = Object.fromEntries(references.map((values, i) => {
-        const collectionName = referenceItems[i].items;
-        return [collectionName, values.map(v => v.name)];
-      }));
-      setReferenceValues(values);
-    });
-  }
-
-  useEffect(() => {
-    initializeDefaultValues();
-    loadReferenceData();
   }, [formItems]);
-
-  const getSelectItems = (arg: string | string[] | undefined) => {
-    if (Array.isArray(arg)) 
-      return arg;
-    else if (typeof arg === 'string' && referenceValues) 
-      return referenceValues[arg];
-    else
-      return undefined;
-  }
 
   const renderInput = (item: DefinedItem) => {
     switch (item.type) {
@@ -85,10 +48,10 @@ const BasicForm: FC<IFormProps> = (props) => {
       case 'boolean':
         return <Switch />
       case 'select':
-        const items = getSelectItems(item.items);
+        const actualItems = getSelectItems(item.items, referenceValues);
         return (
           <Select>
-            {items?.map((item, i) => (
+            {actualItems?.map((item, i) => (
               <Option key={i} value={item}>{item}</Option>
             ))}
           </Select>
@@ -98,7 +61,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       case 'password':
         return <Password />
       case 'currency':
-        return <InputCurrency />
+        return <InputCurrency prefix={currency} />
       default:
         return <Input />
     }
@@ -207,7 +170,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   );
 }
 
-export type { FormItem, ICustomComponentProps };
+export type { FormItem, FieldsData, RenderItem, ISelectItem, ICustomComponentProps };
 export default BasicForm;
 
 const Container = styled(Form)`

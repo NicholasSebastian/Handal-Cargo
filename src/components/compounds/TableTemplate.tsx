@@ -16,9 +16,8 @@ const { Text } = Typography;
 
 const TableTemplate: FC<ITemplateProps> = props => {
   const { collectionName, columns, view, form, modalWidth, query } = props;
-  const firstCol = (columns[0] as any).dataIndex;
-  const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } 
-  = useTemplateHandlers(collectionName, firstCol, query);
+  const defaultSearchBy = (columns[0] as any).dataIndex;
+  const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, defaultSearchBy, query);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 

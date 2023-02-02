@@ -11,8 +11,8 @@ function createDependentValue(config: IDependentValueConfig): FC<ICustomComponen
     const [value, setValue] = useState(defaultValue);
     useEffect(() => {
       if (dependencies.some(dep => changedFields?.includes(dep))) {
-        const bothHasValue = fields && dependencies.every(dep => fields[dep] !== undefined);
-        setValue(bothHasValue ? calculateValue(fields) : defaultValue);
+        const valuesExist = fields && dependencies.every(dep => fields[dep] !== undefined);
+        setValue(valuesExist ? calculateValue(fields) : defaultValue);
       }
     }, [changedFields]);
     return (
