@@ -7,7 +7,7 @@ import { momentsToDates } from '../../utils';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
 
-function useTemplateHandlers(collectionName: string, defaultSearchBy: string, customQuery ?: Query) {
+function useTemplateHandling(collectionName: string, defaultSearchBy: string, customQuery ?: Query) {
   const database = useDatabase();
   const { title } = useRoute()!;
 
@@ -95,7 +95,7 @@ function useTemplateHandlers(collectionName: string, defaultSearchBy: string, cu
 }
 
 export type { IData, Query };
-export default useTemplateHandlers;
+export default useTemplateHandling;
 
 interface IData {
   _id: BSON.ObjectId

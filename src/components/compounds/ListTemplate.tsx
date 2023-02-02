@@ -2,7 +2,7 @@ import { FC, CSSProperties } from "react";
 import styled from "styled-components";
 import { List, Button, Modal, Popconfirm, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import useTemplateHandlers from "../abstractions/useTemplateHandlers";
+import useTemplateHandlers from "../abstractions/useTemplateHandling";
 import { ModalStyles } from "./TableTemplate";
 import FallbackForm, { FormPropType } from "./FallbackForm";
 import Search from '../basics/Search';
