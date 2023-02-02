@@ -13,16 +13,19 @@ const { Item, useForm } = Form;
 const { Password, TextArea } = Input;
 const { Option } = Select;
 
-// Creates a basic, minimally stylized form out of the given props.
+// Creates a functional form out of the given props.
 
 const BasicForm: FC<IFormProps> = (props) => {
-  const [form] = useForm();
   const { formItems, initialValues, onSubmit } = props;
+  const [form] = useForm();
   const [fields, setFields] = useState<FieldsData>();
+
+  // Hooks handling delegated logic.
   const { currentPage, pages, steps, buttons } = usePageHandling(formItems);
   const referenceValues = useReferenceHandling(formItems);
   const currency = useCurrencyHandling(formItems, fields);
 
+  // Sets all the given default values into the form at the beginning.
   useEffect(() => {
     if (!initialValues) {
       formItems.forEach(item => {
@@ -33,6 +36,7 @@ const BasicForm: FC<IFormProps> = (props) => {
     }
   }, [formItems]);
 
+  // Returns the respective component based on the given item type.
   const renderInput = (item: DefinedItem) => {
     switch (item.type) {
       case 'number':
@@ -61,6 +65,7 @@ const BasicForm: FC<IFormProps> = (props) => {
     }
   };
 
+  // Returns the respective component based on the given item type.
   const renderItem = (item: RenderItem, i: number) => {
     switch (item.type) {
       case 'custom':

@@ -3,6 +3,8 @@ import { InputNumber } from "antd";
 import { formatCurrency } from "../../utils";
 import { DEFAULT_SYMBOL } from "../abstractions/useCurrencyHandling";
 
+// Creates a basic InputNumber component formatted for currencies.
+
 const InputCurrency: FC<IInputProps> = props => {
   const { placeholder, value, onChange, prefix } = props;
   return (

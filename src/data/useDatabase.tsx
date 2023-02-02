@@ -1,7 +1,9 @@
 import { appWindow, LogicalSize } from '@tauri-apps/api/window';
 import { Component, ComponentType, PropsWithChildren, createContext, useContext } from 'react';
 import * as Realm from 'realm-web';
+import { clearLocalStorage } from '../utils';
 
+// Database credentials. This should be a secret but oh well.
 const REALM_APP_ID = "application-0-frqqk";
 const CLUSTER_NAME = "mongodb-atlas";
 const DATABASE_NAME = "Primary";
@@ -13,22 +15,7 @@ const TIME_TO_CENTER = 100;
 const instance = new Realm.App({ id: REALM_APP_ID });
 const DatabaseContext = createContext<Realm.App|undefined>(undefined);
 
-function useUser() {
-	const session = useContext(DatabaseContext);
-	const user = session?.currentUser;
-  return user;
-}
-
-function useDatabase() {
-  const user = useUser();
-  const client = user?.mongoClient(CLUSTER_NAME);
-  return client?.db(DATABASE_NAME);
-}
-
-function logoutAndClose() {
-  localStorage.clear();
-  appWindow.close();
-}
+// Intended for use to be wrapped around the entire app to handle authentication logic.
 
 class DatabaseProvider extends Component<PropsWithChildren<IProps>> {
   render() {
@@ -61,6 +48,26 @@ class DatabaseProvider extends Component<PropsWithChildren<IProps>> {
       )} />
     );
   }
+}
+
+// Returns the current authenticated user.
+function useUser() {
+	const session = useContext(DatabaseContext);
+	const user = session?.currentUser;
+  return user;
+}
+
+// Returns the current database instance.
+function useDatabase() {
+  const user = useUser();
+  const client = user?.mongoClient(CLUSTER_NAME);
+  return client?.db(DATABASE_NAME);
+}
+
+// Clears any authentication data from the cache then closes the app.
+function logoutAndClose() {
+  clearLocalStorage('realm-web');
+  appWindow.close();
 }
 
 export { DatabaseProvider, useUser, logoutAndClose };

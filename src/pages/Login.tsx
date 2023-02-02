@@ -10,13 +10,19 @@ const { Password } = Input;
 
 const currentYear = new Date().getFullYear();
 
+// Intended for use for the DatabaseProvider at the top of the app.
+
 const Login: FC<ILoginProps> = ({ login }) => {
   const [loading, setLoading] = useState(false);
 
+  // Passes the inputted credentials to the given 'login' function, 
+  // which is presumably from the DatabaseProvider.
   const onSubmit = ({ username, password }: any) => {
     setLoading(true);
     login(username, password)
-      .catch(e => { message.error(e.statusCode === 401 ? "Salah Nama atau Password." : `${e.errorCode}: ${e.error}`) })
+      .catch(e => { 
+        message.error(e.statusCode === 401 ? "Salah Nama atau Password." : `${e.errorCode}: ${e.error}`) 
+      })
       .finally(() => setLoading(false));
   };
 

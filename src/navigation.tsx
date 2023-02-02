@@ -1,5 +1,8 @@
 import { lazy } from "react";
 
+// Lazy imports causes code-splitting of the different pages into multiple separate bundles.
+// Allowing for quicker initial load times and decreased memory usage as data is only loaded as needed.
+
 const AirCargo = lazy(() => import('./pages/shipping/AirCargo'));
 const SeaFreight = lazy(() => import('./pages/shipping/SeaFreight'));
 const InvoiceEntry = lazy(() => import('./pages/shipping/InvoiceEntry'));
@@ -20,12 +23,7 @@ const AccessLevels = lazy(() => import('./pages/admin/AccessLevels'));
 const CompanySetup = lazy(() => import('./pages/admin/CompanySetup'));
 const BackupRestore = lazy(() => import('./pages/admin/BackupRestore'));
 
-type Paths = { 
-  [key: string]: JSX.Element | { 
-    [key: string]: JSX.Element 
-  }
-}
-
+// Navigation structure.
 const pages: Paths = {
   'Shipping': {
     'Sea Freight': <SeaFreight />,
@@ -55,3 +53,9 @@ const pages: Paths = {
 };
 
 export default pages;
+
+type Paths = { 
+  [key: string]: JSX.Element | { 
+    [key: string]: JSX.Element 
+  }
+}

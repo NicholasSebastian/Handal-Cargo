@@ -1,5 +1,6 @@
 import { FC } from "react";
 import TableTemplate from "../../components/compounds/TableTemplate";
+import { dateToString } from "../../utils";
 
 const Staff: FC = () => {
   return (
@@ -22,14 +23,14 @@ const Staff: FC = () => {
         { key: 'home_number', label: 'Nomor Telepon' },
         { key: 'phone_number', label: 'Nomor HP' },
         { key: 'birthplace', label: 'Tempat Lahir' },
-        { key: 'birthday', label: 'Tanggal Lahir' },
+        { key: 'birthday', label: 'Tanggal Lahir', render: value => dateToString(value) },
         { key: 'salary', label: 'Gaji' },
         { key: 'overtime_pay', label: 'Lembur / Jam' },
         { key: 'allowance', label: 'Uang Makan' },
         { key: 'holiday_pay', label: 'THR' },
         { key: 'bonus', label: 'Uang Kerajinan' },
-        { key: 'status', label: 'Aktif' },
-        { key: 'employment_date', label: 'Tanggal Kerja' }
+        { key: 'status', label: 'Aktif', render: value => value ? 'Aktif': 'Tidak Aktif' },
+        { key: 'employment_date', label: 'Tanggal Kerja', render: value => dateToString(value) }
       ]}
       form={[
         { key: 'name', label: 'Nama', required: true },

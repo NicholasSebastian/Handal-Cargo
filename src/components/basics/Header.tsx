@@ -9,6 +9,9 @@ import { dateToString } from '../../utils';
 
 const { Header: AntHeader } = AntLayout;
 const MONGODB_REALM_URL = "https://realm.mongodb.com/";
+const currentDate = dateToString(new Date());
+
+// Intended for use within the Layout component.
 
 const serverButton = { 
   key: 'server', 
@@ -17,13 +20,12 @@ const serverButton = {
   onClick: () => open(MONGODB_REALM_URL) 
 };
 
-const currentDate = dateToString(new Date());
-
 const Header: FC<IHeaderProps> = props => {
   const { showServerButton } = props;
   const user = useUser();
   const navigate = useNavigate();
 
+  // The buttons to be displayed in the header dropdown.
   const menuItems = [
     { 
       key: 'profile', 
@@ -38,10 +40,10 @@ const Header: FC<IHeaderProps> = props => {
       onClick: () => navigate('/shortcuts') 
     },
     {
-      key: 'news',
-      label: 'Berita',
+      key: 'exchange-rates',
+      label: 'Cek Kurs',
       icon: <ReadOutlined />,
-      onClick: () => navigate('/news')
+      onClick: () => navigate('/kurs')
     },
     ...(showServerButton ? [serverButton] : []),
     { 

@@ -1,5 +1,7 @@
 import moment, { isMoment } from 'moment';
 
+// This file holds a collection of random utility functions.
+
 export function toSlug(text: string) {
   return text
     .toLowerCase()
@@ -35,12 +37,22 @@ export function isInputElement(element: Element): element is HTMLInputElement | 
 }
 
 export function dateToString(date: Date) {
+  if (!date) return undefined;
   return date.toLocaleDateString("id-ID", { 
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 export function formatCurrency(value: string) {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+export function clearLocalStorage(startsWith: string) {
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)!;
+    if (key.startsWith(startsWith)) keys.push(key);
+  }
+  keys.forEach(key => localStorage.removeItem(key));
 }
 
 export type Subtract<T extends T1, T1 extends object> = Pick<T, SetComplement<keyof T, keyof T1>>;

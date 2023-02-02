@@ -8,6 +8,7 @@ import useDatabase from "../../data/useDatabase";
 
 const MONGODB_ATLAS_URL = "https://cloud.mongodb.com/";
 
+// This should list all the collections in the database.
 const collections = [
   "AccessLevels",
   "AirCargo",
@@ -27,13 +28,6 @@ const collections = [
   "Staff",
   "StaffGroups"
 ];
-
-const options: SaveDialogOptions = {
-  filters: [{
-    name: 'JSON File',
-    extensions: ['json']
-  }]
-};
 
 const BackupRestore: FC = () => {
   const database = useDatabase();
@@ -150,6 +144,13 @@ const BackupRestore: FC = () => {
     </Container>
   );
 }
+
+const options: SaveDialogOptions = {
+  filters: [{
+    name: 'JSON File',
+    extensions: ['json']
+  }]
+};
 
 export default BackupRestore;
 

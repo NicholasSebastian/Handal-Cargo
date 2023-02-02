@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import { FC, Fragment, isValidElement } from "react";
 import styled from "styled-components";
 import { Form, Input, Checkbox, Button, Divider } from "antd";
 import ListTemplate from "../../components/compounds/ListTemplate";
@@ -27,21 +27,22 @@ const AccessLevels: FC = () => {
             </Item>
             <Item name='access_level'>
               <Group style={{ width: '100%', textAlign: 'center' }}>
-                {Object.values(pages).map((category, i) => {
-                  const pages = Object.keys(category);
+                {Object.entries(pages).map(([name, component], i) => {
+                  const pages = Object.keys(component);
                   const middle = Math.floor(pages.length / 2);
                   return (
                     <Fragment>
                       {i > 0 && <Divider style={{ margin: '20px 0' }} />}
-                      {pages.map((page_name, j) => {
-                        const page_slug = toSlug(page_name);
-                        return (
+                      {isValidElement(component) ? (
+                        <Checkbox value={toSlug(name)}>{name}</Checkbox>
+                      ) : (
+                        pages.map((page_name, j) => (
                           <Fragment>
                             {(pages.length > 1) && (j === middle) && <br />}
-                            <Checkbox value={page_slug}>{page_name}</Checkbox>
+                            <Checkbox value={toSlug(page_name)}>{page_name}</Checkbox>
                           </Fragment>
-                        );
-                      })}
+                        ))
+                      )}
                     </Fragment>
                   );
                 })}

@@ -4,6 +4,8 @@ import { AlignCenterOutlined, AlignLeftOutlined, MenuOutlined } from "@ant-desig
 
 const { Search: AntSearch } = Input;
 
+// Creates a component pertaining a search bar with advanced features.
+
 const modes: Array<IMode> = [
   { title: "Cocok Sebagian", icon: <AlignCenterOutlined /> }, // Partial Match
   { title: "Cocok Dari Awal", icon: <AlignLeftOutlined /> },  // Match from Beginning
@@ -13,6 +15,7 @@ const modes: Array<IMode> = [
 const Search: FC<ISearchProps> = props => {
   const { onSearch, searchBy, setSearchBy, columns } = props;
   const [currentMode, setCurrentMode] = useState(0);
+  
   return (
     <Space>
       {(columns && searchBy && setSearchBy) && (

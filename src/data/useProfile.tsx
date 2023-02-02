@@ -5,17 +5,15 @@ import useDatabase, { useUser, logoutAndClose } from "./useDatabase";
 
 const ProfileContext = createContext<Profile>(undefined);
 
-function useProfile() {
-  const profile = useContext(ProfileContext);
-  return profile;
-}
+// Intended for use to be wrapped around the entire app to give global access to the user's profile data.
 
 const ProfileProvider: FC<PropsWithChildren<{}>> = props => {
   const { children } = props;
   const user = useUser();
   const database = useDatabase();
-  
   const [profile, setProfile] = useState(undefined);
+
+  // Fetches the current user's corresponding profile data from the 'Staff' collection.
   useEffect(() => {
     database?.collection("Staff")
       .findOne({ username: user?.profile.name })
@@ -31,6 +29,12 @@ const ProfileProvider: FC<PropsWithChildren<{}>> = props => {
       {profile ? children : <Center><Spin size="large" /></Center>}
     </ProfileContext.Provider>
   );
+}
+
+// Returns the cached profile data of the logged-in user.
+function useProfile() {
+  const profile = useContext(ProfileContext);
+  return profile;
 }
 
 export { ProfileProvider };

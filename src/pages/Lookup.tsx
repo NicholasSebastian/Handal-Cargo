@@ -1,15 +1,15 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-const News: FC = () => {
+const Lookup: FC = () => {
   return (
     <Container 
-      src="https://news.detik.com/"
-      title="News" />
+      src="https://kursdollar.org/"
+      title="Exchange Rates" />
   );
 }
 
-export default News;
+export default Lookup;
 
 const Container = styled.iframe`
   width: 100%;

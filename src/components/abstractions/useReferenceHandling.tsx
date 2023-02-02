@@ -14,6 +14,7 @@ function useReferenceHandling(formItems: Array<FormItem>) {
   const database = useDatabase();
   const [reference, setReference] = useState<ReferenceValues>();
 
+  // Fetches all the corresponding reference data required for the form from the database.
   useEffect(() => {
     const referenceItems = getReferenceItems(formItems);
     Promise.all(
@@ -34,6 +35,7 @@ function useReferenceHandling(formItems: Array<FormItem>) {
   return reference;
 }
 
+// Returns the proper data based on the type given.
 function getSelectItems(arg: string | string[] | undefined, reference: ReferenceValues) {
   if (Array.isArray(arg)) 
     return arg;

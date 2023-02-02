@@ -8,8 +8,7 @@ import { isInputElement } from "../utils";
 
 const { Item } = List;
 
-// https://stackoverflow.com/questions/40894637/how-to-programmatically-fill-input-elements-built-with-react/70848568
-
+// Sets the value for React Input components without having access its setState.
 function setNativeValue(element: Element, value: string) {
   const valueSetter = Object.getOwnPropertyDescriptor(element, 'value')?.set;
   const prototype = Object.getPrototypeOf(element);
@@ -23,34 +22,42 @@ function setNativeValue(element: Element, value: string) {
   }
 }
 
+// Slips in the shortcut value at the current text focus location.
+function insertStringAtPos(value: string) {
+  const focus = document.activeElement;
+  if (focus && isInputElement(focus)) {
+    const left = focus.value.substring(0, focus.selectionStart!);
+    const right = focus.value.substring(focus.selectionEnd!);
+    setNativeValue(focus, left + value + right);
+    focus.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+}
+
 const Shortcuts: FC = () => {
   const [modal, setModal] = useState(false);
+
+  // Shortcut state with initial values taken from local storage if exists.
   const [shortcuts, setShortcuts] = useState<Array<IShortcut>>(() => {
     const cache = localStorage.getItem("shortcuts");
     return cache ? JSON.parse(cache) : [];
   });
 
   const addShortcut = (shortcut: IShortcut) => {
+    // Prevents registering multiple values to the same shortcut key.
     if (shortcuts.some(sc => sc.key === shortcut.key)) {
       message.error("Tombol ini sudah terpakai.");
     }
+    // Updates the state and local storage, then registers the shortcut key.
     else {
       const newShortcuts = [...shortcuts, shortcut];
       localStorage.setItem("shortcuts", JSON.stringify(newShortcuts));
       setShortcuts(newShortcuts);
-      register(shortcut.key, () => {
-        const focus = document.activeElement;
-        if (focus && isInputElement(focus)) {
-          const left = focus.value.substring(0, focus.selectionStart!);
-          const right = focus.value.substring(focus.selectionEnd!);
-          setNativeValue(focus, left + shortcut.value + right);
-          focus.dispatchEvent(new Event("input", { bubbles: true }));
-        }
-      });
+      register(shortcut.key, () => insertStringAtPos(shortcut.value));
       setModal(false);
     }
   }
 
+  // Deletes the shortcut from state and local storage, then unregisters it.
   const deleteShortcut = (shortcutKey: string) => {
     const newShortcuts = shortcuts.filter(shortcut => shortcut.key !== shortcutKey);
     localStorage.setItem("shortcuts", JSON.stringify(newShortcuts));
@@ -90,7 +97,7 @@ const Shortcuts: FC = () => {
         width={600}
         style={{ padding: '30px 0' }}>
         <BasicForm 
-          key={useId()} // TODO: Fix this not generating a unique key on every render.
+          key={useId()}
           onSubmit={values => addShortcut(values)}
           formItems={[
             { key: 'key', label: 'Tombol' },
@@ -101,6 +108,8 @@ const Shortcuts: FC = () => {
   );
 }
 
+export type { IShortcut };
+export { insertStringAtPos };
 export default Shortcuts;
 
 const Container = styled.div`

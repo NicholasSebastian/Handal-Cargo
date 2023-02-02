@@ -2,7 +2,6 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Descriptions } from 'antd';
 import { IInjectedProps } from '../abstractions/withInitialData';
-import { dateToString } from '../../utils';
 
 const { Item } = Descriptions;
 
@@ -10,16 +9,6 @@ const { Item } = Descriptions;
 
 const BasicView: FC<IViewProps> = (props) => {
   const { title, viewItems, values } = props;
-
-  const getValue = (key: string) => {
-    const value = values[key];
-    if (!value) return undefined;
-    if (typeof value !== 'object') return value;
-    if ('toLocaleDateString' in value)
-      return dateToString(value);
-    else
-      return value.toString();
-  }
 
   return (
     <Container 
@@ -30,7 +19,7 @@ const BasicView: FC<IViewProps> = (props) => {
         <Item 
           key={item.key}
           label={item.label}>
-          {getValue(item.key)}
+          {item.render ? item.render(values[item.key]) : values[item.key]}
         </Item>
       ))} 
     </Container>
@@ -56,4 +45,5 @@ interface IViewProps extends IInjectedProps {
 interface IViewItem {
   key: string
   label: string
+  render?: (value: any) => any
 }

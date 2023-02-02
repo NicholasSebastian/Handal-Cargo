@@ -7,7 +7,10 @@ import BasicView from "../../components/basics/BasicView";
 import BasicForm from "../../components/basics/BasicForm";
 import { ModalStyles } from "../../components/compounds/TableTemplate";
 
+// The id of the document containing the CompanySetup data.
 const query = { _id: new BSON.ObjectId('63cf962885e64997d6cc706f')};
+
+// Defines both the view and form items.
 const items = [
   { key: 'name', label: 'Nama Perusahaan' },
   { key: 'address', label: 'Alamat' },
@@ -23,12 +26,14 @@ const CompanySetup: FC = () => {
   const [values, setValues] = useState<any>({});
   const [modal, setModal] = useState(false);
 
+  // Fetches the CompanySetup data and updates the state.
   const refreshData = () => {
     database?.collection("Singletons")
       .findOne(query)
       .then(result => setValues(result));
   }
 
+  // Sets the values into the database and refresh the state on form submit.
   const handleUpdate = (values: any) => {
     database?.collection("Singletons")
       .updateOne(query, values)
@@ -40,6 +45,7 @@ const CompanySetup: FC = () => {
       .catch(() => message.error("Error terjadi ketika mengubah detail perusahaan."));
   }
 
+  // Fetch the data at the beginning.
   useEffect(refreshData, []);
 
   return (
