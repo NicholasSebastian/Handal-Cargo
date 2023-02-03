@@ -21,7 +21,7 @@ const SeaFreight: FC = () => {
   return (
     <TableTemplate // TODO
       collectionName="SeaFreight"
-      modalWidth={650}
+      modalWidth={720}
       columns={[
         { dataIndex: "", title: "" }
         // TODO: Display an indicator to signify if all the markings in the container is already paid for.
@@ -70,7 +70,7 @@ const SeaFreight: FC = () => {
         'pagebreak',
         { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies', required: true },
         { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1, required: true },
-        { key: 'clearance_fee', label: 'B. Custom Clearance', type: 'currency', defaultValue: 0, required: true },
+        { key: 'clearance_fee', label: 'Biaya Custom Clearance', type: 'currency', defaultValue: 0, required: true },
         { key: 'muat_fee', label: 'Biaya Muat', type: 'currency', defaultValue: 0, required: true },
         { type: 'custom', render: createDependentValue({
           label: 'Biaya Muat (Rp.)',
@@ -107,63 +107,63 @@ const SeaFreight: FC = () => {
         'pagebreak',
         { type: 'custom', render: createDependentValue({
           label: 'Total Muatan',
-          dependencies: [], // TODO
-          calculateValue: fields => 0, // TODO
+          dependencies: ['markings'], // TODO: Fix this.
+          calculateValue: fields => fields.markings.reduce((acc: number, marking: any) => acc + marking.quantity, 0),
           defaultValue: 0,
           suffix: 'Colly / Ball'
         })},
         { type: 'custom', render: createDependentValue({
           label: 'Total Kubikasi (List)',
-          dependencies: [], // TODO
+          dependencies: ['markings'],
           calculateValue: fields => 0, // TODO
           defaultValue: 0,
           suffix: 'm³'
         })},
         { type: 'custom', render: createDependentValue({
           label: 'Total Berat (List)',
-          dependencies: [], // TODO
+          dependencies: ['markings'],
           calculateValue: fields => 0, // TODO
           defaultValue: 0,
           suffix: 'Kg'
         })},
         { type: 'custom', render: createDependentValue({
           label: 'Total Kubikasi (DList)',
-          dependencies: [], // TODO
+          dependencies: ['markings'],
           calculateValue: fields => 0, // TODO
           defaultValue: 0,
           suffix: 'm³'
         })},
         { type: 'custom', render: createDependentValue({
           label: 'Total Berat (DList)',
-          dependencies: [], // TODO
+          dependencies: ['markings'],
           calculateValue: fields => 0, // TODO
           defaultValue: 0,
           suffix: 'Kg'
         })},
         { type: 'custom', render: createDependentValue({
           label: 'Total Kubikasi (HB)',
-          dependencies: [], // TODO
+          dependencies: ['markings'],
           calculateValue: fields => 0, // TODO
           defaultValue: 0,
           suffix: 'm³'
         })},
         { type: 'custom', render: createDependentValue({
           label: 'Total Berat (HB)',
-          dependencies: [], // TODO
+          dependencies: ['markings'],
           calculateValue: fields => 0, // TODO
           defaultValue: 0,
           suffix: 'Kg'
         })},
         { type: 'custom', render: createDependentValue({
           label: 'Total Kubikasi (Cust)',
-          dependencies: [], // TODO
+          dependencies: ['markings'],
           calculateValue: fields => 0, // TODO
           defaultValue: 0,
           suffix: 'm³'
         })},
         { type: 'custom', render: createDependentValue({
           label: 'Total Berat (Cust)',
-          dependencies: [], // TODO
+          dependencies: ['markings'],
           calculateValue: fields => 0, // TODO
           defaultValue: 0,
           suffix: 'Kg'

@@ -43,12 +43,15 @@ const DetailsTable: FC<ICustomComponentProps> = props => {
     }
     else {
       const username = user?.profile.name;
+      const newValue = { productDetail, route, transport, price, user: username };
       if (value) {
-        handleChange([...value, { productDetail, route, transport, price, user: username }]);
+        handleChange([...value, newValue]);
       }
       else {
-        handleChange([{ productDetail, route, transport, price, user: username }]);
+        handleChange([newValue]);
       }
+
+      // Clear the inputs afterwards.
       setProductDetail(undefined);
       setRoute(undefined);
       setPrice(undefined);
@@ -142,7 +145,7 @@ const DetailsContainer = styled.div`
     margin-bottom: 10px;
 
     > div {
-      width: 35%;
+      width: calc(50% - 50px);
 
       > *:first-child {
         margin-bottom: 10px;

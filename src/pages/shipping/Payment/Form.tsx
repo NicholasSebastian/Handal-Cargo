@@ -52,7 +52,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
           </span>
           <span>
             <Text strong>Total Pembayaran: </Text> 
-            {formatCurrency(items.reduce((acc: number, item: any) => acc + item.amount, 0) ?? 0)}
+            Rp.{formatCurrency(items.reduce((acc: number, item: any) => acc + item.amount, 0) ?? 0)}
           </span>
         </div>
         <Divider style={{ margin: '10px' }} />
@@ -86,19 +86,20 @@ const PaymentForm: FC<IInjectedProps> = props => {
         </div>
         <Table
           size="small"
-          dataSource={items}
           pagination={false}
+          dataSource={items}
           columns={[
             { 
               dataIndex: 'date', 
               title: 'Tanggal',
-              render: value => dateToString(value)
+              render: value => dateToString(value),
+              width: 180
             },
             { dataIndex: 'type', title: 'Jenis Pembayaran' },
             { 
               dataIndex: 'amount', 
               title: 'Jumlah',
-              render: value => formatCurrency(value)
+              render: value => 'Rp.' + formatCurrency(value)
             },
             { dataIndex: 'description', title: 'Keterangan' },
             {
@@ -143,7 +144,7 @@ const Container = styled.div`
       align-items: flex-end;
 
       > div {
-        width: 35%;
+        width: calc(50% - 50px);
 
         > *:first-child {
           margin-bottom: 10px;

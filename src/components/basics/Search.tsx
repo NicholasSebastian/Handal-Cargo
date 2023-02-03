@@ -1,16 +1,28 @@
 import { FC, useState } from "react";
-import { Space, Input, Select, Segmented } from "antd";
+import { Space, Input, Select, Segmented, Tooltip } from "antd";
 import { SegmentedLabeledOption } from "antd/lib/segmented";
-import { AlignCenterOutlined, AlignLeftOutlined, MenuOutlined } from "@ant-design/icons";
+import { AlignCenterOutlined, AlignLeftOutlined, FontColorsOutlined } from "@ant-design/icons";
 
 const { Search: AntSearch } = Input;
 
 // Creates a component pertaining a search bar with advanced features.
 
 const modes: Array<SegmentedLabeledOption> = [
-  { value: 'partial', icon: <AlignCenterOutlined /> }, // Partial Match
-  { value: 'beginning', icon: <AlignLeftOutlined /> },// Match from Beginning
-  { value: 'full', icon: <MenuOutlined /> }             // Full Match
+  { value: 'partial', icon: (   // Partial Match
+    <Tooltip overlay="Match Sebagian">
+      <AlignCenterOutlined />
+    </Tooltip>
+  )},
+  { value: 'beginning', icon: ( // Match from Beginning
+    <Tooltip overlay="Match Dari Awal">
+      <AlignLeftOutlined /> 
+    </Tooltip>
+  )},
+  { value: 'full', icon: (      // Full Match
+    <Tooltip overlay="Match Seluruhnya">
+      <FontColorsOutlined />
+    </Tooltip>
+  )}
 ];
 
 const Search: FC<ISearchProps> = props => {
@@ -36,13 +48,13 @@ const Search: FC<ISearchProps> = props => {
         onSearch={val => {
           switch (currentMode) {
             case 'partial':
-              onSearch(new RegExp(val));
+              onSearch(new RegExp(val, 'i'));
               break;
             case 'beginning':
-              onSearch(new RegExp('^' + val));
+              onSearch(new RegExp('^' + val, 'i'));
               break;
             case 'full':
-              onSearch(new RegExp('^' + val + '$'));
+              onSearch(new RegExp('^' + val + '$', 'i'));
               break;
           }
         }} />

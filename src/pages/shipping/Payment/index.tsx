@@ -8,7 +8,7 @@ const Payment: FC = () => {
   return (
     <TableTemplate
       collectionName="Payments"
-      modalWidth={700}
+      modalWidth={720}
       view={PaymentView}
       form={PaymentForm}
       columns={[

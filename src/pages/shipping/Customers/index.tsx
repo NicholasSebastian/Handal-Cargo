@@ -10,7 +10,7 @@ const Customers: FC = () => {
   return (
     <TableTemplate 
       collectionName="Customers"
-      modalWidth={650}
+      modalWidth={700}
       query={(collectionName, search, searchBy) => {
         if (search) {
           return database?.collection(collectionName).aggregate([

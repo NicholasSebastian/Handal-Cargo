@@ -80,6 +80,11 @@ export default MarkingTable;
 const MarkingContainer = styled.div`
   > div:first-child {
     display: flex;
+    justify-content: space-between;
     margin-bottom: 10px;
+
+    > *:first-child {
+      width: calc(100% - 90px);
+    }
   }
 `;
