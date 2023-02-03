@@ -19,7 +19,7 @@ const Payment: FC = () => {
         },
         { 
           title: "Total Pembayaran",
-          render: (_, row) => 'Rp. ' + formatCurrency(row.items.reduce((acc: number, item: any) => acc + item.amount, 0))
+          render: (_, row) => 'Rp.' + formatCurrency(row.items.reduce((acc: number, item: any) => acc + item.amount, 0))
         }
       ]} />
   );

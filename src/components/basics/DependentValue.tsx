@@ -16,7 +16,7 @@ function createDependentValue(config: IDependentValueConfig): FC<ICustomComponen
     // Whenever the dependency values change, recalculate the value.
     useEffect(() => {
       if (dependencies.some(dep => changedFields?.includes(dep))) {
-        const valuesExist = fields && dependencies.every(dep => fields[dep] !== undefined);
+        const valuesExist = fields && dependencies.every(dep => fields[dep] != null);
         setValue(valuesExist ? calculateValue(fields) : defaultValue);
       }
     }, [changedFields]);

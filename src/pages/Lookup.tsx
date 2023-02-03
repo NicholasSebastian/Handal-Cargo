@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Lookup: FC = () => {
   return (
     <Container 
-      src="https://kursdollar.org/"
+      src="https://kursdollar.org/mata-uang/CNY/"
       title="Exchange Rates" />
   );
 }

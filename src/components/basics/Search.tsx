@@ -1,20 +1,21 @@
-import { FC, ReactNode, useState } from "react";
-import { Space, Input, Select, Button, Tooltip } from "antd";
+import { FC, useState } from "react";
+import { Space, Input, Select, Segmented } from "antd";
+import { SegmentedLabeledOption } from "antd/lib/segmented";
 import { AlignCenterOutlined, AlignLeftOutlined, MenuOutlined } from "@ant-design/icons";
 
 const { Search: AntSearch } = Input;
 
 // Creates a component pertaining a search bar with advanced features.
 
-const modes: Array<IMode> = [
-  { title: "Cocok Sebagian", icon: <AlignCenterOutlined /> }, // Partial Match
-  { title: "Cocok Dari Awal", icon: <AlignLeftOutlined /> },  // Match from Beginning
-  { title: "Cocok Seluruh", icon: <MenuOutlined /> }          // Full Match
+const modes: Array<SegmentedLabeledOption> = [
+  { value: 'partial', icon: <AlignCenterOutlined /> }, // Partial Match
+  { value: 'beginning', icon: <AlignLeftOutlined /> },// Match from Beginning
+  { value: 'full', icon: <MenuOutlined /> }             // Full Match
 ];
 
 const Search: FC<ISearchProps> = props => {
   const { onSearch, searchBy, setSearchBy, columns } = props;
-  const [currentMode, setCurrentMode] = useState(0);
+  const [currentMode, setCurrentMode] = useState(modes[0].value);
   
   return (
     <Space>
@@ -28,26 +29,19 @@ const Search: FC<ISearchProps> = props => {
           onChange={value => setSearchBy(value)}
           dropdownMatchSelectWidth={false} />
       )}
-      {modes.map((mode, i) => (
-        <Tooltip key={i} title={mode.title}>
-          <Button 
-            icon={mode.icon} 
-            type={(currentMode === i) ? 'primary' : 'default'} 
-            onClick={() => setCurrentMode(i)} />
-        </Tooltip>
-      ))}
+      <Segmented options={modes} value={currentMode} onChange={setCurrentMode} />
       <AntSearch allowClear 
         placeholder="Cari" 
         style={{ width: 250 }} 
         onSearch={val => {
           switch (currentMode) {
-            case 0:
+            case 'partial':
               onSearch(new RegExp(val));
               break;
-            case 1:
+            case 'beginning':
               onSearch(new RegExp('^' + val));
               break;
-            case 2:
+            case 'full':
               onSearch(new RegExp('^' + val + '$'));
               break;
           }
@@ -63,9 +57,4 @@ interface ISearchProps {
   columns?: Array<any>
   searchBy?: string
   setSearchBy?: (searchBy: string) => void
-}
-
-interface IMode {
-  title: string
-  icon: ReactNode
 }

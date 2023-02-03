@@ -3,6 +3,7 @@ import styled from "styled-components";
 import TableTemplate from "../../../components/compounds/TableTemplate";
 import createDependentValue from "../../../components/basics/DependentValue";
 import { formatCurrency } from "../../../utils";
+import MarkingTable from "./MarkingTable";
 
 // TODO: Add a Surat Jalan table to view all Surat Jalan, including an Advanced Search feature, 
 //       whether it gets its own page, or just a modal accessible through this page.
@@ -52,13 +53,13 @@ const SeaFreight: FC = () => {
       }}
       form={[
         { key: 'container_number', label: 'Nomor Container', required: true },
-        { key: 'muat_date', label: 'Tanggal Muat', type: 'date', required: true },
-        { key: 'arrival_date', label: 'Tanggal Tiba', type: 'date', required: true },
+        { key: 'muat_date', label: 'Tanggal Muat', type: 'date' },
+        { key: 'arrival_date', label: 'Tanggal Tiba', type: 'date' },
         { key: 'bl_date', label: 'Tanggal BL', type: 'date' },
         { type: 'custom', render: createDependentValue({
           label: 'Hari Tiba Dari Muat',
           dependencies: ['arrival_date', 'muat_date'], 
-          calculateValue: fields => fields.arrival_date.diff(fields.muat_date, "days"), 
+          calculateValue: fields => fields.arrival_date?.diff(fields.muat_date, "days"), 
           defaultValue: 0,
           suffix: 'hari'
         })},
@@ -101,7 +102,73 @@ const SeaFreight: FC = () => {
           defaultValue: 0,
           prefix: 'Rp.'
         })},
-        // TODO
+        'pagebreak',
+        { key: 'markings', type: 'custom', render: MarkingTable },
+        'pagebreak',
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Muatan',
+          dependencies: [], // TODO
+          calculateValue: fields => 0, // TODO
+          defaultValue: 0,
+          suffix: 'Colly / Ball'
+        })},
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Kubikasi (List)',
+          dependencies: [], // TODO
+          calculateValue: fields => 0, // TODO
+          defaultValue: 0,
+          suffix: 'm³'
+        })},
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Berat (List)',
+          dependencies: [], // TODO
+          calculateValue: fields => 0, // TODO
+          defaultValue: 0,
+          suffix: 'Kg'
+        })},
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Kubikasi (DList)',
+          dependencies: [], // TODO
+          calculateValue: fields => 0, // TODO
+          defaultValue: 0,
+          suffix: 'm³'
+        })},
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Berat (DList)',
+          dependencies: [], // TODO
+          calculateValue: fields => 0, // TODO
+          defaultValue: 0,
+          suffix: 'Kg'
+        })},
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Kubikasi (HB)',
+          dependencies: [], // TODO
+          calculateValue: fields => 0, // TODO
+          defaultValue: 0,
+          suffix: 'm³'
+        })},
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Berat (HB)',
+          dependencies: [], // TODO
+          calculateValue: fields => 0, // TODO
+          defaultValue: 0,
+          suffix: 'Kg'
+        })},
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Kubikasi (Cust)',
+          dependencies: [], // TODO
+          calculateValue: fields => 0, // TODO
+          defaultValue: 0,
+          suffix: 'm³'
+        })},
+        { type: 'custom', render: createDependentValue({
+          label: 'Total Berat (Cust)',
+          dependencies: [], // TODO
+          calculateValue: fields => 0, // TODO
+          defaultValue: 0,
+          suffix: 'Kg'
+        })},
+        { key: 'description', label: 'Keterangan', type: 'textarea' },
       ]} />
   );
 }

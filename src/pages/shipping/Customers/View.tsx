@@ -2,6 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Descriptions, Table } from "antd";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
+import { formatCurrency } from "../../../utils";
 
 const { Item } = Descriptions;
 
@@ -42,7 +43,7 @@ const CustomersView: FC<IInjectedProps> = props => {
           { dataIndex: 'productDetail', title: "Keterangan Barang" },
           { dataIndex: 'route', title: 'Rute' },
           { dataIndex: 'transport', title: 'By' },
-          { dataIndex: 'price', title: 'Harga' },
+          { dataIndex: 'price', title: 'Harga', render: value => 'Rp.' + formatCurrency(value) },
           { dataIndex: 'user', title: 'User' }
         ]} />
     </ViewContainer>

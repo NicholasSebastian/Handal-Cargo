@@ -109,7 +109,7 @@ const DetailsTable: FC<ICustomComponentProps> = props => {
           { 
             dataIndex: 'price', 
             title: 'Harga', 
-            render: value => formatCurrency(value) 
+            render: value => 'Rp.' + formatCurrency(value) 
           },
           { dataIndex: 'user', title: 'User' },
           {

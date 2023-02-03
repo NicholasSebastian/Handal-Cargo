@@ -16,7 +16,7 @@ const PaymentView: FC<IInjectedProps> = props => {
         {values['_id'].toString()}
       </Item>
       <Item label="Total Pembayaran">
-        Rp. {formatCurrency(values.items.reduce((acc: number, item: any) => acc + item.amount, 0))}
+        Rp.{formatCurrency(values.items.reduce((acc: number, item: any) => acc + item.amount, 0))}
       </Item>
       <Item>
         <Table bordered
@@ -26,7 +26,7 @@ const PaymentView: FC<IInjectedProps> = props => {
           columns={[
             { dataIndex: 'date', title: 'Tanggal', render: value => dateToString(value) },
             { dataIndex: 'type', title: 'Jenis Pembayaran' },
-            { dataIndex: 'amount', title: 'Jumlah' },
+            { dataIndex: 'amount', title: 'Jumlah', render: value => 'Rp.' + formatCurrency(value) },
             { dataIndex: 'description', title: 'Keterangan' }
           ]}
           style={{ width: '100%' }} />

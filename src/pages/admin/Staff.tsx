@@ -38,7 +38,7 @@ const Staff: FC = () => {
         { key: 'password', label: 'Kata Sandi', type: 'password', required: true },
         { key: 'access_level', label: 'Level Akses', type: 'select', items: 'AccessLevels', required: true },
         { key: 'staff_group', label: 'Kelompok Staff', type: 'select', items: 'StaffGroups', required: true },
-        { key: 'gender', label: 'Kelamin', type: 'select', items: ['Laki-laki', 'Perempuan'], required: true },
+        { key: 'gender', label: 'Kelamin', type: 'select', items: ['Laki-laki', 'Perempuan'] },
         'pagebreak',
         { key: 'address', label: 'Alamat' },
         { key: 'ward', label: 'Kecamatan' },
