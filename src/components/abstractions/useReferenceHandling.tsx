@@ -26,7 +26,7 @@ function useReferenceHandling(formItems: Array<FormItem>) {
     .then(references => {
       const values = Object.fromEntries(references.map((values, i) => {
         const collectionName = referenceItems[i].items;
-        return [collectionName, values?.map(v => v.name)];
+        return [collectionName, values?.map(value => value.name)];
       }));
       setReference(values);
     });
