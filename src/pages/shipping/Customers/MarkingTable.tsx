@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import { Form, List, Input, Button, Popconfirm, message } from "antd";
 import { PlusOutlined } from '@ant-design/icons';
+import useDatabase from "../../../data/useDatabase";
 import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 
 const { useFormInstance } = Form; // https://ant.design/components/form#formuseforminstance
@@ -9,8 +10,29 @@ const { Item } = List;
 
 const MarkingTable: FC<ICustomComponentProps> = props => {
   const { value } = props;
+  const database = useDatabase();
   const form = useFormInstance();
   const [markingInput, setMarkingInput] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const checkCollisions = () => new Promise<boolean>((resolve, reject) => {
+    const existsLocally = value?.some((marking: string) => marking === markingInput);
+    if (existsLocally) return resolve(true);
+
+    setLoading(true);
+    database?.collection('Customers')
+      .aggregate([
+        { $project: { _id: 0, marking: '$markings' } },
+        { $unwind: "$marking" },
+        { $match: { marking: markingInput } }
+      ])
+      .finally(() => setLoading(false))
+      .then(results => {
+        const existsGlobally = results.length > 0;
+        return resolve(existsGlobally);
+      })
+      .catch(reject);
+  })
 
   const handleChange = (markings: Array<string>) => {
     form.setFieldsValue({ ...form.getFieldsValue(true), markings });
@@ -20,18 +42,21 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
     if (markingInput.length === 0) {
       message.error("Marking belum diisi.");
     }
-    else if (value) {
-      const exists = value.some((marking: string) => marking === markingInput);
-      if (exists) 
-        message.error(`Marking '${markingInput}' sudah ada.`);
-      else {
-        handleChange([...value, markingInput]);
-        setMarkingInput('');
-      }
-    }
     else {
-      handleChange([markingInput]);
-      setMarkingInput('');
+      checkCollisions().then(alreadyExists => {
+        if (alreadyExists) {
+          message.error(`Marking '${markingInput}' sudah ada.`);
+        }
+        else {
+          if (value) {
+            handleChange([...value, markingInput]);
+          }
+          else {
+            handleChange([markingInput]);
+          }
+          setMarkingInput('');
+        }
+      });
     }
   }
 
@@ -47,6 +72,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
           value={markingInput} 
           onChange={e => setMarkingInput(e.target.value)} />
         <Button 
+          loading={loading}
           icon={<PlusOutlined />}
           onClick={handleAdd}> 
           Add

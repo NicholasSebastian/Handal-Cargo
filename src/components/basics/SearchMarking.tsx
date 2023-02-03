@@ -19,7 +19,7 @@ const SearchMarking: FC<ISearchProps> = props => {
     // Fetch the list of all customer markings that match the input value.
     database?.collection('Customers')
       .aggregate([
-        { $project: { marking: '$markings' } },
+        { $project: { _id: 0, marking: '$markings' } },
         { $unwind: "$marking" },
         { $match: { marking: { $regex: new RegExp('^' + value, 'i') } } }
       ])
