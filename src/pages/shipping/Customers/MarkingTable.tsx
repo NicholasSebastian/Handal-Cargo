@@ -69,7 +69,6 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
       database?.collection('AirCargo').count({ 'markings.marking': item })
     ])
     .then(results => {
-      console.log(results);
       if (results.every(result => result === 0)) {
         // If the marking has not been used, then proceed to delete it.
         handleChange(value.filter((i: string) => i !== item));
