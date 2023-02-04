@@ -15,7 +15,7 @@ const { Text } = Typography;
 // TODO: Pagination.
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, columns, view, form, modalWidth, query } = props;
+  const { collectionName, columns, view, form, modalWidth, query, width, showIndicator } = props;
   const defaultSearchBy = (columns[0] as any).dataIndex;
   const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, defaultSearchBy, query);
   const { handleAdd, handleEdit, handleDelete } = handlers;
@@ -40,9 +40,11 @@ const TableTemplate: FC<ITemplateProps> = props => {
         size='small' 
         pagination={false}
         dataSource={data}
-        loading={loading}
+        loading={loading} 
+        scroll={width ? { x: width } : undefined}
         onRow={entry => ({ 
-          onClick: () => setModal({ mode: 'view', id: entry._id }) 
+          onClick: () => setModal({ mode: 'view', id: entry._id }),
+          className: (showIndicator && showIndicator(entry)) ? 'badge' : undefined
         })}
         columns={[
           ...columns.map(column => {
@@ -121,6 +123,17 @@ const Container = styled.div`
     }
   }
 
+  tr.badge > td:first-child::after {
+    content: '';
+    background-color: #52c41a;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+  }
+
   tbody > tr:hover {
     cursor: pointer;
   }
@@ -139,8 +152,10 @@ interface ITemplateProps {
   columns: ColumnsType<IData>
   view: ViewPropType
   form: FormPropType
+  width?: number
   modalWidth?: number
   query?: Query
+  showIndicator?: (entry: any) => boolean
 }
 
 type ClickHandler1 = React.MouseEventHandler<HTMLElement>;

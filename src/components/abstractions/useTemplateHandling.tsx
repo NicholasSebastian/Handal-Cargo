@@ -45,7 +45,7 @@ function useTemplateHandling(collectionName: string, defaultSearchBy: string, cu
     database?.collection(collectionName)
       .insertOne(momentsToDates(values))
       .then(() => {
-        message.success(`${values.name} telah disimpan.`);
+        message.success(`${values.name ? values.name : 'Data'} telah disimpan.`);
         setModal(null);
         refreshData();
       });
@@ -55,7 +55,7 @@ function useTemplateHandling(collectionName: string, defaultSearchBy: string, cu
     database?.collection(collectionName)
       .updateOne({ _id: entryId }, { $set: momentsToDates(values) })
       .then(() => {
-        message.success(`${values.name} telah diubah.`);
+        message.success(`${values.name ? values.name : 'Data'} telah diubah.`);
         setModal(null);
         refreshData();
       });
@@ -65,7 +65,7 @@ function useTemplateHandling(collectionName: string, defaultSearchBy: string, cu
     database?.collection(collectionName)
       .deleteOne({ _id: entryId })
       .then(() => {
-        message.success("Item telah dihapus.");
+        message.success("Data telah dihapus.");
         refreshData();
       });
   };

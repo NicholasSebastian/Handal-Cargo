@@ -22,7 +22,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   // Hooks handling delegated logic.
   const { currentPage, pages, steps, buttons } = usePageHandling(formItems);
   const referenceValues = useReferenceHandling(formItems);
-  const currency = useCurrencyHandling(formItems);
+  const currency = useCurrencyHandling(form, formItems);
 
   // Sets all the given default values into the form at the beginning.
   useEffect(() => {

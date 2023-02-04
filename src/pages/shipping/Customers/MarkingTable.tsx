@@ -16,20 +16,20 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
   const [loading, setLoading] = useState(false);
 
   const checkCollisions = () => new Promise<boolean>((resolve, reject) => {
+    // Check if the marking already exists in the local table.
     const existsLocally = value?.some((marking: string) => marking === markingInput);
-    if (existsLocally) return resolve(true);
+    if (existsLocally) {
+      return resolve(true);
+    }
 
+    // Check if the marking already exists in the database.
     setLoading(true);
     database?.collection('Customers')
-      .aggregate([
-        { $project: { _id: 0, marking: '$markings' } },
-        { $unwind: "$marking" },
-        { $match: { marking: markingInput } }
-      ])
+      .count({ markings: markingInput })
       .finally(() => setLoading(false))
-      .then(results => {
-        const existsGlobally = results.length > 0;
-        return resolve(existsGlobally);
+      .then(result => {
+        const existsGlobally = result > 0;
+        resolve(existsGlobally);
       })
       .catch(reject);
   })
@@ -43,25 +43,42 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
       message.error("Marking belum diisi.");
     }
     else {
-      checkCollisions().then(alreadyExists => {
-        if (alreadyExists) {
-          message.error(`Marking '${markingInput}' sudah ada.`);
-        }
-        else {
-          if (value) {
-            handleChange([...value, markingInput]);
+      checkCollisions()
+        .then(alreadyExists => {
+          if (alreadyExists) {
+            message.error(`Marking '${markingInput}' sudah ada.`);
           }
           else {
-            handleChange([markingInput]);
+            if (value) {
+              handleChange([...value, markingInput]);
+            }
+            else {
+              handleChange([markingInput]);
+            }
+            setMarkingInput('');
           }
-          setMarkingInput('');
-        }
-      });
+        });
     }
   }
 
   const handleDelete = (item: string) => {
-    handleChange(value.filter((i: string) => i !== item));
+    // Check if the marking is already being used in a SeaFreight or AirCargo entry.
+    setLoading(true);
+    Promise.all([
+      database?.collection('SeaFreight').count({ 'markings.marking': item }),
+      database?.collection('AirCargo').count({ 'markings.marking': item })
+    ])
+    .then(results => {
+      console.log(results);
+      if (results.every(result => result === 0)) {
+        // If the marking has not been used, then proceed to delete it.
+        handleChange(value.filter((i: string) => i !== item));
+      }
+      else {
+        message.error("Marking ini tidak boleh dihapus.");
+      }
+    })
+    .finally(() => setLoading(false));
   }
 
   return (
@@ -91,7 +108,11 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
                 e?.stopPropagation();
                 handleDelete(item);
               }}>
-              <Button onClick={e => e.stopPropagation()}>Delete</Button>
+              <Button 
+                loading={loading} 
+                onClick={e => e.stopPropagation()}>
+                Delete
+              </Button>
             </Popconfirm>
           ]}>
             {item}

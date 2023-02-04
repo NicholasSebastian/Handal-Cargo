@@ -1,16 +1,15 @@
 import { useState, useEffect, useMemo } from "react";
-import { Form } from "antd";
+import { Form, FormInstance } from "antd";
 import { FormItem } from "../basics/BasicForm";
 import useDatabase from "../../data/useDatabase";
 
-const { useFormInstance, useWatch } = Form;
+const { useWatch } = Form;
 const DEFAULT_SYMBOL = 'Rp.';
 
 // Intended for use within the BasicForm component.
 
-function useCurrencyHandling(formItems: Array<FormItem>) {
+function useCurrencyHandling(form: FormInstance, formItems: Array<FormItem>) {
   const database = useDatabase();
-  const form = useFormInstance();
   const [reference, setReference] = useState<Record<string, string>>();
   const [symbol, setSymbol] = useState(DEFAULT_SYMBOL);
 

@@ -32,13 +32,26 @@ const Login: FC<ILoginProps> = ({ login }) => {
         <Title level={5} style={{ textAlign: 'right' }}>Handal Cargo</Title>
         <Title level={2}>Log In</Title>
         <Form onFinish={onSubmit}>
-          <Item name="username" rules={[{ required: true, message: 'Nama Pengguna harus diisi.' }]}>
-            <Input prefix={<UserOutlined style={{ color: 'gray' }} />} placeholder="Nama Pengguna" />
+          <Item 
+            name="username" 
+            rules={[{ required: true, message: 'Nama Pengguna harus diisi.' }]}>
+            <Input 
+              prefix={<UserOutlined style={{ color: 'gray' }} />} 
+              placeholder="Nama Pengguna" />
           </Item>
-          <Item name="password" rules={[{ required: true, message: 'Kata Sandi harus diisi.' }]}>
-            <Password prefix={<LockOutlined style={{ color: 'gray' }} />} placeholder="Kata Sandi" />
+          <Item 
+            name="password" 
+            rules={[{ required: true, message: 'Kata Sandi harus diisi.' }]}>
+            <Password 
+              prefix={<LockOutlined style={{ color: 'gray' }} />} 
+              placeholder="Kata Sandi" />
           </Item>
-          <Button type="primary" loading={loading} htmlType="submit">Masuk</Button>
+          <Button 
+            type="primary" 
+            loading={loading} 
+            htmlType="submit">
+            Masuk
+          </Button>
         </Form>
         <Text>© Handal Cargo {currentYear}, All rights reserved.</Text>
       </div>
