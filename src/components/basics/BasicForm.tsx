@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, ComponentType } from "react";
+import { FC, useEffect, ComponentType } from "react";
 import styled from "styled-components";
 import { Typography, Form, Input, InputNumber, Select, Switch, DatePicker, Divider } from "antd";
 import { IInjectedProps } from "../abstractions/withFormHandling";
@@ -18,12 +18,11 @@ const { Option } = Select;
 const BasicForm: FC<IFormProps> = (props) => {
   const { formItems, initialValues, onSubmit } = props;
   const [form] = useForm();
-  const [fields, setFields] = useState<FieldsData>();
 
   // Hooks handling delegated logic.
   const { currentPage, pages, steps, buttons } = usePageHandling(formItems);
   const referenceValues = useReferenceHandling(formItems);
-  const currency = useCurrencyHandling(formItems, fields);
+  const currency = useCurrencyHandling(formItems);
 
   // Sets all the given default values into the form at the beginning.
   useEffect(() => {
@@ -73,11 +72,11 @@ const BasicForm: FC<IFormProps> = (props) => {
           <Item 
             key={item.key}
             name={item.key}>
-            <item.render {...fields} />
+            <item.render />
           </Item>
         );
         else return (
-          <item.render key={i} {...fields} />
+          <item.render key={i} />
         );
       case 'divider':
         return (
@@ -115,11 +114,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   return (
     <Container 
       form={form}
-      initialValues={datesToMoments(initialValues)} 
-      onFieldsChange={(changedFields, fields) => setFields({ 
-        changedFields: changedFields.map(field => (field.name as never)[0]), 
-        fields: Object.fromEntries(fields.map(field => [(field.name as never)[0], field.value])) 
-      })}
+      initialValues={datesToMoments(initialValues)}
       onFinish={onSubmit} 
       labelCol={{ span: 7 }}>
       {steps}
@@ -133,7 +128,7 @@ const BasicForm: FC<IFormProps> = (props) => {
   );
 }
 
-export type { FormItem, FieldsData, RenderItem, ISelectItem, ICustomComponentProps };
+export type { FormItem, RenderItem, ISelectItem, ICustomComponentProps };
 export default BasicForm;
 
 const Container = styled(Form)`
@@ -184,13 +179,8 @@ interface ICustomItem {
   render: ComponentType<ICustomComponentProps> // For only 'custom' types.
 }
 
-interface ICustomComponentProps extends FieldsData {
+interface ICustomComponentProps {
   value?: any
-}
-
-interface FieldsData {
-  fields?: Record<string, any>
-  changedFields?: Array<string>
 }
 
 type InputType = 'string' | 'textarea' | 'password' | 'number' | 'currency' | 'boolean' | 'date';

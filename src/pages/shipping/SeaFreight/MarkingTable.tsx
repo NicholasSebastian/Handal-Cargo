@@ -31,6 +31,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
 
   const handleChange = (markings: Array<any>) => {
     form.setFieldsValue({ ...form.getFieldsValue(true), markings });
+    
   }
 
   const handleAdd = () => {
@@ -44,14 +45,14 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
       const newValue = { 
         marking, 
         quantity: parseInt(quantity), 
-        listm3: parseFloat(listm3), 
-        listkg: parseFloat(listkg), 
-        dlistm3: parseFloat(dlistm3), 
-        dlistkg: parseFloat(dlistkg), 
-        hbm3: parseFloat(hbm3), 
-        hbkg: parseFloat(hbkg), 
-        custm3: parseFloat(custm3), 
-        custkg: parseFloat(custkg)
+        listm3: listm3 ? parseFloat(listm3) : undefined, 
+        listkg: listkg ? parseFloat(listkg) : undefined, 
+        dlistm3: dlistm3 ? parseFloat(dlistm3) : undefined, 
+        dlistkg: dlistkg ? parseFloat(dlistkg) : undefined, 
+        hbm3: hbm3 ? parseFloat(hbm3) : undefined, 
+        hbkg: hbkg ? parseFloat(hbkg) : undefined, 
+        custm3: custm3 ? parseFloat(custm3) : undefined, 
+        custkg: custkg ? parseFloat(custkg) : undefined
       };
       if (value) {
         handleChange([...value, newValue]);

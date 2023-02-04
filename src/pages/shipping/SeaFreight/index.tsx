@@ -59,7 +59,7 @@ const SeaFreight: FC = () => {
         { type: 'custom', render: createDependentValue({
           label: 'Hari Tiba Dari Muat',
           dependencies: ['arrival_date', 'muat_date'], 
-          calculateValue: fields => fields.arrival_date?.diff(fields.muat_date, "days"), 
+          calculateValue: ([arrival_date, muat_date]) => arrival_date?.diff(muat_date, "days"), 
           defaultValue: 0,
           suffix: 'hari'
         })},
@@ -75,7 +75,10 @@ const SeaFreight: FC = () => {
         { type: 'custom', render: createDependentValue({
           label: 'Biaya Muat (Rp.)',
           dependencies: ['muat_fee', 'exchange_rate'],
-          calculateValue: fields => formatCurrency((fields.muat_fee * fields.exchange_rate).toString()),
+          calculateValue: ([muat_fee, exchange_rate]) => {
+            const value = muat_fee * exchange_rate;
+            return formatCurrency(value.toString());
+          },
           defaultValue: 0,
           prefix: 'Rp.'
         })},
@@ -83,7 +86,10 @@ const SeaFreight: FC = () => {
         { type: 'custom', render: createDependentValue({
           label: 'Biaya Tambahan (Rp.)',
           dependencies: ['additional_fee', 'exchange_rate'],
-          calculateValue: fields => formatCurrency((fields.additional_fee * fields.exchange_rate).toString()),
+          calculateValue: ([additional_fee, exchange_rate]) => {
+            const value = additional_fee * exchange_rate;
+            return formatCurrency(value.toString());
+          },
           defaultValue: 0,
           prefix: 'Rp.'
         })},
@@ -91,14 +97,20 @@ const SeaFreight: FC = () => {
         { type: 'custom', render: createDependentValue({
           label: 'Biaya Lain-Lain (Rp.)',
           dependencies: ['other_fee', 'exchange_rate'],
-          calculateValue: fields => formatCurrency((fields.other_fee * fields.exchange_rate).toString()),
+          calculateValue: ([other_fee, exchange_rate]) => {
+            const value = other_fee * exchange_rate;
+            return formatCurrency(value.toString());
+          },
           defaultValue: 0,
           prefix: 'Rp.'
         })},
         { type: 'custom', render: createDependentValue({
           label: 'Total Biaya (Rp.)',
-          dependencies: ['muat_fee', 'additional_fee', 'other_fee'],
-          calculateValue: fields => formatCurrency(((fields.muat_fee + fields.additional_fee + fields.other_fee) * fields.exchange_rate).toString()),
+          dependencies: ['muat_fee', 'additional_fee', 'other_fee', 'exchange_rate'],
+          calculateValue: ([muat_fee, additional_fee, other_fee, exchange_rate]) => {
+            const value = (muat_fee + additional_fee + other_fee) * exchange_rate;
+            return formatCurrency(value.toString());
+          },
           defaultValue: 0,
           prefix: 'Rp.'
         })},
@@ -107,8 +119,10 @@ const SeaFreight: FC = () => {
         'pagebreak',
         { type: 'custom', render: createDependentValue({
           label: 'Total Muatan',
-          dependencies: ['markings'], // TODO: Fix this.
-          calculateValue: fields => fields.markings.reduce((acc: number, marking: any) => acc + marking.quantity, 0),
+          dependencies: ['markings'],
+          calculateValue: ([markings]) => {
+            return markings.reduce((acc: number, marking: any) => acc + marking.quantity, 0);
+          },
           defaultValue: 0,
           suffix: 'Colly / Ball'
         })},

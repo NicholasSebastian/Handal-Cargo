@@ -2,24 +2,25 @@ import { FC, useState, useEffect } from "react";
 import { Form, Input } from "antd";
 import { ICustomComponentProps } from "./BasicForm";
 
-const { Item } = Form;
+const { useFormInstance, useWatch, Item } = Form;
 
 // Intended for use for building BasicForm custom components.
 // Creates a disabled form item to display a calculated value dependent on other items in the form.
 
 function createDependentValue(config: IDependentValueConfig): FC<ICustomComponentProps> {
-  return props => {
-    const { fields, changedFields } = props;
-    const { label, dependencies, calculateValue, defaultValue, ...args } = config;
+  const { label, dependencies, calculateValue, defaultValue, ...args } = config;
+  return () => {
+    const form = useFormInstance();
     const [value, setValue] = useState(defaultValue);
+
+    // Watch the fields defined by the given dependencies for any changes.
+    const values = dependencies.map(dependency => useWatch(dependency, form));
 
     // Whenever the dependency values change, recalculate the value.
     useEffect(() => {
-      if (dependencies.some(dep => changedFields?.includes(dep))) {
-        const valuesExist = fields && dependencies.every(dep => fields[dep] != null);
-        setValue(valuesExist ? calculateValue(fields) : defaultValue);
-      }
-    }, [changedFields]);
+      const valuesExist = values.every(value => value != null);
+      setValue(valuesExist ? calculateValue(values) : defaultValue);
+    }, values);
 
     return (
       <Item label={label}>
@@ -34,7 +35,7 @@ export default createDependentValue;
 interface IDependentValueConfig {
   label: string
   dependencies: Array<string>
-  calculateValue: (fields: Record<string, any>) => string | number
+  calculateValue: (values: Array<any>) => string | number
   defaultValue: string | number
   [key: string]: any
 }

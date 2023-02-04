@@ -1,13 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
-import { FormItem, FieldsData } from "../basics/BasicForm";
+import { Form } from "antd";
+import { FormItem } from "../basics/BasicForm";
 import useDatabase from "../../data/useDatabase";
 
+const { useFormInstance, useWatch } = Form;
 const DEFAULT_SYMBOL = 'Rp.';
 
 // Intended for use within the BasicForm component.
 
-function useCurrencyHandling(formItems: Array<FormItem>, fieldsData: FieldsData | undefined) {
+function useCurrencyHandling(formItems: Array<FormItem>) {
   const database = useDatabase();
+  const form = useFormInstance();
   const [reference, setReference] = useState<Record<string, string>>();
   const [symbol, setSymbol] = useState(DEFAULT_SYMBOL);
 
@@ -25,18 +28,16 @@ function useCurrencyHandling(formItems: Array<FormItem>, fieldsData: FieldsData 
           setReference(Object.fromEntries(currencies.map(currency => [currency.name, currency.symbol])));
         });
     }
-  }, []);
+  }, [currencyFieldExists]);
 
   // Then whenever the 'currency' field changes, change the 'symbol' state.
+  const currency = useWatch('currency', form);
   useEffect(() => {
-    if (currencyFieldExists && fieldsData?.changedFields?.includes('currency') && reference) {
-      const currency = fieldsData.fields?.currency;
-      if (currency) {
-        const symbol = reference[currency];
-        setSymbol(symbol);
-      }
+    if (currency && reference) {
+      const symbol = reference[currency];
+      setSymbol(symbol);
     }
-  }, [fieldsData]);
+  }, [currency]);
 
   return symbol;
 }
