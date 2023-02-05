@@ -15,9 +15,9 @@ const { Text } = Typography;
 // TODO: Pagination.
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, columns, view, form, modalWidth, query, width, showIndicator } = props;
-  const defaultSearchBy = (columns[0] as any).dataIndex;
-  const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, defaultSearchBy, query);
+  const { collectionName, columns, view, form, width, modalWidth, defaultSearchBy, query, showIndicator } = props;
+  const initialSearchBy = defaultSearchBy ?? (columns[0] as any).dataIndex;
+  const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, initialSearchBy, query);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
@@ -123,19 +123,20 @@ const Container = styled.div`
     }
   }
 
-  tr.badge > td:first-child::after {
-    content: '';
-    background-color: #52c41a;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-  }
-
   tbody > tr:hover {
     cursor: pointer;
+  }
+
+  // Indicator syles.
+  tbody > tr.badge > td:first-child::after {
+    content: '';
+    background-color: #52c41a;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    position: absolute;
+    top: -8px;
+    left: -8px;
   }
 `;
 
@@ -154,6 +155,7 @@ interface ITemplateProps {
   form: FormPropType
   width?: number
   modalWidth?: number
+  defaultSearchBy?: string
   query?: Query
   showIndicator?: (entry: any) => boolean
 }
