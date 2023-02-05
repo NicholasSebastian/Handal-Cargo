@@ -92,7 +92,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
         <Button
           icon={<PlusOutlined />}
           onClick={handleAdd}>
-          Add
+          Baru
         </Button>
       </div>
       <div>
@@ -113,19 +113,19 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
           value={custm3}
           onChange={setCustm3} />
         <InputNumber 
-          placeholder="List (Kg)"
+          placeholder="List (kg)"
           value={listkg}
           onChange={setListkg} />
         <InputNumber 
-          placeholder="DList (Kg)"
+          placeholder="DList (kg)"
           value={dlistkg}
           onChange={setDlistkg} />
         <InputNumber 
-          placeholder="HB (Kg)"
+          placeholder="HB (kg)"
           value={hbkg}
           onChange={setHbkg} />
         <InputNumber 
-          placeholder="Cust (Kg)"
+          placeholder="Cust (kg)"
           value={custkg}
           onChange={setCustkg} />
       </div>
@@ -137,22 +137,23 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
         columns={[
           { dataIndex: 'marking', title: 'Marking' },
           { dataIndex: 'quantity', title: 'Kuantitas' },
-          { dataIndex: 'listm3', title: 'List (m³)' },
-          { dataIndex: 'listkg', title: 'List (Kg)' },
-          { dataIndex: 'dlistm3', title: 'DList (m³)' },
-          { dataIndex: 'dlistkg', title: 'DList (Kg)' },
-          { dataIndex: 'hbm3', title: 'HB (m³)' },
-          { dataIndex: 'hbkg', title: 'HB (Kg)' },
-          { dataIndex: 'custm3', title: 'Cust (m³)' },
-          { dataIndex: 'custkg', title: 'Cust (Kg)' },
+          { dataIndex: 'listm3', title: 'List (m³)', render: value => value && (value + ' m³') },
+          { dataIndex: 'listkg', title: 'List (kg)', render: value => value && (value + ' kg') },
+          { dataIndex: 'dlistm3', title: 'DList (m³)', render: value => value && (value + ' m³') },
+          { dataIndex: 'dlistkg', title: 'DList (kg)', render: value => value && (value + ' kg') },
+          { dataIndex: 'hbm3', title: 'HB (m³)', render: value => value && (value + ' m³') },
+          { dataIndex: 'hbkg', title: 'HB (kg)', render: value => value && (value + ' kg') },
+          { dataIndex: 'custm3', title: 'Cust (m³)', render: value => value && (value + ' m³') },
+          { dataIndex: 'custkg', title: 'Cust (kg)', render: value => value && (value + ' kg') },
           { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
           { dataIndex: 'remainder', title: 'Sisa' },
           { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 100 },
           { dataIndex: 'invoices', title: 'Faktur' },
           {
             fixed: 'right',
+            width: 92,
             render: (_, __, i) => (
-              <Button onClick={() => handleDelete(i)}>Delete</Button>
+              <Button onClick={() => handleDelete(i)}>Hapus</Button>
             )
           }
         ]} />

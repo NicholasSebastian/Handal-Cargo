@@ -23,7 +23,7 @@ const ListTemplate: FC<ITemplateProps> = props => {
           type='dashed' 
           icon={<PlusOutlined />} 
           onClick={() => setModal({ mode: 'add' })}>
-          New
+          Baru
         </Button>
       </div>
       <Spin spinning={loading}>
@@ -45,7 +45,7 @@ const ListTemplate: FC<ITemplateProps> = props => {
                   e?.stopPropagation();
                   handleDelete(entry._id);
                 }}>
-                <Button onClick={e => e.stopPropagation()}>Delete</Button>
+                <Button onClick={e => e.stopPropagation()}>Hapus</Button>
               </Popconfirm>
             ]}>
               <ItemContainer>

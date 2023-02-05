@@ -65,17 +65,18 @@ const SeaFreightForm: Array<FormItem> = [
   },
   'pagebreak',
   { key: 'markings', type: 'custom', render: MarkingTable },
+  { type: 'divider' },
   { type: 'custom', render: () => (
     <MarkingTableDetails>
       {[
         { key: 'listm3', label: 'Total Kubikasi (List)', suffix: 'm³' },
-        { key: 'listkg', label: 'Total Berat (List)', suffix: 'Kg' },
+        { key: 'listkg', label: 'Total Berat (List)', suffix: 'kg' },
         { key: 'dlistm3', label: 'Total Kubikasi (DList)', suffix: 'm³' },
-        { key: 'dlistkg', label: 'Total Berat (DList)', suffix: 'Kg' },
+        { key: 'dlistkg', label: 'Total Berat (DList)', suffix: 'kg' },
         { key: 'hbm3', label: 'Total Kubikasi (HB)', suffix: 'm³' },
-        { key: 'hbkg', label: 'Total Berat (HB)', suffix: 'Kg' },
+        { key: 'hbkg', label: 'Total Berat (HB)', suffix: 'kg' },
         { key: 'custm3', label: 'Total Kubikasi (Cust)', suffix: 'm³' },
-        { key: 'custkg', label: 'Total Berat (Cust)', suffix: 'Kg' },
+        { key: 'custkg', label: 'Total Berat (Cust)', suffix: 'kg' },
         { key: 'quantity', label: 'Total Muatan', suffix: 'Colly / Ball' }
       ]
       .map(field => createDependentValue({

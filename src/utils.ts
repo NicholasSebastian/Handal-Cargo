@@ -51,7 +51,7 @@ export function dateToString(date: Date) {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-export function formatCurrency(value: string) {
+export function formatCurrency(value: string | number) {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 

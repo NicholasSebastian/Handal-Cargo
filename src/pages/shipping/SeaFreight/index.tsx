@@ -1,4 +1,6 @@
 import { FC } from "react";
+import { Space, Button } from "antd";
+import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import TableTemplate from "../../../components/compounds/TableTemplate";
 import { dateToString, dateDiffInDays } from "../../../utils";
 import SeaFreightView from "./View";
@@ -10,7 +12,7 @@ const SeaFreight: FC = () => {
       collectionName="SeaFreight"
       defaultSearchBy="container_number"
       width={1050}
-      modalWidth={720}
+      modalWidth={800}
       showIndicator={value => true} // TODO: Indicator to signify if all the markings in the container is already paid for.
       view={SeaFreightView}
       form={SeaFreightForm}
@@ -25,7 +27,19 @@ const SeaFreight: FC = () => {
           title: "Lama Tiba", 
           render: (_, values) => dateDiffInDays(values.arrival_date, values.muat_date) + ' Hari'
         }
-      ]} />
+      ]}
+      extra={
+        <Space>
+          <Button 
+            icon={<FileDoneOutlined />}>
+            Surat Jalan
+          </Button>
+          <Button 
+            icon={<AuditOutlined />}>
+            Faktur
+          </Button>
+        </Space>
+      } />
   );
 }
 

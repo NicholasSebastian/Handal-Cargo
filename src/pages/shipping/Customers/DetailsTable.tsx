@@ -98,7 +98,7 @@ const DetailsTable: FC<ICustomComponentProps> = props => {
         <Button
           icon={<PlusOutlined />}
           onClick={handleAdd}>
-          Add
+          Baru
         </Button>
       </div>
       <Table
@@ -126,7 +126,7 @@ const DetailsTable: FC<ICustomComponentProps> = props => {
                   e?.stopPropagation(); 
                   handleDelete(i);
                 }}>
-                <Button onClick={e => e.stopPropagation()}>Delete</Button>
+                <Button onClick={e => e.stopPropagation()}>Hapus</Button>
               </Popconfirm>
             )
           }

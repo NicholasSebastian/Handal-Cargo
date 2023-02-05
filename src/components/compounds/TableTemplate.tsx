@@ -1,4 +1,4 @@
-import { FC, CSSProperties } from 'react';
+import { FC, CSSProperties, ReactNode } from 'react';
 import styled from 'styled-components';
 import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
@@ -15,7 +15,7 @@ const { Text } = Typography;
 // TODO: Pagination.
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, columns, view, form, width, modalWidth, defaultSearchBy, query, showIndicator } = props;
+  const { collectionName, columns, view, form, extra, width, modalWidth, defaultSearchBy, query, showIndicator } = props;
   const initialSearchBy = defaultSearchBy ?? (columns[0] as any).dataIndex;
   const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, initialSearchBy, query);
   const { handleAdd, handleEdit, handleDelete } = handlers;
@@ -29,11 +29,11 @@ const TableTemplate: FC<ITemplateProps> = props => {
         setSearchBy={setSearchBy} 
         columns={columns} />
       <div>
-        <Text>Menampilkan {data?.length} hasil.</Text>
+        {extra ?? <Text>Menampilkan {data?.length ?? '?'} hasil.</Text>}
         <Button 
           icon={<PlusOutlined />} 
           onClick={() => setModal({ mode: 'add' })}>
-          New
+          Baru
         </Button>
       </div>
       <Table 
@@ -53,7 +53,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
           }), 
           {
             fixed: 'right',
-            width: 150,
+            width: 155,
             render: entry => {
               const onEdit: ClickHandler1 = e => {
                 e.stopPropagation(); 
@@ -71,7 +71,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
                     placement="left"
                     onCancel={e => e?.stopPropagation()}
                     onConfirm={onDelete}>
-                    <Button onClick={e => e.stopPropagation()}>Delete</Button>
+                    <Button onClick={e => e.stopPropagation()}>Hapus</Button>
                   </Popconfirm>
                 </Space>
               );
@@ -83,7 +83,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
         visible={modal !== null} 
         onCancel={() => setModal(null)}
         footer={null}
-        width={modalWidth ?? 600} 
+        width={modalWidth ?? 650} 
         bodyStyle={ModalStyles}>
         {modalHasId && modal.mode === 'view' ? (
           <FallbackView
@@ -153,6 +153,7 @@ interface ITemplateProps {
   columns: ColumnsType<IData>
   view: ViewPropType
   form: FormPropType
+  extra?: ReactNode
   width?: number
   modalWidth?: number
   defaultSearchBy?: string

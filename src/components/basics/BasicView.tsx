@@ -13,7 +13,7 @@ const BasicView: FC<IViewProps> = (props) => {
   return (
     <Container 
       title={title} 
-      column={1}
+      column={(viewItems.length > 8) ? 2 : 1}
       labelStyle={{ fontWeight: 500 }}>
       {viewItems.map(item => (
         <Item 
@@ -30,7 +30,7 @@ export type { IViewItem };
 export default BasicView;
 
 const Container = styled(Descriptions)`
-  width: 75%;
+  width: calc(100% - 100px);
 
   > div {
     padding-bottom: 50px;

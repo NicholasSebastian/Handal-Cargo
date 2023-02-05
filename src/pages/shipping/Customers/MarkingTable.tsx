@@ -91,7 +91,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
           loading={loading}
           icon={<PlusOutlined />}
           onClick={handleAdd}> 
-          Add
+          Baru
         </Button>
       </div>
       <List
@@ -110,7 +110,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
               <Button 
                 loading={loading} 
                 onClick={e => e.stopPropagation()}>
-                Delete
+                Hapus
               </Button>
             </Popconfirm>
           ]}>

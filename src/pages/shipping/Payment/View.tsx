@@ -24,9 +24,9 @@ const PaymentView: FC<IInjectedProps> = props => {
           dataSource={values.items}
           pagination={false}
           columns={[
-            { dataIndex: 'date', title: 'Tanggal', render: value => dateToString(value) },
-            { dataIndex: 'type', title: 'Jenis Pembayaran' },
-            { dataIndex: 'amount', title: 'Jumlah', render: value => 'Rp.' + formatCurrency(value) },
+            { dataIndex: 'date', title: 'Tanggal', width: 190, render: value => dateToString(value) },
+            { dataIndex: 'type', title: 'Jenis Pembayaran', width: 140 },
+            { dataIndex: 'amount', title: 'Jumlah', width: 130, render: value => 'Rp.' + formatCurrency(value) },
             { dataIndex: 'description', title: 'Keterangan' }
           ]}
           style={{ width: '100%' }} />
@@ -38,5 +38,5 @@ const PaymentView: FC<IInjectedProps> = props => {
 export default PaymentView;
 
 const ViewContainer = styled(Descriptions)`
-  width: 550px;
+  width: calc(100% - 100px);
 `;

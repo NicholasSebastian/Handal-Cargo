@@ -18,14 +18,10 @@ function useTemplateHandling(collectionName: string, defaultSearchBy: string, cu
   const [loading, setLoading] = useState(false);
 
   const query = () => {
-    if (customQuery) return customQuery(collectionName, search, searchBy);
-    if (!search) return database?.collection(collectionName).find();
-    if ((searchBy === '_id')) {
-      return database?.collection(collectionName).aggregate([
-        { $addFields: { id: { $toString: '$_id' }}},
-        { $match: { id: { $regex: search }}}
-      ]);
-    }
+    if (customQuery) 
+      return customQuery(collectionName, search, searchBy);
+    if (!search) 
+      return database?.collection(collectionName).find();
     else 
       return database?.collection(collectionName).find({ 
         [searchBy]: { $regex: search, $options: 'i' } 
@@ -71,7 +67,7 @@ function useTemplateHandling(collectionName: string, defaultSearchBy: string, cu
   };
 
   const getFormTitle = () => {
-    if (modal?.mode === 'add') return 'New ' + title;
+    if (modal?.mode === 'add') return title + ' Baru';
     if (modal?.mode === 'edit') return 'Edit ' + title;
     return title;
   }

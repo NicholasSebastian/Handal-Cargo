@@ -81,7 +81,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
           <Button
             icon={<PlusOutlined />}
             onClick={handleAdd}>
-            Add
+            Baru
           </Button>
         </div>
         <Table
@@ -113,7 +113,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
                     e?.stopPropagation(); 
                     handleDelete(i);
                   }}>
-                  <Button onClick={e => e.stopPropagation()}>Delete</Button>
+                  <Button onClick={e => e.stopPropagation()}>Hapus</Button>
                 </Popconfirm>
               )
             }

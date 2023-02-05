@@ -1,5 +1,5 @@
 import { register, unregister } from "@tauri-apps/api/globalShortcut";
-import { FC, useState, useId } from "react";
+import { FC, CSSProperties, useState, useId } from "react";
 import styled from "styled-components";
 import { List, Button, Modal, Alert, message } from "antd";
 import { PlusOutlined } from '@ant-design/icons';
@@ -75,7 +75,7 @@ const Shortcuts: FC = () => {
         dataSource={shortcuts}
         renderItem={entry => (
           <Item actions={[
-            <Button onClick={() => deleteShortcut(entry.key)}>Delete</Button>
+            <Button onClick={() => deleteShortcut(entry.key)}>Hapus</Button>
           ]}>
             <ItemContainer>
               <div>{entry.key}</div>
@@ -87,15 +87,15 @@ const Shortcuts: FC = () => {
         type='dashed' 
         icon={<PlusOutlined />}
         onClick={() => setModal(true)}>
-        New
+        Baru
       </Button>
       <Modal centered maskClosable
-        title="New Shortcut"
+        title="Shortcut Baru"
         visible={modal}
         onCancel={() => setModal(false)}
         footer={null}
         width={600}
-        style={{ padding: '30px 0' }}>
+        bodyStyle={ModalStyles}>
         <BasicForm 
           key={useId()}
           onSubmit={values => addShortcut(values)}
@@ -126,6 +126,12 @@ const ItemContainer = styled.div`
     font-weight: 500;
   }
 `;
+
+const ModalStyles: CSSProperties = { 
+  padding: '30px 0', 
+  display: 'flex', 
+  justifyContent: 'center'
+};
 
 interface IShortcut {
   key: string

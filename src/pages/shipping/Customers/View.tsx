@@ -11,7 +11,7 @@ const CustomersView: FC<IInjectedProps> = props => {
   return (
     <ViewContainer>
       <Descriptions 
-        column={1}
+        column={2}
         labelStyle={{ fontWeight: 500 }}>
         <Item label="Nama">{values.name}</Item>
         <Item label="Perusahaan">{values.company}</Item>
@@ -53,7 +53,7 @@ const CustomersView: FC<IInjectedProps> = props => {
 export default CustomersView;
 
 const ViewContainer = styled.div`
-  width: 75%;
+  width: calc(100% - 100px);
 
   > *:nth-last-child(2) {
     margin-top: 10px;
