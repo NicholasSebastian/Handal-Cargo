@@ -1,9 +1,11 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { Table, Space, Descriptions, Button, Tooltip, message } from "antd";
 import { CheckOutlined, CloseOutlined, FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 import { dateToString, formatCurrency } from "../../../utils";
+import TravelDocument from "./TravelDocument";
+import Invoice from "./Invoice";
 
 const { Item } = Descriptions;
 const check = <CheckOutlined style={{ color: 'green' }} />
@@ -19,26 +21,23 @@ const cross = <CloseOutlined style={{ color:'red' }} />
 // TODO: The items on the table should be clickable to view their details, alongside the 'Print' button.
 // TODO: The table should have 'Print' buttons on the right for each row.
 
-// TODO: The Surat Jalan print preview page should be an editable form with all the values pre-filled
-//       and includes additional fields such as:
-//       - Quantity Kirim (Will be used to calculate the 'sisa' field)
-//       - M3/kg (Idk, you gotta ask Ifat for clarification)
-// TODO: 'Simpan' button to save to the 'TravelDocuments' collection.
-// TODO: 'Simpan dan Print' button alongside a Select component for 'Surat Jalan' or 'Surat Jalan Daerah'.
-
-// TODO: The Faktur print preview page should be an editable form with all the values pre-filled and
-//       includes additional fields such as:
-//       - Total (Uneditable field, calculated by M3/kg * Harga)
-// TODO: 'Simpan' button to save to the 'Invoices' collection.
-// TODO: 'Simpan dan Print' button.
-
 // TODO: The Laporan Rugi Laba print preview page. (Idk, you gotta ask Ifat for clarification)
 
 const SeaFreightView: FC<IInjectedProps> = props => {
-  const { values } = props;
-  
-  // TODO: Have state here to determine which of the different pages to display.
+  const { markings, ...values } = props.values;
+  const [currentPage, setCurrentPage] = useState<PageState>('default');
 
+  if (currentPage !== 'default') {
+    const pageProps = { values, marking: currentPage.marking };
+
+    switch (currentPage.type) {
+      case 'travel_document':
+        return <TravelDocument {...pageProps as IPageProps} />
+
+      case 'invoice':
+        return <Invoice {...pageProps as IPageProps} />
+    }
+  }
   return (
     <ViewContainer>
       <Descriptions
@@ -64,7 +63,7 @@ const SeaFreightView: FC<IInjectedProps> = props => {
         size="small"
         scroll={{ x: 1280 }}
         pagination={false}
-        dataSource={values.markings}
+        dataSource={markings}
         columns={[
           { dataIndex: 'marking', title: 'Marking' },
           { dataIndex: 'quantity', title: 'Kuantitas' },
@@ -83,13 +82,21 @@ const SeaFreightView: FC<IInjectedProps> = props => {
           {
             fixed: 'right',
             width: 90,
-            render: () => (
+            render: (_, marking) => (
               <Space>
-                <Tooltip title="Buat Surat Jalan" placement="left">
-                  <Button icon={<FileDoneOutlined />} />
+                <Tooltip 
+                  title="Buat Surat Jalan" 
+                  placement="left">
+                  <Button 
+                    icon={<FileDoneOutlined />}
+                    onClick={() => setCurrentPage({ type: 'travel_document', marking })} />
                 </Tooltip>
-                <Tooltip title="Buat Faktur" placement="right">
-                  <Button icon={<AuditOutlined />} />
+                <Tooltip 
+                  title="Buat Faktur" 
+                  placement="right">
+                  <Button 
+                    icon={<AuditOutlined />}
+                    onClick={() => setCurrentPage({ type: 'invoice', marking })} />
                 </Tooltip>
               </Space>
             )
@@ -105,10 +112,11 @@ const SeaFreightView: FC<IInjectedProps> = props => {
   );
 }
 
+export type { IPageProps };
 export default SeaFreightView;
 
 const ViewContainer = styled.div`
-  width: 700px;
+  width: calc(100% - 100px);
 
   > div.ant-table-wrapper {
     margin-top: 10px;
@@ -123,3 +131,15 @@ const ViewContainer = styled.div`
     }
   }
 `;
+
+interface IPageProps {
+  values: Omit<IInjectedProps, 'markings'>
+  marking: any
+}
+
+interface IAltPageState {
+  type: 'travel_document' | 'invoice'
+  marking: any
+}
+
+type PageState = 'default' | IAltPageState;
