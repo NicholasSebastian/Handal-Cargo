@@ -42,9 +42,10 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
       message.error(`Marking '${marking}' sudah ada.`);
     }
     else {
+      const qty = parseInt(quantity);
       const newValue = { 
         marking, 
-        quantity: parseInt(quantity), 
+        quantity: qty, 
         listm3: listm3 ? parseFloat(listm3) : undefined, 
         listkg: listkg ? parseFloat(listkg) : undefined, 
         dlistm3: dlistm3 ? parseFloat(dlistm3) : undefined, 
@@ -52,7 +53,8 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
         hbm3: hbm3 ? parseFloat(hbm3) : undefined, 
         hbkg: hbkg ? parseFloat(hbkg) : undefined, 
         custm3: custm3 ? parseFloat(custm3) : undefined, 
-        custkg: custkg ? parseFloat(custkg) : undefined
+        custkg: custkg ? parseFloat(custkg) : undefined,
+        remainder: qty
       };
       if (value) {
         handleChange([...value, newValue]);
@@ -164,6 +166,8 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
 export default MarkingTable;
 
 const Container = styled.div`
+  width: 750px; // Because of a stupid bug, this has to be an absolute value.
+
   > div:first-child {
     display: flex;
     justify-content: space-between;

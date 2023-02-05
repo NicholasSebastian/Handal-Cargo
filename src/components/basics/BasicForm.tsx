@@ -16,34 +16,32 @@ const { Option } = Select;
 // Creates a functional form out of the given props.
 
 const BasicForm: FC<IFormProps> = (props) => {
-  const { formItems, initialValues, onSubmit } = props;
+  const { formItems, initialValues, onSubmit, twoColumns, labelSpan, buttonLabel } = props;
   const [form] = useForm();
 
   // Hooks handling delegated logic.
-  const { currentPage, pages, steps, buttons } = usePageHandling(formItems);
+  const { currentPage, pages, steps, buttons } = usePageHandling(formItems, buttonLabel);
   const referenceValues = useReferenceHandling(formItems);
   const currency = useCurrencyHandling(form, formItems);
 
   // Sets all the given default values into the form at the beginning.
   useEffect(() => {
-    if (!initialValues) {
-      formItems.forEach(item => {
-        if ((typeof item === 'object') && ('defaultValue' in item)) {
-          form.setFieldsValue({ [item.key]: item.defaultValue });
-        }
-      });
-    }
+    formItems.forEach(item => {
+      if ((typeof item === 'object') && ('defaultValue' in item) && (!form.getFieldValue(item.key))) {
+        form.setFieldsValue({ [item.key]: item.defaultValue });
+      }
+    });
   }, [formItems]);
 
   // Returns the respective component based on the given item type.
   const renderInput = (item: DefinedItem) => {
     switch (item.type) {
       case 'number':
-        return <InputNumber style={{ width: '100%' }} />
+        return <InputNumber style={{ width: '100%' }} disabled={item.disabled} />
       case 'textarea':
-        return <TextArea rows={4} />
+        return <TextArea rows={4} disabled={item.disabled} />
       case 'boolean':
-        return <Switch />
+        return <Switch disabled={item.disabled} />
       case 'select':
         const actualItems = getSelectItems(item.items, referenceValues);
         return (
@@ -54,13 +52,13 @@ const BasicForm: FC<IFormProps> = (props) => {
           </Select>
         );
       case 'date': 
-        return <DatePicker />
+        return <DatePicker disabled={item.disabled} />
       case 'password':
-        return <Password />
+        return <Password disabled={item.disabled} />
       case 'currency':
-        return <InputCurrency prefix={currency} />
+        return <InputCurrency prefix={currency} disabled={item.disabled} />
       default:
-        return <Input />
+        return <Input disabled={item.disabled} />
     }
   };
 
@@ -116,19 +114,23 @@ const BasicForm: FC<IFormProps> = (props) => {
       form={form}
       initialValues={datesToMoments(initialValues)}
       onFinish={onSubmit} 
-      labelCol={{ span: 7 }}>
+      labelCol={{ span: labelSpan ?? 7 }}>
       {steps}
-      {pages.map((page, index) => (
-        <div key={index} style={{ display: (index === currentPage) ? 'block' : 'none' }}>
-          {page.map((item, i) => renderItem(item, i))}
-        </div>
-      ))}
+      {pages.map((page, index) => {
+        const show = (index === currentPage);
+        const display = show ? (twoColumns ? 'grid' : 'block') : 'none';
+        return (
+          <div key={index} style={{ display, gridTemplateColumns: '1fr 1fr' }}>
+            {page.map((item, i) => renderItem(item, i))}
+          </div>
+        );
+      })}
       {buttons}
     </Container>
   );
 }
 
-export type { FormItem, RenderItem, ISelectItem, ICustomComponentProps };
+export type { IFormProps, FormItem, RenderItem, ISelectItem, ICustomComponentProps };
 export default BasicForm;
 
 const Container = styled(Form)`
@@ -143,6 +145,9 @@ const Container = styled(Form)`
 
 interface IFormProps extends IInjectedProps {
   formItems: Array<FormItem>
+  twoColumns?: boolean
+  labelSpan?: number
+  buttonLabel?: string
 }
 
 interface IFormItem {
@@ -151,6 +156,7 @@ interface IFormItem {
   type?: InputType
   required?: boolean
   defaultValue?: any
+  disabled?: boolean
 }
 
 interface ISelectItem {

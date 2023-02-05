@@ -12,7 +12,7 @@ const SeaFreight: FC = () => {
       collectionName="SeaFreight"
       defaultSearchBy="container_number"
       width={1050}
-      modalWidth={800}
+      modalWidth={850}
       showIndicator={value => true} // TODO: Indicator to signify if all the markings in the container is already paid for.
       view={SeaFreightView}
       form={SeaFreightForm}

@@ -28,14 +28,14 @@ const SeaFreightView: FC<IInjectedProps> = props => {
   const [currentPage, setCurrentPage] = useState<PageState>('default');
 
   if (currentPage !== 'default') {
-    const pageProps = { values, marking: currentPage.marking };
+    const markingValues = { ...values, ...currentPage.marking };
 
     switch (currentPage.type) {
       case 'travel_document':
-        return <TravelDocument {...pageProps as IPageProps} />
+        return <TravelDocument values={markingValues} />
 
       case 'invoice':
-        return <Invoice {...pageProps as IPageProps} />
+        return <Invoice values={markingValues} />
     }
   }
   return (
@@ -133,8 +133,7 @@ const ViewContainer = styled.div`
 `;
 
 interface IPageProps {
-  values: Omit<IInjectedProps, 'markings'>
-  marking: any
+  values: IInjectedProps
 }
 
 interface IAltPageState {

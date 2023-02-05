@@ -8,7 +8,7 @@ const { Step } = Steps;
 
 // Intended for use within the BasicForm component.
 
-function usePageHandling(formItems: Array<FormItem>) {
+function usePageHandling(formItems: Array<FormItem>, buttonLabel?: string) {
   const [currentPage, setCurrentPage] = useState(0);
 
   // Separate the form items by page into multiple arrays.
@@ -52,7 +52,7 @@ function usePageHandling(formItems: Array<FormItem>) {
         <Button 
           type="primary" 
           htmlType="submit">
-          Simpan
+          {buttonLabel ?? 'Simpan'}
         </Button>
       )}
     </Item>
