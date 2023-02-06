@@ -11,7 +11,7 @@ const { Item } = List;
 
 const ListTemplate: FC<ITemplateProps> = props => {
   const { collectionName, searchBy, secondaryColumn, form } = props;
-  const { data, loading, modal, setSearch, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, searchBy);
+  const { data, loading, modal, modalTitle, setSearch, setModal, handlers } = useTemplateHandlers(collectionName, searchBy);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
@@ -56,7 +56,7 @@ const ListTemplate: FC<ITemplateProps> = props => {
           )} />
       </Spin>
       <Modal centered maskClosable 
-        title={getFormTitle()}
+        title={modalTitle}
         visible={modal !== null} 
         onCancel={() => setModal(null)}
         footer={null}

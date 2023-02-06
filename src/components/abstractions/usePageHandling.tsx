@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, ReactNode } from "react";
 import styled from "styled-components";
 import { Form, Button, Steps } from "antd";
 import { FormItem, RenderItem } from "../basics/BasicForm";
@@ -8,7 +8,7 @@ const { Step } = Steps;
 
 // Intended for use within the BasicForm component.
 
-function usePageHandling(formItems: Array<FormItem>, buttonLabel?: string) {
+function usePageHandling(formItems: Array<FormItem>, customButton: ReactNode) {
   const [currentPage, setCurrentPage] = useState(0);
 
   // Separate the form items by page into multiple arrays.
@@ -30,13 +30,12 @@ function usePageHandling(formItems: Array<FormItem>, buttonLabel?: string) {
 
   // Conditional button compnents to be placed at the bottom of the form.
   const buttons = (
-    <Item>
+    <ButtonsContainer>
       {(currentPage > 0) && (
         <Button 
           type="primary" 
           htmlType="button" 
-          onClick={() => setCurrentPage(page => page - 1)} 
-          style={{ marginRight: 10 }}>
+          onClick={() => setCurrentPage(page => page - 1)}>
           Kembali
         </Button>
       )}
@@ -49,13 +48,15 @@ function usePageHandling(formItems: Array<FormItem>, buttonLabel?: string) {
         </Button>
       )}
       {(currentPage === pages.length - 1) && (
-        <Button 
-          type="primary" 
-          htmlType="submit">
-          {buttonLabel ?? 'Simpan'}
-        </Button>
+        customButton ?? (
+          <Button 
+            type="primary" 
+            htmlType="submit">
+            Simpan
+          </Button>
+        )
       )}
-    </Item>
+    </ButtonsContainer>
   );
 
   return { currentPage, pages, steps, buttons };
@@ -66,4 +67,12 @@ export default usePageHandling;
 const StepsContainer = styled(Steps)`
   padding-top: 0;
   margin-bottom: 30px;
+`;
+
+const ButtonsContainer = styled(Item)`
+  margin-top: 10px;
+
+  button:not(:last-child) {
+    margin-right: 10px;
+  }
 `;

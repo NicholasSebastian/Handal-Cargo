@@ -1,4 +1,4 @@
-import { FC, useEffect, ComponentType } from "react";
+import { FC, useEffect, ComponentType, ReactNode } from "react";
 import styled from "styled-components";
 import { Typography, Form, Input, InputNumber, Select, Switch, DatePicker, Divider } from "antd";
 import { IInjectedProps } from "../abstractions/withFormHandling";
@@ -16,11 +16,11 @@ const { Option } = Select;
 // Creates a functional form out of the given props.
 
 const BasicForm: FC<IFormProps> = (props) => {
-  const { formItems, initialValues, onSubmit, twoColumns, labelSpan, buttonLabel } = props;
+  const { formItems, initialValues, onSubmit, twoColumns, labelSpan, customButton } = props;
   const [form] = useForm();
 
   // Hooks handling delegated logic.
-  const { currentPage, pages, steps, buttons } = usePageHandling(formItems, buttonLabel);
+  const { currentPage, pages, steps, buttons } = usePageHandling(formItems, customButton);
   const referenceValues = useReferenceHandling(formItems);
   const currency = useCurrencyHandling(form, formItems);
 
@@ -147,7 +147,7 @@ interface IFormProps extends IInjectedProps {
   formItems: Array<FormItem>
   twoColumns?: boolean
   labelSpan?: number
-  buttonLabel?: string
+  customButton?: ReactNode
 }
 
 interface IFormItem {

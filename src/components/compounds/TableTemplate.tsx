@@ -17,7 +17,7 @@ const { Text } = Typography;
 const TableTemplate: FC<ITemplateProps> = props => {
   const { collectionName, columns, view, form, extra, width, modalWidth, defaultSearchBy, query, showIndicator } = props;
   const initialSearchBy = defaultSearchBy ?? (columns[0] as any).dataIndex;
-  const { data, loading, searchBy, modal, setSearch, setSearchBy, setModal, getFormTitle, handlers } = useTemplateHandlers(collectionName, initialSearchBy, query);
+  const { data, loading, modalTitle, searchBy, modal, setSearch, setSearchBy, setModal, handlers } = useTemplateHandlers(collectionName, initialSearchBy, query);
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
@@ -79,13 +79,13 @@ const TableTemplate: FC<ITemplateProps> = props => {
           }
         ]} />
       <Modal centered maskClosable 
-        title={getFormTitle()}
+        title={modalTitle}
         visible={modal !== null} 
         onCancel={() => setModal(null)}
         footer={null}
         width={modalWidth ?? 650} 
         bodyStyle={ModalStyles}>
-        {modalHasId && modal.mode === 'view' ? (
+        {(modalHasId && modal.mode === 'view') ? (
           <FallbackView
             id={modal.id}   // Use the 'columns' prop instead to build the view if not provided.
             collectionName={collectionName}

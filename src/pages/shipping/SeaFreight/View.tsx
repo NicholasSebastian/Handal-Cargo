@@ -9,7 +9,7 @@ import Invoice from "./Invoice";
 
 const { Item } = Descriptions;
 const check = <CheckOutlined style={{ color: 'green' }} />
-const cross = <CloseOutlined style={{ color:'red' }} />
+const cross = <CloseOutlined style={{ color: 'red' }} />
 
 // TODO: New a Surat Jalan table to view all Surat Jalan, including an Advanced Search feature, 
 //       whether it gets its own page, or just a modal accessible through this page.
@@ -112,7 +112,6 @@ const SeaFreightView: FC<IInjectedProps> = props => {
   );
 }
 
-export type { IPageProps };
 export default SeaFreightView;
 
 const ViewContainer = styled.div`
@@ -131,10 +130,6 @@ const ViewContainer = styled.div`
     }
   }
 `;
-
-interface IPageProps {
-  values: IInjectedProps
-}
 
 interface IAltPageState {
   type: 'travel_document' | 'invoice'

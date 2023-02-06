@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { BSON } from 'realm-web';
 import { message } from 'antd';
 import useDatabase from "../../data/useDatabase";
@@ -6,6 +6,9 @@ import useRoute from '../../data/useRoute';
 import { momentsToDates } from '../../utils';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
+
+// TODO: Convert this into a higher-order component.
+// TODO: Add a state for the 'title', and wrap the children in context so it can set the title.
 
 function useTemplateHandling(collectionName: string, defaultSearchBy: string, customQuery ?: Query) {
   const database = useDatabase();
@@ -16,6 +19,12 @@ function useTemplateHandling(collectionName: string, defaultSearchBy: string, cu
   const [searchBy, setSearchBy] = useState(defaultSearchBy);
   const [modal, setModal] = useState<ModalState>(null);
   const [loading, setLoading] = useState(false);
+
+  const modalTitle = useMemo(() => {
+    if (modal?.mode === 'add') return title + ' Baru';
+    if (modal?.mode === 'edit') return 'Edit ' + title;
+    return title;
+  }, [modal]);
 
   const query = () => {
     if (customQuery) 
@@ -66,22 +75,16 @@ function useTemplateHandling(collectionName: string, defaultSearchBy: string, cu
       });
   };
 
-  const getFormTitle = () => {
-    if (modal?.mode === 'add') return title + ' Baru';
-    if (modal?.mode === 'edit') return 'Edit ' + title;
-    return title;
-  }
-
   useEffect(refreshData, [search]);
   return {
     data, 
     loading,
+    modalTitle,
     searchBy,
     modal, 
     setSearch, 
     setSearchBy,
     setModal, 
-    getFormTitle,
     handlers: {
       handleAdd, 
       handleEdit, 

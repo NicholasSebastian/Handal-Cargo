@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { IPageProps } from "./View";
+import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 
 // TODO: The Faktur print preview page should be an editable form with all the values pre-filled and
 //       includes additional fields such as:
@@ -7,7 +7,7 @@ import { IPageProps } from "./View";
 // TODO: Autosaves to the 'Invoices' collection.
 // TODO: 'Print' button.
 
-const Invoice: FC<IPageProps> = props => {
+const Invoice: FC<IInjectedProps> = props => {
   const { values } = props;
 
   return (

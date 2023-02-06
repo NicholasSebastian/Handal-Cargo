@@ -1,8 +1,9 @@
-import { FC } from "react";
-import { Form, Input } from "antd";
+import { FC, Fragment, useEffect, useMemo, useRef } from "react";
+import { Form, InputNumber, Button } from "antd";
 import moment from "moment";
-import { IPageProps } from "./View";
-import BasicForm from "../../../components/basics/BasicForm";
+import useDatabase from "../../../data/useDatabase";
+import BasicForm, { ICustomComponentProps } from "../../../components/basics/BasicForm";
+import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 
 const { Item, useFormInstance, useWatch } = Form;
 
@@ -13,11 +14,14 @@ const { Item, useFormInstance, useWatch } = Form;
 // TODO: 'Simpan' button to save to the 'TravelDocuments' collection.
 // TODO: 'Simpan dan Print' button alongside a Select component for 'Surat Jalan' or 'Surat Jalan Daerah'.
 
-const TravelDocument: FC<IPageProps> = props => {
+const TravelDocument: FC<IInjectedProps> = props => {
   const { values } = props;
+  const alsoPrint = useRef<boolean>();
 
   const handleSubmit = (values: any) => {
     // TODO
+    console.log(values, alsoPrint.current);
+
     // TODO: Deduct the sisa from the SeaFreight marking by the kuantitas kirim.
   }
 
@@ -26,45 +30,80 @@ const TravelDocument: FC<IPageProps> = props => {
       initialValues={values}
       onSubmit={handleSubmit}
       labelSpan={10}
-      buttonLabel="Simpan dan Print"
       formItems={[
         { key: 'marking', label: 'Marking', disabled: true },
-        { key: 'tanggal', label: 'Tanggal', type: 'date', defaultValue: moment() },
+        { key: 'tanggal', label: 'Tanggal', type: 'date', defaultValue: moment(), required: true },
         { key: 'container_number', label: 'Nomor Container', disabled: true },
-        { key: 'description', label: 'Keterangan Kirim' },
-        { key: 'remainder', label: 'Kuantitas Kirim', type: 'number' },
         { key: 'route', label: 'Rute', type: 'select', items: 'Routes' },
+        { key: 'remainder', label: 'Kuantitas Kirim', type: 'number', required: true },
         { key: 'carrier', label: 'Shipper', type: 'select', items: 'Carriers' },
-        { key: 'measurement', label: 'Pilihan Ukuran', type: 'select', items: ['Kubikasi (m³)', 'Berat (kg)'] },
-        { 
-          key: 'm3kg', 
-          type: 'custom', 
-          render: props => {
-            const { value } = props;
-            const form = useFormInstance();
-            const measurement = useWatch('measurement', form);
-            return (
-              <Item 
-                label={measurement ?? 'Kubikasi/Berat'} 
-                labelCol={{ span: 10 }} 
-                style={{ marginBottom: 0 }}>
-                <Input 
-                  value={value} // Very memory inefficient way to handle the onChange but oh well.
-                  onChange={e => form.setFieldsValue({ ...form.getFieldsValue(true), m3kg: e.target.value })} />
-              </Item>
-            );
-          } 
-        },
-        { key: 'unit', label: 'Satuan', type: 'select', items: ['Colly'] },
+        { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', items: ['Kubikasi (m³)', 'Berat (kg)'], required: true },
         { key: 'expedition', label: 'Expedisi', type: 'select', items: 'Expeditions' },
-        // TODO: Get the customer this marking belongs to and pre-fill the details below.
-        { key: 'customer', label: 'Customer' }, 
-        { key: 'address', label: 'Alamat' },
-        { key: 'city', label: 'Kota' },
+        { key: 'measurement', type: 'custom', render: InputMeasurement },
         { key: 'home_number', label: 'Nomor Telepon' },
-        { key: 'phone_number', label: 'Nomor HP' }
-      ]} />
+        { key: 'unit', label: 'Satuan', type: 'select', items: ['Colly'] },
+        { key: 'phone_number', label: 'Nomor HP' },
+        { key: 'customer', label: 'Customer' }, 
+        { key: 'city', label: 'Kota' },
+        { key: 'address', label: 'Alamat', type: 'textarea' },
+        { key: 'description', label: 'Keterangan Kirim', type: 'textarea' },
+        { type: 'custom', render: CustomerFetcher }
+      ]}
+      customButton={
+        <Fragment>
+          <Button 
+            type='primary'
+            htmlType="submit"
+            onClick={() => { alsoPrint.current = false }}>
+            Simpan
+          </Button>
+          <Button 
+            type='primary'
+            htmlType="submit"
+            onClick={() => { alsoPrint.current = true }}>
+            Simpan dan Print
+          </Button>
+        </Fragment>
+      } />
   );
+}
+
+const InputMeasurement: FC<ICustomComponentProps> = props => {
+  const { value } = props;
+  const form = useFormInstance();
+  const measurementOption = useWatch('measurement_option', form);
+
+  return (
+    <Item required
+      label={measurementOption ?? 'Kubikasi / Berat'} 
+      labelCol={{ span: 10 }} 
+      style={{ marginBottom: 0 }}>
+      <InputNumber 
+        value={value} // Very memory inefficient way to handle the onChange but oh well.
+        onChange={measurement => form.setFieldsValue({ ...form.getFieldsValue(true), measurement })}
+        style={{ width: '100%' }} />
+    </Item>
+  );
+} 
+
+const CustomerFetcher: FC = () => {
+  const database = useDatabase();
+  const form = useFormInstance();
+  const marking = useMemo(() => form.getFieldValue('marking'), []);
+
+  useEffect(() => {
+    database?.collection('Customers').aggregate([
+      { $match: { markings: marking } },
+      { $project: { _id: 0, customer: '$name', address: 1, city: 1, home_number: 1, phone_number: 1 } }
+    ])
+    .then(result => {
+      if (result && result.length > 0) {
+        form.setFieldsValue({ ...form.getFieldsValue(true), ...result[0] });
+      }
+    });
+  }, []);
+  
+  return <Fragment />
 }
 
 export default TravelDocument;
