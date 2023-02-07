@@ -4,22 +4,12 @@ import { Table, Space, Descriptions, Button, Tooltip, message } from "antd";
 import { CheckOutlined, CloseOutlined, FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 import { dateToString, formatCurrency } from "../../../utils";
-import TravelDocument from "./TravelDocument";
-import Invoice from "./Invoice";
+import TravelDocumentForm from "./TravelDocument/Form";
+import InvoiceForm from "./Invoice/Form";
 
 const { Item } = Descriptions;
 const check = <CheckOutlined style={{ color: 'green' }} />
 const cross = <CloseOutlined style={{ color: 'red' }} />
-
-// TODO: New a Surat Jalan table to view all Surat Jalan, including an Advanced Search feature, 
-//       whether it gets its own page, or just a modal accessible through this page.
-// TODO: The items on the table should be clickable to view their details, alongside the 'Print' button.
-// TODO: The table should have 'Print SJ' and 'Print SJ Daerah' buttons on the right for each row.
-
-// TODO: New a Faktur table to view all Faktur, including an Advanced Search feature, 
-//       whether it gets its own page, or just a modal accessible through this page.
-// TODO: The items on the table should be clickable to view their details, alongside the 'Print' button.
-// TODO: The table should have 'Print' buttons on the right for each row.
 
 // TODO: The Laporan Rugi Laba print preview page. (Idk, you gotta ask Ifat for clarification)
 
@@ -32,10 +22,10 @@ const SeaFreightView: FC<IInjectedProps> = props => {
 
     switch (currentPage.type) {
       case 'travel_document':
-        return <TravelDocument values={markingValues} />
+        return <TravelDocumentForm values={markingValues} />
 
       case 'invoice':
-        return <Invoice values={markingValues} />
+        return <InvoiceForm values={markingValues} />
     }
   }
   return (

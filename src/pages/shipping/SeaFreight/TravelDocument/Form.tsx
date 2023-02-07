@@ -1,9 +1,10 @@
 import { FC, Fragment, useEffect, useMemo, useRef } from "react";
-import { Form, InputNumber, Button } from "antd";
+import { Form, InputNumber, Button, message } from "antd";
 import moment from "moment";
-import useDatabase from "../../../data/useDatabase";
-import BasicForm, { ICustomComponentProps } from "../../../components/basics/BasicForm";
-import { IInjectedProps } from "../../../components/abstractions/withInitialData";
+import useDatabase from "../../../../data/useDatabase";
+import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
+import { IInjectedProps } from "../../../../components/abstractions/withInitialData";
+import { momentsToDates } from "../../../../utils";
 
 const { Item, useFormInstance, useWatch } = Form;
 
@@ -14,15 +15,27 @@ const { Item, useFormInstance, useWatch } = Form;
 // TODO: 'Simpan' button to save to the 'TravelDocuments' collection.
 // TODO: 'Simpan dan Print' button alongside a Select component for 'Surat Jalan' or 'Surat Jalan Daerah'.
 
-const TravelDocument: FC<IInjectedProps> = props => {
+const TravelDocumentForm: FC<IInjectedProps> = props => {
   const { values } = props;
+  const database = useDatabase();
   const alsoPrint = useRef<boolean>();
 
   const handleSubmit = (values: any) => {
-    // TODO
-    console.log(values, alsoPrint.current);
+    // Insert the data into the database.
+    database?.collection('TravelPermits')
+      .insertOne(momentsToDates(values))
+      .then(() => {
+        message.success(`${values.name} telah disimpan.`);
+        // TODO: Close the modal.
+      })
+      .catch(() => message.error("Error terjadi. Data gagal dihapus."));
 
     // TODO: Deduct the sisa from the SeaFreight marking by the kuantitas kirim.
+
+    if (alsoPrint.current) {
+      // TODO: Open a new Tauri window, displaying the data positioned for printing.
+      // TODO: Use 'window.print' to print the contents of the window.
+    }
   }
 
   return (
@@ -37,11 +50,15 @@ const TravelDocument: FC<IInjectedProps> = props => {
         { key: 'route', label: 'Rute', type: 'select', items: 'Routes' },
         { key: 'remainder', label: 'Kuantitas Kirim', type: 'number', required: true },
         { key: 'carrier', label: 'Shipper', type: 'select', items: 'Carriers' },
-        { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', items: ['Kubikasi (m³)', 'Berat (kg)'], required: true },
+        { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', required: true, 
+          items: ['List (m³)', 'List (kg)', 'DList (m³)', 'DList (kg)', 'HB (m³)', 'HB (kg)', 'Cust (m³)', 'Cust (kg)'] 
+        },
         { key: 'expedition', label: 'Expedisi', type: 'select', items: 'Expeditions' },
         { key: 'measurement', type: 'custom', render: InputMeasurement },
         { key: 'home_number', label: 'Nomor Telepon' },
-        { key: 'unit', label: 'Satuan', type: 'select', items: ['Colly'] },
+        { key: 'unit', label: 'Satuan', type: 'select', 
+          items: ['Colly', 'Ball', 'Roll', 'Kardus', 'Pcs', 'Kodi', 'Lusin'] 
+        },
         { key: 'phone_number', label: 'Nomor HP' },
         { key: 'customer', label: 'Customer' }, 
         { key: 'city', label: 'Kota' },
@@ -106,4 +123,4 @@ const CustomerFetcher: FC = () => {
   return <Fragment />
 }
 
-export default TravelDocument;
+export default TravelDocumentForm;

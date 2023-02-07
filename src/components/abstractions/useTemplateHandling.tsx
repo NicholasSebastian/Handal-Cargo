@@ -50,20 +50,22 @@ function useTemplateHandling(collectionName: string, defaultSearchBy: string, cu
     database?.collection(collectionName)
       .insertOne(momentsToDates(values))
       .then(() => {
-        message.success(`${values.name ? values.name : 'Data'} telah disimpan.`);
+        message.success(`${values.name ?? 'Data'} telah disimpan.`);
         setModal(null);
         refreshData();
-      });
+      })
+      .catch(() => message.error(`Error terjadi. ${values.name} gagal disimpan.`));
   };
 
   const handleEdit = (entryId: BSON.ObjectId, values: any) => {
     database?.collection(collectionName)
       .updateOne({ _id: entryId }, { $set: momentsToDates(values) })
       .then(() => {
-        message.success(`${values.name ? values.name : 'Data'} telah diubah.`);
+        message.success(`${values.name ?? 'Data'} telah diubah.`);
         setModal(null);
         refreshData();
-      });
+      })
+      .catch(() => message.error(`Error terjadi. ${values.name} gagal diubah.`));
   };
 
   const handleDelete = (entryId: BSON.ObjectId) => {
@@ -72,7 +74,8 @@ function useTemplateHandling(collectionName: string, defaultSearchBy: string, cu
       .then(() => {
         message.success("Data telah dihapus.");
         refreshData();
-      });
+      })
+      .catch(() => message.error("Error terjadi. Data gagal dihapus."));
   };
 
   useEffect(refreshData, [search]);

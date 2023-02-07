@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { IInjectedProps } from "../../../components/abstractions/withInitialData";
+import { IInjectedProps } from "../../../../components/abstractions/withInitialData";
 
 // TODO: The Faktur print preview page should be an editable form with all the values pre-filled and
 //       includes additional fields such as:
@@ -7,7 +7,7 @@ import { IInjectedProps } from "../../../components/abstractions/withInitialData
 // TODO: Autosaves to the 'Invoices' collection.
 // TODO: 'Print' button.
 
-const Invoice: FC<IInjectedProps> = props => {
+const InvoiceForm: FC<IInjectedProps> = props => {
   const { values } = props;
 
   return (
@@ -18,4 +18,4 @@ const Invoice: FC<IInjectedProps> = props => {
   );
 }
 
-export default Invoice;
+export default InvoiceForm;
