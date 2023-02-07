@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useMemo, useRef } from "react";
+import { FC, Fragment, useEffect, useMemo } from "react";
 import { Form, InputNumber, Button, message } from "antd";
 import moment from "moment";
 import useDatabase from "../../../../data/useDatabase";
@@ -18,7 +18,6 @@ const { Item, useFormInstance, useWatch } = Form;
 const TravelDocumentForm: FC<IInjectedProps> = props => {
   const { values } = props;
   const database = useDatabase();
-  const alsoPrint = useRef<boolean>();
 
   const handleSubmit = (values: any) => {
     // Insert the data into the database.
@@ -32,10 +31,8 @@ const TravelDocumentForm: FC<IInjectedProps> = props => {
 
     // TODO: Deduct the sisa from the SeaFreight marking by the kuantitas kirim.
 
-    if (alsoPrint.current) {
-      // TODO: Open a new Tauri window, displaying the data positioned for printing.
-      // TODO: Use 'window.print' to print the contents of the window.
-    }
+    // TODO: Open a new Tauri window, displaying the data positioned for printing.
+    // TODO: Use 'window.print' to print the contents of the window.
   }
 
   return (
@@ -70,15 +67,14 @@ const TravelDocumentForm: FC<IInjectedProps> = props => {
         <Fragment>
           <Button 
             type='primary'
-            htmlType="submit"
-            onClick={() => { alsoPrint.current = false }}>
-            Simpan
+            htmlType="button"
+            onClick={() => {}}>
+            Kembali
           </Button>
           <Button 
             type='primary'
-            htmlType="submit"
-            onClick={() => { alsoPrint.current = true }}>
-            Simpan dan Print
+            htmlType="submit">
+            Print
           </Button>
         </Fragment>
       } />
