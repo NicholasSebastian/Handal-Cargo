@@ -1,23 +1,27 @@
-import { FC, CSSProperties, ReactNode } from 'react';
+import { CSSProperties, ReactNode, createContext, useContext } from 'react';
 import styled from 'styled-components';
 import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
-import useTemplateHandlers, { IData, Query } from '../abstractions/useTemplateHandling';
+import withTemplateHandling, { ISharedProps, IData, ModalState } from '../abstractions/withTemplateHandling';
 import FallbackView, { ViewPropType } from './FallbackView';
 import FallbackForm, { FormPropType } from "./FallbackForm";
 import Search from '../basics/Search';
 
 const { Text } = Typography;
+const ModalContext = createContext<ModalControl>(undefined);
+const useModal = () => useContext(ModalContext);
 
 // TODO: Sorter.
 // TODO: Fixed header.
 // TODO: Pagination.
 
-const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, columns, view, form, extra, width, modalWidth, defaultSearchBy, query, showIndicator } = props;
-  const initialSearchBy = defaultSearchBy ?? (columns[0] as any).dataIndex;
-  const { data, loading, modalTitle, searchBy, modal, setSearch, setSearchBy, setModal, handlers } = useTemplateHandlers(collectionName, initialSearchBy, query);
+const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
+  const { 
+    collectionName, columns, view, form, extra, 
+    width, modalWidth, data, loading, modalTitle, searchKey, modal, 
+    showIndicator, setSearch, setSearchKey, setModal, handlers 
+  } = props;
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
@@ -25,8 +29,8 @@ const TableTemplate: FC<ITemplateProps> = props => {
     <Container>
       <Search 
         onSearch={setSearch} 
-        searchBy={searchBy}
-        setSearchBy={setSearchBy} 
+        searchBy={searchKey}
+        setSearchBy={setSearchKey} 
         columns={columns} />
       <div>
         {extra ?? <Text>Menampilkan {data?.length ?? '?'} hasil.</Text>}
@@ -85,25 +89,27 @@ const TableTemplate: FC<ITemplateProps> = props => {
         footer={null}
         width={modalWidth ?? 650} 
         bodyStyle={ModalStyles}>
-        {(modalHasId && modal.mode === 'view') ? (
-          <FallbackView
-            id={modal.id}   // Use the 'columns' prop instead to build the view if not provided.
-            collectionName={collectionName}
-            view={view ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
-        ) : (
-          <FallbackForm
-            id={modalHasId ? modal.id : undefined}
-            collectionName={collectionName}
-            handleAdd={handleAdd}
-            handleEdit={handleEdit}
-            form={form} />
-        )}
+        <ModalContext.Provider value={setModal}>
+          {(modalHasId && modal.mode === 'view') ? (
+            <FallbackView
+              id={modal.id}   // Use the 'columns' prop instead to build the view if not provided.
+              collectionName={collectionName}
+              view={view ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
+          ) : (
+            <FallbackForm
+              id={modalHasId ? modal.id : undefined}
+              collectionName={collectionName}
+              handleAdd={handleAdd}
+              handleEdit={handleEdit}
+              form={form} />
+          )}
+        </ModalContext.Provider>
       </Modal>
     </Container>
   );
-}
+});
 
-export { ModalStyles };
+export { ModalStyles, useModal };
 export default TableTemplate;
 
 const Container = styled.div`
@@ -148,18 +154,16 @@ const ModalStyles: CSSProperties = {
   overflowY: 'scroll'
 };
 
-interface ITemplateProps {
-  collectionName: string
+interface ITemplateProps extends ISharedProps {
   columns: ColumnsType<IData>
   view: ViewPropType
   form: FormPropType
   extra?: ReactNode
   width?: number
   modalWidth?: number
-  defaultSearchBy?: string
-  query?: Query
   showIndicator?: (entry: any) => boolean
 }
 
 type ClickHandler1 = React.MouseEventHandler<HTMLElement>;
 type ClickHandler2 = ((e?: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => void) | undefined;
+type ModalControl = React.Dispatch<React.SetStateAction<ModalState>> | undefined;

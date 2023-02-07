@@ -6,6 +6,7 @@ const Staff: FC = () => {
   return (
     <TableTemplate 
       collectionName="Staff"
+      searchBy="name"
       columns={[
         { dataIndex: 'name', title: 'Nama' },
         { dataIndex: 'access_level', title: 'Level Akses' },

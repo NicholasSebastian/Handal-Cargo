@@ -22,7 +22,7 @@ const SeaFreight: FC = () => {
       return (
         <TableTemplate
           collectionName="SeaFreight"
-          defaultSearchBy="container_number"
+          searchBy="container_number"
           width={1050}
           modalWidth={850}
           showIndicator={value => true} // TODO: Indicator to signify if all the markings in the container is already paid for.

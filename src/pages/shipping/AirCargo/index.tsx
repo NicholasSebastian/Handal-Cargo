@@ -8,6 +8,7 @@ const AirCargo: FC = () => {
   return (
     <TableTemplate // TODO: Refer to the SeaFreight components. They're pretty much almost identical. 
       collectionName="AirCargo"
+      searchBy=""
       view={props => {
         const { values } = props;
         return (

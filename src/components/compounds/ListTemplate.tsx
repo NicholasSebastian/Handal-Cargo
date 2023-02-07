@@ -1,17 +1,18 @@
-import { FC, CSSProperties } from "react";
 import styled from "styled-components";
 import { List, Button, Modal, Popconfirm, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import useTemplateHandlers from "../abstractions/useTemplateHandling";
+import withTemplateHandling, { ISharedProps } from "../abstractions/withTemplateHandling";
 import { ModalStyles } from "./TableTemplate";
 import FallbackForm, { FormPropType } from "./FallbackForm";
 import Search from '../basics/Search';
 
 const { Item } = List;
 
-const ListTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, searchBy, secondaryColumn, form } = props;
-  const { data, loading, modal, modalTitle, setSearch, setModal, handlers } = useTemplateHandlers(collectionName, searchBy);
+const ListTemplate = withTemplateHandling<ITemplateProps>(props => {
+  const { 
+    collectionName, data, loading, modal, modalTitle, 
+    setSearch, setModal, secondaryColumn, form, handlers 
+  } = props;
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
@@ -71,7 +72,7 @@ const ListTemplate: FC<ITemplateProps> = props => {
       </Modal>
     </Container>
   );
-}
+});
 
 export default ListTemplate;
 
@@ -99,9 +100,7 @@ const ItemContainer = styled.div`
   }
 `;
 
-interface ITemplateProps {
-  collectionName: string
-  searchBy: string
+interface ITemplateProps extends ISharedProps {
   secondaryColumn?: (entry: any) => React.ReactNode
   form: FormPropType
 }

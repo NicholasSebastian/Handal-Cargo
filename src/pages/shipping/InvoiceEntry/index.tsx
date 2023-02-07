@@ -5,6 +5,7 @@ const InvoiceEntry: FC = () => {
   return (
     <TableTemplate // TODO: Refer to page 36 on the design document.
       collectionName="Invoices"
+      searchBy=""
       columns={[
         { dataIndex: "", title: "" }
       ]}

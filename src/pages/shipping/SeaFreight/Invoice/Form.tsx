@@ -1,5 +1,11 @@
 import { FC } from "react";
-import { IInjectedProps } from "../../../../components/abstractions/withInitialData";
+import { Form, InputNumber, Button, message } from "antd";
+import moment from "moment";
+import useDatabase from "../../../../data/useDatabase";
+import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
+import { useModal } from "../../../../components/compounds/TableTemplate";
+import { momentsToDates } from "../../../../utils";
+import { IFormProps } from "../View";
 
 // TODO: The Faktur print preview page should be an editable form with all the values pre-filled and
 //       includes additional fields such as:
@@ -7,8 +13,10 @@ import { IInjectedProps } from "../../../../components/abstractions/withInitialD
 // TODO: Autosaves to the 'Invoices' collection.
 // TODO: 'Print' button.
 
-const InvoiceForm: FC<IInjectedProps> = props => {
-  const { values } = props;
+const InvoiceForm: FC<IFormProps> = props => {
+  const { values, setCurrentPage } = props;
+  const database = useDatabase();
+  const setModal = useModal();
 
   return (
     <div>

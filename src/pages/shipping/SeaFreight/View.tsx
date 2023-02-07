@@ -1,7 +1,8 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Table, Space, Descriptions, Button, Tooltip, message } from "antd";
 import { CheckOutlined, CloseOutlined, FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
+import { useTitle } from "../../../components/abstractions/withTemplateHandling";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 import { dateToString, formatCurrency } from "../../../utils";
 import TravelDocumentForm from "./TravelDocument/Form";
@@ -16,16 +17,20 @@ const cross = <CloseOutlined style={{ color: 'red' }} />
 const SeaFreightView: FC<IInjectedProps> = props => {
   const { markings, ...values } = props.values;
   const [currentPage, setCurrentPage] = useState<PageState>('default');
+  const setTitle = useTitle(); // TODO: Fix this causing weirdass blinking issues.
 
   if (currentPage !== 'default') {
     const markingValues = { ...values, ...currentPage.marking };
+    const formProps = { values: markingValues, setCurrentPage };
 
     switch (currentPage.type) {
       case 'travel_document':
-        return <TravelDocumentForm values={markingValues} />
+        setTitle!("Surat Jalan Baru untuk Sea Freight");
+        return <TravelDocumentForm {...formProps} />
 
       case 'invoice':
-        return <InvoiceForm values={markingValues} />
+        setTitle!("Faktur Baru untuk Sea Freight");
+        return <InvoiceForm {...formProps} />
     }
   }
   return (
@@ -102,6 +107,7 @@ const SeaFreightView: FC<IInjectedProps> = props => {
   );
 }
 
+export type { IFormProps };
 export default SeaFreightView;
 
 const ViewContainer = styled.div`
@@ -120,6 +126,10 @@ const ViewContainer = styled.div`
     }
   }
 `;
+
+interface IFormProps extends IInjectedProps {
+  setCurrentPage: React.Dispatch<React.SetStateAction<PageState>>
+}
 
 interface IAltPageState {
   type: 'travel_document' | 'invoice'

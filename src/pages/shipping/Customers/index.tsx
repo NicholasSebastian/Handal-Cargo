@@ -10,6 +10,7 @@ const Customers: FC = () => {
   return (
     <TableTemplate 
       collectionName="Customers"
+      searchBy="name"
       modalWidth={700}
       query={(collectionName, search, searchBy) => {
         if (search) {

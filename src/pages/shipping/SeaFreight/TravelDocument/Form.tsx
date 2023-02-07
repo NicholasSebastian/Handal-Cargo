@@ -3,8 +3,9 @@ import { Form, InputNumber, Button, message } from "antd";
 import moment from "moment";
 import useDatabase from "../../../../data/useDatabase";
 import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
-import { IInjectedProps } from "../../../../components/abstractions/withInitialData";
+import { useModal } from "../../../../components/compounds/TableTemplate";
 import { momentsToDates } from "../../../../utils";
+import { IFormProps } from "../View";
 
 const { Item, useFormInstance, useWatch } = Form;
 
@@ -15,9 +16,10 @@ const { Item, useFormInstance, useWatch } = Form;
 // TODO: 'Simpan' button to save to the 'TravelDocuments' collection.
 // TODO: 'Simpan dan Print' button alongside a Select component for 'Surat Jalan' or 'Surat Jalan Daerah'.
 
-const TravelDocumentForm: FC<IInjectedProps> = props => {
-  const { values } = props;
+const TravelDocumentForm: FC<IFormProps> = props => {
+  const { values, setCurrentPage } = props;
   const database = useDatabase();
+  const setModal = useModal();
 
   const handleSubmit = (values: any) => {
     // Insert the data into the database.
@@ -25,7 +27,7 @@ const TravelDocumentForm: FC<IInjectedProps> = props => {
       .insertOne(momentsToDates(values))
       .then(() => {
         message.success(`${values.name} telah disimpan.`);
-        // TODO: Close the modal.
+        setModal!(null);
       })
       .catch(() => message.error("Error terjadi. Data gagal dihapus."));
 
@@ -68,7 +70,7 @@ const TravelDocumentForm: FC<IInjectedProps> = props => {
           <Button 
             type='primary'
             htmlType="button"
-            onClick={() => {}}>
+            onClick={() => setCurrentPage('default')}>
             Kembali
           </Button>
           <Button 

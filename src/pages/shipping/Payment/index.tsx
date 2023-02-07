@@ -10,6 +10,7 @@ const Payment: FC = () => {
   return (
     <TableTemplate
       collectionName="Payments"
+      searchBy="_id"
       modalWidth={720}
       view={PaymentView}
       form={PaymentForm}
