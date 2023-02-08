@@ -1,40 +1,40 @@
-import { FC, Fragment, useEffect, useMemo } from "react";
+import { FC, Fragment, useEffect, useMemo, useRef } from "react";
 import { Form, InputNumber, Button, message } from "antd";
 import moment from "moment";
 import useDatabase from "../../../../data/useDatabase";
 import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
-import { useModal } from "../../../../components/compounds/TableTemplate";
-import { momentsToDates } from "../../../../utils";
+import { useCloseModal } from "../../../../components/compounds/TableTemplate";
 import { IFormProps } from "../View";
+import print from "../../../../print";
+import { momentsToDates } from "../../../../utils";
 
 const { Item, useFormInstance, useWatch } = Form;
-
-// TODO: The Surat Jalan print preview page should be an editable form with all the values pre-filled
-//       and includes additional fields such as:
-//       - Quantity Kirim (Will be used to calculate the 'sisa' field)
-//       - M3/kg (Idk, you gotta ask Ifat for clarification)
-// TODO: 'Simpan' button to save to the 'TravelDocuments' collection.
-// TODO: 'Simpan dan Print' button alongside a Select component for 'Surat Jalan' or 'Surat Jalan Daerah'.
 
 const TravelDocumentForm: FC<IFormProps> = props => {
   const { values, setCurrentPage } = props;
   const database = useDatabase();
-  const setModal = useModal();
+  const closeModal = useCloseModal();
+  const isDaerahType = useRef<boolean>();
 
-  const handleSubmit = (values: any) => {
-    // Insert the data into the database.
-    database?.collection('TravelPermits')
-      .insertOne(momentsToDates(values))
-      .then(() => {
-        message.success(`${values.name} telah disimpan.`);
-        setModal!(null);
-      })
-      .catch(() => message.error("Error terjadi. Data gagal dihapus."));
+  const handleSubmit = (submittedValues: any) => {
+    Promise.all([
+      // Insert the data into the database.
+      database?.collection('TravelPermits').insertOne(momentsToDates(submittedValues)),
 
-    // TODO: Deduct the sisa from the SeaFreight marking by the kuantitas kirim.
+      // Deduct the 'sisa' in the SeaFreight marking by the 'kuantitas kirim'.
+      database?.collection('SeaFreight').updateOne(
+        { _id: values._id, "markings": submittedValues.marking }, 
+        { $inc: { "markings.$.remainder": (submittedValues.remainder * -1) }})
+    ])
+    .then(() => {
+      message.success("Surat Jalan telah disimpan.");
+      closeModal();
 
-    // TODO: Open a new Tauri window, displaying the data positioned for printing.
-    // TODO: Use 'window.print' to print the contents of the window.
+      // Proceed to the printing process.
+      const preset = isDaerahType.current ? 'sf-surat-jalan-daerah' : 'sf-surat-jalan';
+      print(submittedValues, preset);
+    })
+    .catch(() => message.error("Error terjadi. Data gagal disimpan."));
   }
 
   return (
@@ -44,10 +44,10 @@ const TravelDocumentForm: FC<IFormProps> = props => {
       labelSpan={10}
       formItems={[
         { key: 'marking', label: 'Marking', disabled: true },
-        { key: 'tanggal', label: 'Tanggal', type: 'date', defaultValue: moment(), required: true },
+        { key: 'date', label: 'Tanggal', type: 'date', defaultValue: moment(), required: true },
         { key: 'container_number', label: 'Nomor Container', disabled: true },
         { key: 'route', label: 'Rute', type: 'select', items: 'Routes' },
-        { key: 'remainder', label: 'Kuantitas Kirim', type: 'number', required: true },
+        { key: 'quantity', label: 'Kuantitas Kirim', type: 'number', required: true },
         { key: 'carrier', label: 'Shipper', type: 'select', items: 'Carriers' },
         { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', required: true, 
           items: ['List (m³)', 'List (kg)', 'DList (m³)', 'DList (kg)', 'HB (m³)', 'HB (kg)', 'Cust (m³)', 'Cust (kg)'] 
@@ -68,15 +68,21 @@ const TravelDocumentForm: FC<IFormProps> = props => {
       customButton={
         <Fragment>
           <Button 
-            type='primary'
             htmlType="button"
             onClick={() => setCurrentPage('default')}>
             Kembali
           </Button>
           <Button 
             type='primary'
-            htmlType="submit">
-            Print
+            htmlType="submit"
+            onClick={() => { isDaerahType.current = false }}>
+            Print Surat Jalan
+          </Button>
+          <Button 
+            type='primary'
+            htmlType="submit"
+            onClick={() => { isDaerahType.current = true }}>
+            Print Surat Jalan Daerah
           </Button>
         </Fragment>
       } />

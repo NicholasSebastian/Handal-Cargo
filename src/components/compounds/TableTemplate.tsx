@@ -9,8 +9,8 @@ import FallbackForm, { FormPropType } from "./FallbackForm";
 import Search from '../basics/Search';
 
 const { Text } = Typography;
-const ModalContext = createContext<ModalControl>(undefined);
-const useModal = () => useContext(ModalContext);
+const ModalContext = createContext<() => void>(() => {});
+const useCloseModal = () => useContext(ModalContext);
 
 // TODO: Sorter.
 // TODO: Fixed header.
@@ -23,7 +23,6 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
     showIndicator, setSearch, setSearchKey, setModal, handlers 
   } = props;
   const { handleAdd, handleEdit, handleDelete } = handlers;
-  const modalHasId = (modal !== null && 'id' in modal);
 
   return (
     <Container>
@@ -84,24 +83,26 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
         ]} />
       <Modal centered maskClosable 
         title={modalTitle}
-        visible={modal !== null} 
+        visible={modal != null} 
         onCancel={() => setModal(null)}
         footer={null}
         width={modalWidth ?? 650} 
         bodyStyle={ModalStyles}>
-        <ModalContext.Provider value={setModal}>
-          {(modalHasId && modal.mode === 'view') ? (
-            <FallbackView
-              id={modal.id}   // Use the 'columns' prop instead to build the view if not provided.
-              collectionName={collectionName}
-              view={view ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
-          ) : (
-            <FallbackForm
-              id={modalHasId ? modal.id : undefined}
-              collectionName={collectionName}
-              handleAdd={handleAdd}
-              handleEdit={handleEdit}
-              form={form} />
+        <ModalContext.Provider value={() => setModal(null)}>
+          {(modal != null) && (
+            (modal.mode === 'view') ? (
+              <FallbackView
+                id={modal.id}
+                collectionName={collectionName}
+                view={view ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
+            ) : (
+              <FallbackForm
+                id={('id' in modal) ? modal.id : undefined}
+                collectionName={collectionName}
+                handleAdd={handleAdd}
+                handleEdit={handleEdit}
+                form={form} />
+            )
           )}
         </ModalContext.Provider>
       </Modal>
@@ -109,7 +110,7 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
   );
 });
 
-export { ModalStyles, useModal };
+export { ModalStyles, useCloseModal };
 export default TableTemplate;
 
 const Container = styled.div`
@@ -166,4 +167,3 @@ interface ITemplateProps extends ISharedProps {
 
 type ClickHandler1 = React.MouseEventHandler<HTMLElement>;
 type ClickHandler2 = ((e?: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => void) | undefined;
-type ModalControl = React.Dispatch<React.SetStateAction<ModalState>> | undefined;

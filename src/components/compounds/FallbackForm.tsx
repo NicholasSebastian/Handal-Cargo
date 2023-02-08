@@ -37,7 +37,7 @@ const FallbackForm: FC<IFormProps> = props => {
   }
 }
 
-export type { FormPropType, HandledFormPropType };
+export type { IFormProps, FormPropType, HandledFormPropType };
 export default FallbackForm;
 
 interface IFormProps extends IEnhancedProps {

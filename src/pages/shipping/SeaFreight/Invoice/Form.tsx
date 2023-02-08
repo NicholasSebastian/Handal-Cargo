@@ -3,7 +3,7 @@ import { Form, InputNumber, Button, message } from "antd";
 import moment from "moment";
 import useDatabase from "../../../../data/useDatabase";
 import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
-import { useModal } from "../../../../components/compounds/TableTemplate";
+import { useCloseModal } from "../../../../components/compounds/TableTemplate";
 import { momentsToDates } from "../../../../utils";
 import { IFormProps } from "../View";
 
@@ -16,7 +16,7 @@ import { IFormProps } from "../View";
 const InvoiceForm: FC<IFormProps> = props => {
   const { values, setCurrentPage } = props;
   const database = useDatabase();
-  const setModal = useModal();
+  const closeModal = useCloseModal();
 
   return (
     <div>

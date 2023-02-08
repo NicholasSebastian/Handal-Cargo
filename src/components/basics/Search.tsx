@@ -36,7 +36,11 @@ const Search: FC<ISearchProps> = props => {
           defaultValue={searchBy}
           options={columns
             .filter(column => column.dataIndex)
-            .map(column => ({ label: `Search by ${column.title}`, value: column.dataIndex }))
+            .map(column => ({ 
+              key: column.dataIndex, 
+              value: column.dataIndex, 
+              label: `Search by ${column.title}` 
+            }))
           }
           onChange={value => setSearchBy(value)}
           dropdownMatchSelectWidth={false} />

@@ -25,12 +25,12 @@ const FallbackView: FC<IViewProps> = props => {
   }
 }
 
-export type { ViewPropType };
+export type { IViewProps, ViewPropType };
 export default FallbackView;
 
 interface IViewProps extends IEnhancedProps {
   view: ViewPropType
 }
 
-type ViewComponentType = ComponentType<IInjectedProps>;
 type ViewPropType = ViewComponentType | Array<IViewItem>;
+type ViewComponentType = ComponentType<IInjectedProps>;

@@ -31,7 +31,6 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
 
   const handleChange = (markings: Array<any>) => {
     form.setFieldsValue({ ...form.getFieldsValue(true), markings });
-    
   }
 
   const handleAdd = () => {

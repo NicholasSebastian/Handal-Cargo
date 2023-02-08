@@ -32,7 +32,7 @@ const Sider: FC<ISiderProps> = props => {
 
       // Return the item if it is a valid page that the user also has access to.
       if (isValidElement(component)) {
-        return (access?.includes(toSlug(name))) ? item : undefined as never;
+        return access?.includes(toSlug(name)) ? item : undefined as never;
       }
 
       // Else assume it has children, so format them appropriately as well,

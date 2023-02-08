@@ -10,13 +10,14 @@ import Invoice from "./Invoice";
 
 const SeaFreight: FC = () => {
   const [currentPage, setCurrentPage] = useState<PageState>('default');
+  const pageProps: IPageProps = { goBack: () => setCurrentPage('default') };
 
   switch (currentPage) {
     case 'travel_permits':
-      return <TravelDocument />
+      return <TravelDocument {...pageProps} />
 
     case 'invoices':
-      return <Invoice />
+      return <Invoice {...pageProps} />
 
     default:
       return (
@@ -58,6 +59,11 @@ const SeaFreight: FC = () => {
   }
 }
 
+export type { IPageProps };
 export default SeaFreight;
+
+interface IPageProps {
+  goBack: () => void
+}
 
 type PageState = 'default' | 'travel_permits' | 'invoices'

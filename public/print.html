@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Print Preview</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+  <script>
+    const tauri = window.__TAURI__;
+    const { listen } = tauri.event;
+    const { getCurrent } = tauri.window;
+
+    function appendElement(value, x, y) {
+      const el = document.createElement('div');
+      document.getElementById('root').appendChild(el);
+      el.setAttribute('style', `position: fixed; top: ${y}px; left: ${x}px; font-size: 12px;`);
+      el.innerText = value;
+    }
+
+    listen('data', event => {
+      const data = JSON.parse(event.payload);
+      console.log(data);
+
+      // Format and display the data properly for printing.
+      switch (data.type) {
+        case 'sf-surat-jalan':
+          appendElement(data.marking, 100, 100);
+          appendElement(data.date, 100, 120);
+          appendElement(data.container_number, 100, 140);
+          break;
+        
+        case 'sf-surat-jalan-daerah':
+          // TODO
+          break;
+        
+        case 'sf-faktur':
+          // TODO
+          break;
+        case 'ac-surat-jalan':
+          break;
+        
+        case 'ac-surat-jalan-daerah':
+          // TODO
+          break;
+        
+        case 'ac-faktur':
+          // TODO
+          break;
+      }
+
+      // Wait half a second before then print the webview.
+      setTimeout(() => {
+        addEventListener('afterprint', () => getCurrent().close());
+        window.print();
+      }, 500);
+    });
+  </script>
+</html>

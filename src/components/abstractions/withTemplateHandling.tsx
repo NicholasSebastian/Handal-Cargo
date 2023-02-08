@@ -1,4 +1,4 @@
-import { FC, ComponentType, createContext, useState, useEffect, useMemo, useContext } from 'react';
+import { FC, ComponentType, useState, useEffect, useMemo, useCallback } from 'react';
 import { BSON } from 'realm-web';
 import { message } from 'antd';
 import useDatabase from "../../data/useDatabase";
@@ -6,9 +6,6 @@ import useRoute from '../../data/useRoute';
 import { momentsToDates } from '../../utils';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
-
-const TitleContext = createContext<TitleControl>(undefined);
-const useTitle = () => useContext(TitleContext);
 
 function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P & IInjectedProps>): 
   FC<P & IEnhancedProps> {
@@ -22,17 +19,14 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
     const [searchKey, setSearchKey] = useState(searchBy);
     const [modal, setModal] = useState<ModalState>(null);
     const [loading, setLoading] = useState(false);
-    const [altTitle, setAltTitle] = useState<string>();
   
     const modalTitle = useMemo(() => {
-      const t = altTitle ?? title;
-      if (modal?.mode === 'add') return t + ' Baru';
-      if (modal?.mode === 'edit') return 'Edit ' + t;
-      return t;
-    }, 
-    [modal, altTitle]);
+      if (modal?.mode === 'add') return title + ' Baru';
+      if (modal?.mode === 'edit') return 'Edit ' + title;
+      return title;
+    }, [modal]);
   
-    const fetchData = () => {
+    const fetchData = useCallback(() => {
       if (query) 
         return query(collectionName, search, searchKey);
       if (!search) 
@@ -41,18 +35,18 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
         return database?.collection(collectionName).find({ 
           [searchKey]: { $regex: search, $options: 'i' } 
         });
-    } 
+    }, [collectionName, search, searchKey]);
   
-    const refreshData = () => {
+    const refreshData = useCallback(() => {
       setLoading(true);
       fetchData()
         ?.then(results => {
           if (results) setData(results);
         })
         .finally(() => setLoading(false));
-    };
+    }, []);
     
-    const handleAdd = (values: any) => {
+    const handleAdd = useCallback((values: any) => {
       database?.collection(collectionName)
         .insertOne(momentsToDates(values))
         .then(() => {
@@ -61,9 +55,9 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
           refreshData();
         })
         .catch(() => message.error(`Error terjadi. ${values.name} gagal disimpan.`));
-    };
+    }, [collectionName]);
   
-    const handleEdit = (entryId: BSON.ObjectId, values: any) => {
+    const handleEdit = useCallback((entryId: BSON.ObjectId, values: any) => {
       database?.collection(collectionName)
         .updateOne({ _id: entryId }, { $set: momentsToDates(values) })
         .then(() => {
@@ -72,9 +66,9 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
           refreshData();
         })
         .catch(() => message.error(`Error terjadi. ${values.name} gagal diubah.`));
-    };
+    }, [collectionName]);
   
-    const handleDelete = (entryId: BSON.ObjectId) => {
+    const handleDelete = useCallback((entryId: BSON.ObjectId) => {
       database?.collection(collectionName)
         .deleteOne({ _id: entryId })
         .then(() => {
@@ -82,7 +76,7 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
           refreshData();
         })
         .catch(() => message.error("Error terjadi. Data gagal dihapus."));
-    };
+    }, [collectionName]);
   
     useEffect(refreshData, [search]);
 
@@ -102,15 +96,10 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
       }
     };
 
-    return (
-      <TitleContext.Provider value={setAltTitle}>
-        <Component {...props} {...newProps} />
-      </TitleContext.Provider>
-    );
+    return <Component {...props} {...newProps} />
   }
 }
 
-export { useTitle };
 export type { ISharedProps, IData, ModalState };
 export default withTemplateHandling;
 
