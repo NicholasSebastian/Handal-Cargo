@@ -1,4 +1,4 @@
-import { FC, ComponentType, useState, useEffect, useMemo, useCallback } from 'react';
+import { FC, ComponentType, useState, useEffect, useMemo } from 'react';
 import { BSON } from 'realm-web';
 import { message } from 'antd';
 import useDatabase from "../../data/useDatabase";
@@ -26,7 +26,7 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
       return title;
     }, [modal]);
   
-    const fetchData = useCallback(() => {
+    const fetchData = () => {
       if (query) 
         return query(collectionName, search, searchKey);
       if (!search) 
@@ -35,18 +35,18 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
         return database?.collection(collectionName).find({ 
           [searchKey]: { $regex: search, $options: 'i' } 
         });
-    }, [collectionName, search, searchKey]);
+    }
   
-    const refreshData = useCallback(() => {
+    const refreshData = () => {
       setLoading(true);
       fetchData()
         ?.then(results => {
           if (results) setData(results);
         })
         .finally(() => setLoading(false));
-    }, []);
+    };
     
-    const handleAdd = useCallback((values: any) => {
+    const handleAdd = (values: any) => {
       database?.collection(collectionName)
         .insertOne(momentsToDates(values))
         .then(() => {
@@ -55,9 +55,9 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
           refreshData();
         })
         .catch(() => message.error(`Error terjadi. ${values.name} gagal disimpan.`));
-    }, [collectionName]);
+    };
   
-    const handleEdit = useCallback((entryId: BSON.ObjectId, values: any) => {
+    const handleEdit = (entryId: BSON.ObjectId, values: any) => {
       database?.collection(collectionName)
         .updateOne({ _id: entryId }, { $set: momentsToDates(values) })
         .then(() => {
@@ -66,9 +66,9 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
           refreshData();
         })
         .catch(() => message.error(`Error terjadi. ${values.name} gagal diubah.`));
-    }, [collectionName]);
+    };
   
-    const handleDelete = useCallback((entryId: BSON.ObjectId) => {
+    const handleDelete = (entryId: BSON.ObjectId) => {
       database?.collection(collectionName)
         .deleteOne({ _id: entryId })
         .then(() => {
@@ -76,7 +76,7 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
           refreshData();
         })
         .catch(() => message.error("Error terjadi. Data gagal dihapus."));
-    }, [collectionName]);
+    };
   
     useEffect(refreshData, [search]);
 
@@ -100,7 +100,7 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
   }
 }
 
-export type { ISharedProps, IData, ModalState };
+export type { ISharedProps, IData };
 export default withTemplateHandling;
 
 interface ISharedProps {
@@ -140,4 +140,3 @@ type ModalState = null
   | { mode: 'edit', id: BSON.ObjectId };
 
 type Query = (collectionName: string, search: RegExp | undefined, searchBy: string) => Promise<any> | undefined;
-type TitleControl = React.Dispatch<React.SetStateAction<string | undefined>> | undefined;

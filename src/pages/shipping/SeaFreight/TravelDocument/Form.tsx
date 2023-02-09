@@ -23,8 +23,11 @@ const TravelDocumentForm: FC<IFormProps> = props => {
 
       // Deduct the 'sisa' in the SeaFreight marking by the 'kuantitas kirim'.
       database?.collection('SeaFreight').updateOne(
-        { _id: values._id, "markings": submittedValues.marking }, 
-        { $inc: { "markings.$.remainder": (submittedValues.remainder * -1) }})
+        { _id: values._id, "markings.marking": submittedValues.marking }, 
+        { $inc: { 
+          "markings.$.remainder": (submittedValues.quantity * -1),
+          "markings.$.travel_documents": 1 
+        }})
     ])
     .then(() => {
       message.success("Surat Jalan telah disimpan.");

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
-import withTemplateHandling, { ISharedProps, IData, ModalState } from '../abstractions/withTemplateHandling';
+import withTemplateHandling, { ISharedProps, IData } from '../abstractions/withTemplateHandling';
 import FallbackView, { ViewPropType } from './FallbackView';
 import FallbackForm, { FormPropType } from "./FallbackForm";
 import Search from '../basics/Search';
@@ -150,7 +150,8 @@ const Container = styled.div`
 const ModalStyles: CSSProperties = { 
   padding: '30px 0', 
   display: 'flex', 
-  justifyContent: 'center',
+  flexDirection: 'column',
+  alignItems: 'center',
   maxHeight: '80vh',
   overflowY: 'scroll'
 };

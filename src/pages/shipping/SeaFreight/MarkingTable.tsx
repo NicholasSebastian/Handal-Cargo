@@ -53,7 +53,9 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
         hbkg: hbkg ? parseFloat(hbkg) : undefined, 
         custm3: custm3 ? parseFloat(custm3) : undefined, 
         custkg: custkg ? parseFloat(custkg) : undefined,
-        remainder: qty
+        remainder: qty,
+        travel_documents: 0,
+        invoices: 0
       };
       if (value) {
         handleChange([...value, newValue]);
