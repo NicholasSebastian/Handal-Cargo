@@ -1,24 +1,37 @@
 import { FC } from "react";
-import styled from "styled-components";
-import useDatabase from "../../../../data/useDatabase";
+import { Button } from "antd";
+import { LeftOutlined } from "@ant-design/icons";
+import TableTemplate from "../../../../components/compounds/ViewTableTemplate";
 import { IPageProps } from "../index";
-
-// TODO: Add a Faktur table to view all Faktur, including an Advanced Search feature, 
-//       whether it gets its own page, or just a modal accessible through this page.
-// TODO: The items on the table should be clickable to view their details, alongside the 'Print' button.
-// TODO: The table should have 'Print' buttons on the right for each row.
+import print from "../../../../print";
+import { dateToString } from "../../../../utils";
 
 const Invoice: FC<IPageProps> = props => {
   const { goBack } = props;
-  const database = useDatabase();
 
   return (
-    <Container>{}</Container>
+    <TableTemplate
+      title=""
+      collection=""
+      columns={[
+        // TODO
+      ]}
+      viewItems={[
+        // TODO
+      ]}
+      viewExtra={values => (
+        <Button onClick={() => print(values, 'sf-faktur')}>
+          Print Ulang Faktur
+        </Button>
+      )}
+      extra={
+        <Button 
+          icon={<LeftOutlined />} 
+          onClick={goBack}>
+          Kembali
+        </Button>
+      } />
   );
 }
 
 export default Invoice;
-
-const Container = styled.div`
-  // TODO
-`;

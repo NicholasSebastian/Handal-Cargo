@@ -1,5 +1,5 @@
 import { FC, Fragment, useEffect, useMemo } from "react";
-import { Form, Button, message } from "antd";
+import { Form, Button, InputNumber, message } from "antd";
 import moment from "moment";
 import useDatabase, { useUser } from "../../../../data/useDatabase";
 import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
@@ -9,7 +9,7 @@ import { InputMeasurement } from "../TravelDocument/Form";
 import print from "../../../../print";
 import { momentsToDates } from "../../../../utils";
 
-const { useFormInstance } = Form;
+const { Item, useFormInstance, useWatch } = Form;
 
 // TODO: The Faktur print preview page should be an editable form with all the values pre-filled and
 //       includes additional fields such as:
@@ -49,9 +49,9 @@ const InvoiceForm: FC<IFormProps> = props => {
         },
         { key: 'productDetail', label: 'Keterangan Barang', type: 'select', items: 'ProductDetails' },
         { key: 'measurement', type: 'custom', render: InputMeasurement },
-        { key: 'price', label: 'Harga', type: 'currency', required: true },
         { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies' },
         { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1 },
+        { key: 'price', label: 'Harga', type: 'currency', required: true },
         // TODO
         { key: '', label: 'Biaya Tambahan' },
         { key: '', label: 'Biaya Tambahan (Rp.)', disabled: true },
@@ -61,8 +61,8 @@ const InvoiceForm: FC<IFormProps> = props => {
         { key: '', label: 'Nomor Surat Jalan Expedisi' },
         { key: '', label: 'Ongkos Kirim' },
         { key: '', label: 'Nomor Surat Jalan' },
-        { key: '', label: 'Total' }, // 'measurement' x 'price'
         // END TODO
+        { key: 'total', type: 'custom', render: DisplayTotal },
         { key: 'nb', label: 'NB', type: 'textarea' },
         { type: 'custom', render: DataSetter }
       ]}
@@ -80,6 +80,29 @@ const InvoiceForm: FC<IFormProps> = props => {
           </Button>
         </Fragment>
       } />
+  );
+}
+
+const DisplayTotal: FC<ICustomComponentProps> = props => {
+  const { value } = props;
+  const form = useFormInstance();
+  const measurement = useWatch('measurement', form);
+  const price = useWatch('price', form);
+
+  useEffect(() => {
+    const total = measurement * price;
+    form.setFieldsValue({ ...form.getFieldsValue(true), total });
+  }, [measurement, price]);
+
+  return (
+    <Item
+      label="Total"
+      labelCol={{ span: 10 }}
+      style={{ marginBottom: 0 }}>
+      <InputNumber disabled
+        value={value}
+        style={{ width: '100%' }} />
+    </Item>
   );
 }
 
