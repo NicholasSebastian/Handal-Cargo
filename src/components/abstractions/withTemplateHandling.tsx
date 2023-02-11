@@ -1,9 +1,10 @@
-import { FC, ComponentType, useState, useEffect, useMemo } from 'react';
+import { FC, ComponentType, useState, useMemo } from 'react';
 import { BSON } from 'realm-web';
 import { message } from 'antd';
 import useDatabase from "../../data/useDatabase";
 import useRoute from '../../data/useRoute';
 import { momentsToDates } from '../../utils';
+import useDataFetching from './useDataFetching';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
 
@@ -11,40 +12,17 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
   FC<P & IEnhancedProps> {
   return props => {
     const { collectionName, searchBy, query } = props;
-    const database = useDatabase();
     const { title } = useRoute()!;
+    const database = useDatabase();
   
-    const [data, setData] = useState<Array<IData>>();
-    const [search, setSearch] = useState<RegExp>();
-    const [searchKey, setSearchKey] = useState(searchBy);
+    const { data, loading, searchKey, setSearch, setSearchKey, refreshData } = useDataFetching(collectionName, searchBy);
     const [modal, setModal] = useState<ModalState>(null);
-    const [loading, setLoading] = useState(false);
   
     const modalTitle = useMemo(() => {
       if (modal?.mode === 'add') return title + ' Baru';
       if (modal?.mode === 'edit') return 'Edit ' + title;
       return title;
     }, [modal]);
-  
-    const fetchData = () => {
-      if (query) 
-        return query(collectionName, search, searchKey);
-      if (!search) 
-        return database?.collection(collectionName).find();
-      else 
-        return database?.collection(collectionName).find({ 
-          [searchKey]: { $regex: search, $options: 'i' } 
-        });
-    }
-  
-    const refreshData = () => {
-      setLoading(true);
-      fetchData()
-        ?.then(results => {
-          if (results) setData(results);
-        })
-        .finally(() => setLoading(false));
-    };
     
     const handleAdd = (values: any) => {
       database?.collection(collectionName)
@@ -77,8 +55,6 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
         })
         .catch(() => message.error("Error terjadi. Data gagal dihapus."));
     };
-  
-    useEffect(refreshData, [search]);
 
     const newProps: IInjectedProps = {
       data, 

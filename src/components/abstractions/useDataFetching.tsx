@@ -1,0 +1,35 @@
+import { useState, useEffect } from "react";
+import useDatabase from "../../data/useDatabase";
+
+// TODO: Implement pagination.
+
+function useDataFetching(collectionName: string, defaultSearchKey: string) {
+  const database = useDatabase();
+  const [data, setData] = useState<Array<any>>();
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState<RegExp>();
+  const [searchKey, setSearchKey] = useState(defaultSearchKey);
+
+  const fetchData = () => {
+    if (!search) 
+      return database?.collection(collectionName).find();
+    else 
+      return database?.collection(collectionName).find({ 
+        [searchKey]: { $regex: search, $options: 'i' } 
+      });
+  };
+
+  const refreshData = () => {
+    setLoading(true);
+    fetchData()
+      ?.then(results => {
+        if (results) setData(results);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(refreshData, [search]);
+  return { data, loading, searchKey, setSearch, setSearchKey, refreshData };
+}
+
+export default useDataFetching;

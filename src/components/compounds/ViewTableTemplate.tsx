@@ -1,41 +1,18 @@
-import { FC, ReactNode, ComponentType, useState, useEffect } from "react";
+import { FC, ReactNode, useState } from "react";
 import styled from "styled-components";
 import { Table, Modal } from "antd";
 import { ColumnsType } from "antd/lib/table";
-import useDatabase from "../../data/useDatabase";
 import { ModalStyles } from "./TableTemplate";
 import BasicView, { IViewItem } from "../basics/BasicView";
 import Search from "../basics/Search";
+import useDataFetching from "../abstractions/useDataFetching";
 
 const BasicTableTemplate: FC<ITemplateProps> = props => {
   const { title, collection, columns, viewItems, viewExtra, extra } = props;
-  const database = useDatabase();
-
-  const [data, setData] = useState<Array<any>>();
-  const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState<RegExp>();
-  const [searchKey, setSearchKey] = useState((columns[0] as any).dataIndex);
+  const initSearchKey = (columns[0] as any).dataIndex;
+  const { data, loading, searchKey, setSearch, setSearchKey } = useDataFetching(collection, initSearchKey);
   const [modal, setModal] = useState<any>();
 
-  const fetchData = () => {
-    if (!search) 
-      return database?.collection(collection).find();
-    else 
-      return database?.collection(collection).find({ 
-        [searchKey]: { $regex: search, $options: 'i' } 
-      });
-  };
-
-  const refreshData = () => {
-    setLoading(true);
-    fetchData()
-      ?.then(results => {
-        if (results) setData(results);
-      })
-      .finally(() => setLoading(false));
-  };
-
-  useEffect(refreshData, []);
   return (
     <Container>
       <div>
