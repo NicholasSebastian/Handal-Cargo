@@ -131,5 +131,4 @@ const CustomerFetcher: FC = () => {
   return <Fragment />
 }
 
-export { InputMeasurement };
 export default TravelDocumentForm;

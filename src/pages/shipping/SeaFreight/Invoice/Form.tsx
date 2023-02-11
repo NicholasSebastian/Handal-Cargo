@@ -1,19 +1,16 @@
 import { FC, Fragment, useEffect, useMemo } from "react";
-import { Form, Button, InputNumber, message } from "antd";
+import { Form, Button, Input, InputNumber, message } from "antd";
 import moment from "moment";
 import useDatabase, { useUser } from "../../../../data/useDatabase";
-import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
 import { useCloseModal } from "../../../../components/compounds/TableTemplate";
+import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
+import createDependentValue from "../../../../components/basics/DependentValue";
 import { IFormProps } from "../View";
-import { InputMeasurement } from "../TravelDocument/Form";
 import print from "../../../../print";
-import { momentsToDates } from "../../../../utils";
+import { momentsToDates, formatCurrency } from "../../../../utils";
 
 const { Item, useFormInstance, useWatch } = Form;
 
-// TODO: The Faktur print preview page should be an editable form with all the values pre-filled and
-//       includes additional fields such as:
-//       - Total (Uneditable field, calculated by M3/kg * Harga)
 // TODO: Autosaves to the 'Invoices' collection.
 // TODO: 'Print' button.
 
@@ -31,35 +28,44 @@ const InvoiceForm: FC<IFormProps> = props => {
     <BasicForm twoColumns
       initialValues={values}
       onSubmit={handleSubmit}
-      labelSpan={10}
+      labelSpan={11}
       formItems={[
         { key: 'user', label: 'User', disabled: true },
         { key: 'print_date', label: 'Tanggal Cetak', type: 'date', defaultValue: moment(), disabled: true },
-        { key: 'date', label: 'Tanggal', type: 'date', defaultValue: moment() },
         { key: 'marking', label: 'Marking', disabled: true },
-        { key: 'measurement_details', label: 'Keterangan Ukuran', disabled: true },
+        { key: 'date', label: 'Tanggal', type: 'date', defaultValue: moment() },
         { key: 'container_number', label: 'Nomor Container', required: true },
+        { key: 'measurement_details', label: 'Keterangan Ukuran', disabled: true },
         { key: 'quantity', label: 'Kuantitas', type: 'number', required: true },
         { key: 'route', label: 'Rute', type: 'select', items: 'Routes' },
-        { key: 'carrier', label: 'Shipper', type: 'select', items: 'Carriers' },
         { key: 'two_various', label: '2 Various', type: 'boolean' },
+        { key: 'carrier', label: 'Shipper', type: 'select', items: 'Carriers' },
         { key: 'via_transfer', label: 'Via Transfer', type: 'boolean' },
+        { key: 'productDetail', label: 'Keterangan Barang', type: 'select', items: 'ProductDetails' },
         { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', required: true, 
           items: ['List (m³)', 'List (kg)', 'DList (m³)', 'DList (kg)', 'HB (m³)', 'HB (kg)', 'Cust (m³)', 'Cust (kg)'] 
         },
-        { key: 'productDetail', label: 'Keterangan Barang', type: 'select', items: 'ProductDetails' },
-        { key: 'measurement', type: 'custom', render: InputMeasurement },
         { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies' },
+        { key: 'measurement', type: 'custom', render: InputMeasurement },
         { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1 },
         { key: 'price', label: 'Harga', type: 'currency', required: true },
-        // TODO
-        { key: '', label: 'Biaya Tambahan' },
-        { key: '', label: 'Biaya Tambahan (Rp.)', disabled: true },
-        // END TODO
+        { key: 'additional_fee', label: 'Biaya Tambahan', type: 'currency', defaultValue: 0 },
         { key: 'expedition', label: 'Expedisi', type: 'select',  items: 'Expeditions' },
+        { 
+          type: 'custom', 
+          render: createDependentValue({
+            label: "Biaya Tambahan (Rp.)",
+            dependencies: ['additional_fee', 'exchange_rate'],
+            calculateValue: ([additional_fee, exchange_rate]) => {
+              const value = additional_fee * exchange_rate;
+              return formatCurrency(value.toString());
+            },
+            defaultValue: 0
+          })
+        },
         // TODO
-        { key: '', label: 'Nomor Surat Jalan Expedisi' },
-        { key: '', label: 'Ongkos Kirim' },
+        { key: '', label: 'No. Surat Jalan Expedisi' },
+        { key: 'shipment_fee', label: 'Ongkos Kirim', type: 'currency', defaultValue: 0 },
         { key: '', label: 'Nomor Surat Jalan' },
         // END TODO
         { key: 'total', type: 'custom', render: DisplayTotal },
@@ -83,24 +89,45 @@ const InvoiceForm: FC<IFormProps> = props => {
   );
 }
 
+const InputMeasurement: FC<ICustomComponentProps> = props => {
+  const { value } = props;
+  const form = useFormInstance();
+  const measurementOption = useWatch('measurement_option', form);
+
+  return (
+    <Item required
+      label={measurementOption ?? 'Kubikasi / Berat'} 
+      labelCol={{ span: 11 }} 
+      style={{ marginBottom: 0 }}>
+      <InputNumber 
+        value={value} // Very memory inefficient way to handle the onChange but oh well.
+        onChange={measurement => form.setFieldsValue({ ...form.getFieldsValue(true), measurement })}
+        style={{ width: '100%' }} />
+    </Item>
+  );
+} 
+
 const DisplayTotal: FC<ICustomComponentProps> = props => {
   const { value } = props;
   const form = useFormInstance();
+
   const measurement = useWatch('measurement', form);
   const price = useWatch('price', form);
+  const additional_fee = useWatch('additional_fee', form);
+  const shipment_fee = useWatch('shipment_fee', form);
 
   useEffect(() => {
-    const total = measurement * price;
+    const total = (measurement * price) + additional_fee + shipment_fee;
     form.setFieldsValue({ ...form.getFieldsValue(true), total });
   }, [measurement, price]);
 
   return (
     <Item
       label="Total"
-      labelCol={{ span: 10 }}
+      labelCol={{ span: 11 }}
       style={{ marginBottom: 0 }}>
-      <InputNumber disabled
-        value={value}
+      <Input disabled
+        value={/* formatCurrency(value.toString())*/ value}
         style={{ width: '100%' }} />
     </Item>
   );
