@@ -1,7 +1,7 @@
 import { WebviewWindow, WindowOptions } from "@tauri-apps/api/window";
 
-type Presets = 'sf-surat-jalan-daerah' | 'sf-surat-jalan' | 'sf-faktur' 
-  | 'ac-surat-jalan-daerah' | 'ac-surat-jalan' | 'ac-faktur';
+type Presets = 'sf-surat-jalan-daerah' | 'sf-surat-jalan' | 'sf-faktur' | 'sf-rugi-laba'
+  | 'ac-surat-jalan-daerah' | 'ac-surat-jalan' | 'ac-faktur' | 'ac-rugi-laba';
 
 const A4_WIDTH = 210;
 const A4_HEIGHT = 297;

@@ -1,18 +1,15 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { Table, Space, Descriptions, Button, Tooltip, message } from "antd";
-import { CheckOutlined, CloseOutlined, FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
+import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 import { dateToString, formatCurrency } from "../../../utils";
+import print from "../../../print";
 import { columns } from "./MarkingTable";
 import TravelDocumentForm from "./TravelDocument/Form";
 import InvoiceForm from "./Invoice/Form";
 
 const { Item } = Descriptions;
-const check = <CheckOutlined style={{ color: 'green' }} />
-const cross = <CloseOutlined style={{ color: 'red' }} />
-
-// TODO: The Laporan Rugi Laba print preview page. (Idk, you gotta ask Ifat for clarification)
 
 const SeaFreightView: FC<IInjectedProps> = props => {
   const { markings, ...values } = props.values;
@@ -82,8 +79,7 @@ const SeaFreightView: FC<IInjectedProps> = props => {
           }
         ]} />
       <div>
-        <Button 
-          onClick={() => message.warning("Fitur ini masih Work in Progress.")}>
+        <Button onClick={() => print(markings, 'sf-rugi-laba')}>
           Laporan Rugi Laba
         </Button>
       </div>
