@@ -17,27 +17,17 @@ const TravelDocumentForm: FC<IFormProps> = props => {
   const isDaerahType = useRef<boolean>();
 
   const handleSubmit = (submittedValues: any) => {
-    Promise.all([
-      // Insert the data into the database.
-      database?.collection('TravelPermits').insertOne(momentsToDates(submittedValues)),
+    database?.collection('TravelPermits')
+      .insertOne(momentsToDates(submittedValues))
+      .then(() => {
+        message.success("Surat Jalan telah disimpan.");
+        closeModal();
 
-      // Deduct the 'sisa' in the SeaFreight marking by the 'kuantitas kirim'.
-      database?.collection('SeaFreight').updateOne(
-        { _id: values._id, "markings.marking": submittedValues.marking }, 
-        { $inc: { 
-          "markings.$.remainder": (submittedValues.quantity * -1),
-          "markings.$.travel_documents": 1 
-        }})
-    ])
-    .then(() => {
-      message.success("Surat Jalan telah disimpan.");
-      closeModal();
-
-      // Proceed to the printing process.
-      const preset = isDaerahType.current ? 'sf-surat-jalan-daerah' : 'sf-surat-jalan';
-      print(submittedValues, preset);
-    })
-    .catch(() => message.error("Error terjadi. Data gagal disimpan."));
+        // Proceed to the printing process.
+        const preset = isDaerahType.current ? 'sf-surat-jalan-daerah' : 'sf-surat-jalan';
+        print(submittedValues, preset);
+      })
+      .catch(() => message.error("Error terjadi. Data gagal disimpan."));
   }
 
   return (

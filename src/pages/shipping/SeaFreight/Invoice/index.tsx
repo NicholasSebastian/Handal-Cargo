@@ -11,8 +11,8 @@ const Invoice: FC<IPageProps> = props => {
 
   return (
     <TableTemplate
-      title=""
-      collection=""
+      title="Faktur Sea Freight"
+      collection="Invoices"
       columns={[
         { dataIndex: '_id', title: 'Nomor Faktur' },
         { dataIndex: 'marking', title: 'Marking' },
@@ -24,26 +24,26 @@ const Invoice: FC<IPageProps> = props => {
         { key: 'user', label: 'User' },
         { key: 'print_date', label: 'tanggal_cetak', render: value => dateToString(value) },
         { key: 'marking', label: 'Marking' },
-        { key: '', label: '' }, // TODO
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' },
-        { key: '', label: '' }
+        { key: 'date', label: 'Tanggal' },
+        { key: 'container_number', label: 'Nomor Container' },
+        { key: 'measurement_details', label: 'Keterangan Ukuran' },
+        { key: 'quantity', label: 'Kuantitas' },
+        { key: 'route', label: 'Rute' },
+        { key: 'two_various', label: '2 Various' },
+        { key: 'carrier', label: 'Shipper' },
+        { key: 'via_transfer', label: 'Via Transfer' },
+        { key: 'product_detail', label: 'Keterangan Barang' },
+        { key: 'measurement_option', label: 'Pilihan Ukuran' },
+        { key: 'currency', label: 'Mata Uang' },
+        { key: 'measurement', label: 'Ukuran' },
+        { key: 'exchange_rate', label: 'Kurs' },
+        { key: 'price', label: 'Harga' },
+        { key: 'additional_fee', label: 'Biaya Tambahan' },
+        { key: 'expedition', label: 'Expedisi' },
+        { key: 'travel_number', label: 'No. Surat Jalan Expedisi' },
+        { key: 'shipment_fee', label: 'Ongkos Kirim' },
+        { key: 'nb', label: 'NB' },
+        { key: 'total', label: 'Total' }
       ]}
       viewExtra={values => (
         <Button onClick={() => print(values, 'sf-faktur')}>

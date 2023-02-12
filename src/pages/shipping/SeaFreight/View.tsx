@@ -4,6 +4,7 @@ import { Table, Space, Descriptions, Button, Tooltip, message } from "antd";
 import { CheckOutlined, CloseOutlined, FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 import { dateToString, formatCurrency } from "../../../utils";
+import { columns } from "./MarkingTable";
 import TravelDocumentForm from "./TravelDocument/Form";
 import InvoiceForm from "./Invoice/Form";
 
@@ -56,20 +57,7 @@ const SeaFreightView: FC<IInjectedProps> = props => {
         pagination={false}
         dataSource={markings}
         columns={[
-          { dataIndex: 'marking', title: 'Marking' },
-          { dataIndex: 'quantity', title: 'Kuantitas' },
-          { dataIndex: 'listm3', title: 'List (m³)', render: value => value && (value + ' m³') },
-          { dataIndex: 'listkg', title: 'List (kg)', render: value => value && (value + ' kg') },
-          { dataIndex: 'dlistm3', title: 'DList (m³)', render: value => value && (value + ' m³') },
-          { dataIndex: 'dlistkg', title: 'DList (kg)', render: value => value && (value + ' kg') },
-          { dataIndex: 'hbm3', title: 'HB (m³)', render: value => value && (value + ' m³') },
-          { dataIndex: 'hbkg', title: 'HB (kg)', render: value => value && (value + ' kg') },
-          { dataIndex: 'custm3', title: 'Cust (m³)', render: value => value && (value + ' m³') },
-          { dataIndex: 'custkg', title: 'Cust (kg)', render: value => value && (value + ' kg') },
-          { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
-          { dataIndex: 'remainder', title: 'Sisa' },
-          { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 100 },
-          { dataIndex: 'invoices', title: 'Faktur' },
+          ...columns,
           {
             fixed: 'right',
             width: 90,

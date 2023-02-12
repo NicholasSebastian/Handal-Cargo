@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { Form, Table, InputNumber, Button, message } from "antd";
+import { ColumnsType } from "antd/lib/table";
 import { PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 import SearchMarking from "../../../components/basics/SearchMarking";
@@ -9,10 +10,22 @@ const { useFormInstance } = Form;
 const check = <CheckOutlined style={{ color: 'green' }} />
 const cross = <CloseOutlined style={{ color:'red' }} />
 
-// TODO: The 'Lunas' column should display true/false, signifying whether the marking has been paid for through Entri Faktur.
-// TODO: The 'Sisa' column should display an integer, signifying the quantity that has not been sent through Surat Jalan.
-// TODO: The 'Surat Jalan' column should display an integer, signifying the number of surat jalan that has been made.
-// TODO: The 'Faktur' column should display an integer, signifying the number of faktur (invoices) that has been made.
+const columns: ColumnsType<any> = [
+  { dataIndex: 'marking', title: 'Marking' },
+  { dataIndex: 'quantity', title: 'Kuantitas' },
+  { dataIndex: 'listm3', title: 'List (m³)', render: value => value && (value + ' m³') },
+  { dataIndex: 'listkg', title: 'List (kg)', render: value => value && (value + ' kg') },
+  { dataIndex: 'dlistm3', title: 'DList (m³)', render: value => value && (value + ' m³') },
+  { dataIndex: 'dlistkg', title: 'DList (kg)', render: value => value && (value + ' kg') },
+  { dataIndex: 'hbm3', title: 'HB (m³)', render: value => value && (value + ' m³') },
+  { dataIndex: 'hbkg', title: 'HB (kg)', render: value => value && (value + ' kg') },
+  { dataIndex: 'custm3', title: 'Cust (m³)', render: value => value && (value + ' m³') },
+  { dataIndex: 'custkg', title: 'Cust (kg)', render: value => value && (value + ' kg') },
+  { dataIndex: 'paid', title: 'Lunas', render: () => false ? check : cross },
+  { dataIndex: 'remainder', title: 'Sisa' },
+  { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 100 },
+  { dataIndex: 'invoices', title: 'Faktur' }
+];
 
 const MarkingTable: FC<ICustomComponentProps> = props => {
   const { value } = props;
@@ -52,10 +65,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
         hbm3: hbm3 ? parseFloat(hbm3) : undefined, 
         hbkg: hbkg ? parseFloat(hbkg) : undefined, 
         custm3: custm3 ? parseFloat(custm3) : undefined, 
-        custkg: custkg ? parseFloat(custkg) : undefined,
-        remainder: qty,
-        travel_documents: 0,
-        invoices: 0
+        custkg: custkg ? parseFloat(custkg) : undefined
       };
       if (value) {
         handleChange([...value, newValue]);
@@ -138,20 +148,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
         pagination={false}
         dataSource={value}
         columns={[
-          { dataIndex: 'marking', title: 'Marking' },
-          { dataIndex: 'quantity', title: 'Kuantitas' },
-          { dataIndex: 'listm3', title: 'List (m³)', render: value => value && (value + ' m³') },
-          { dataIndex: 'listkg', title: 'List (kg)', render: value => value && (value + ' kg') },
-          { dataIndex: 'dlistm3', title: 'DList (m³)', render: value => value && (value + ' m³') },
-          { dataIndex: 'dlistkg', title: 'DList (kg)', render: value => value && (value + ' kg') },
-          { dataIndex: 'hbm3', title: 'HB (m³)', render: value => value && (value + ' m³') },
-          { dataIndex: 'hbkg', title: 'HB (kg)', render: value => value && (value + ' kg') },
-          { dataIndex: 'custm3', title: 'Cust (m³)', render: value => value && (value + ' m³') },
-          { dataIndex: 'custkg', title: 'Cust (kg)', render: value => value && (value + ' kg') },
-          { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
-          { dataIndex: 'remainder', title: 'Sisa' },
-          { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 100 },
-          { dataIndex: 'invoices', title: 'Faktur' },
+          ...columns,
           {
             fixed: 'right',
             width: 92,
@@ -164,6 +161,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
   );
 }
 
+export { columns };
 export default MarkingTable;
 
 const Container = styled.div`

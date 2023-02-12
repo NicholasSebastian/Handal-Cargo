@@ -11,17 +11,20 @@ import { momentsToDates, formatCurrency } from "../../../../utils";
 
 const { Item, useFormInstance, useWatch } = Form;
 
-// TODO: Autosaves to the 'Invoices' collection.
-// TODO: 'Print' button.
-
 const InvoiceForm: FC<IFormProps> = props => {
   const { values, setCurrentPage } = props;
   const database = useDatabase();
   const closeModal = useCloseModal();
 
   const handleSubmit = (submittedValues: any) => {
-    // TODO
-    console.log(submittedValues);
+    database?.collection('Invoices')
+      .insertOne(momentsToDates(submittedValues))
+      .then(() => {
+        message.success("Faktur telah disimpan.");
+        closeModal();
+        print(submittedValues, 'sf-faktur');
+      })
+      .catch(() => message.error("Error terjadi. Data gagal disimpan."));
   }
 
   return (
@@ -41,7 +44,7 @@ const InvoiceForm: FC<IFormProps> = props => {
         { key: 'two_various', label: '2 Various', type: 'boolean' },
         { key: 'carrier', label: 'Shipper', type: 'select', items: 'Carriers' },
         { key: 'via_transfer', label: 'Via Transfer', type: 'boolean' },
-        { key: 'productDetail', label: 'Keterangan Barang', type: 'select', items: 'ProductDetails' },
+        { key: 'product_detail', label: 'Keterangan Barang', type: 'select', items: 'ProductDetails' },
         { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', required: true, 
           items: ['List (m³)', 'List (kg)', 'DList (m³)', 'DList (kg)', 'HB (m³)', 'HB (kg)', 'Cust (m³)', 'Cust (kg)'] 
         },
