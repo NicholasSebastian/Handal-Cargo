@@ -14,7 +14,7 @@ const InvoiceEntry: FC = () => {
         { dataIndex: "arrival_date", title: "Tanggal Tiba" },
         { dataIndex: "muat_date", title: "Tanggal Muat" },
         { dataIndex: "_id", title: "Kode Faktur" },
-        { dataIndex: "", title: "Kode Barang" },
+        { dataIndex: "payment_id", title: "Kode Pembayaran" },
         { dataIndex: "container_number", title: "Nomor Container" },
         { dataIndex: "marking", title: "Marking" },
         { dataIndex: "quantity", title: "Kuantitas" },

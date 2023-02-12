@@ -1,4 +1,5 @@
 import { open } from '@tauri-apps/api/shell';
+import { WebviewWindow } from "@tauri-apps/api/window";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -12,13 +13,6 @@ const MONGODB_REALM_URL = "https://realm.mongodb.com/";
 const currentDate = dateToString(new Date());
 
 // Intended for use within the Layout component.
-
-const serverButton = { 
-  key: 'server', 
-  label: 'Dasbor Server', 
-  icon: <UpSquareOutlined />, 
-  onClick: () => open(MONGODB_REALM_URL) 
-};
 
 const Header: FC<IHeaderProps> = props => {
   const { showServerButton } = props;
@@ -43,9 +37,19 @@ const Header: FC<IHeaderProps> = props => {
       key: 'exchange-rates',
       label: 'Cek Kurs',
       icon: <ReadOutlined />,
-      onClick: () => navigate('/kurs')
+      onClick: () => new WebviewWindow("whatsapp-window", {
+        center: true, 
+        focus: true, 
+        title: "WhatsApp",
+        url: "https://web.whatsapp.com/"
+      })
     },
-    ...(showServerButton ? [serverButton] : []),
+    ...(showServerButton ? [{ 
+      key: 'server', 
+      label: 'Dasbor Server', 
+      icon: <UpSquareOutlined />, 
+      onClick: () => open(MONGODB_REALM_URL) 
+    }] : []),
     { 
       key: 'logout', 
       label: 'Log Out dan Keluar', 

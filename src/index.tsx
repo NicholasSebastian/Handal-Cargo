@@ -18,7 +18,6 @@ const DEFAULT_PAGE = '/sea-freight';
 
 const Profile = lazy(() => import('./pages/Profile'));
 const Shortcuts = lazy(() => import('./pages/Shortcuts'));
-const Lookup = lazy(() => import('./pages/Lookup'));
 
 const Center = styled.div`
   display: flex;
@@ -42,7 +41,6 @@ const elements = (
               <Route path='/' element={<Navigate to={DEFAULT_PAGE} />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/shortcuts' element={<Shortcuts />} />
-              <Route path='/kurs' element={<Lookup />} />
               {routes}
             </Routes>
           </Suspense>

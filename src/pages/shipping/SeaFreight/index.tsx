@@ -26,9 +26,6 @@ const SeaFreight: FC = () => {
           searchBy="container_number"
           width={1050}
           modalWidth={850}
-          showIndicator={value => true} // TODO: Indicator to signify if all the markings in the container is already paid for.
-          view={SeaFreightView}
-          form={SeaFreightForm}
           query={(collectionName, search, searchBy) => {
             // TODO: The 'paid' column should display true/false, signifying whether the marking has been paid for through Entri Faktur.
             // TODO: The 'remainder' column should display an integer, signifying the quantity that has not been sent through Surat Jalan.
@@ -36,6 +33,9 @@ const SeaFreight: FC = () => {
             // TODO: The 'invoices' column should display an integer, signifying the number of faktur (invoices) that has been made.
             return undefined;
           }}
+          showIndicator={values => values.paid}
+          view={SeaFreightView}
+          form={SeaFreightForm}
           columns={[
             { dataIndex: "arrival_date", title: "Tanggal Tiba", width: 190, render: value => dateToString(value) },
             { dataIndex: "container_number", title: "No. Container" },
