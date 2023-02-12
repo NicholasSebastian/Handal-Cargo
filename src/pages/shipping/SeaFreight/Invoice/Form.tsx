@@ -48,13 +48,13 @@ const InvoiceForm: FC<IFormProps> = props => {
         { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies' },
         { key: 'measurement', type: 'custom', render: InputMeasurement },
         { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1 },
-        { key: 'price', label: 'Harga', type: 'currency', required: true },
+        { key: 'price', label: 'Harga', type: 'currency', required: true, defaultValue: 0 },
         { key: 'additional_fee', label: 'Biaya Tambahan', type: 'currency', defaultValue: 0 },
         { key: 'expedition', label: 'Expedisi', type: 'select',  items: 'Expeditions' },
         { 
           type: 'custom', 
           render: createDependentValue({
-            label: "Biaya Tambahan (Rp.)",
+            label: "Biaya Tambahan (Rp)",
             dependencies: ['additional_fee', 'exchange_rate'],
             calculateValue: ([additional_fee, exchange_rate]) => {
               const value = additional_fee * exchange_rate;
@@ -63,13 +63,10 @@ const InvoiceForm: FC<IFormProps> = props => {
             defaultValue: 0
           })
         },
-        // TODO
-        { key: '', label: 'No. Surat Jalan Expedisi' },
+        { key: 'travel_number', label: 'No. Surat Jalan Expedisi' },
         { key: 'shipment_fee', label: 'Ongkos Kirim', type: 'currency', defaultValue: 0 },
-        { key: '', label: 'Nomor Surat Jalan' },
-        // END TODO
-        { key: 'total', type: 'custom', render: DisplayTotal },
         { key: 'nb', label: 'NB', type: 'textarea' },
+        { key: 'total', type: 'custom', render: DisplayTotal },
         { type: 'custom', render: DataSetter }
       ]}
       customButton={
@@ -111,23 +108,24 @@ const DisplayTotal: FC<ICustomComponentProps> = props => {
   const { value } = props;
   const form = useFormInstance();
 
+  const currency = useWatch('currency', form);
   const measurement = useWatch('measurement', form);
   const price = useWatch('price', form);
   const additional_fee = useWatch('additional_fee', form);
   const shipment_fee = useWatch('shipment_fee', form);
 
   useEffect(() => {
-    const total = (measurement * price) + additional_fee + shipment_fee;
+    const total = ((measurement ?? 0) * price) + additional_fee + shipment_fee;
     form.setFieldsValue({ ...form.getFieldsValue(true), total });
-  }, [measurement, price]);
+  }, [measurement, price, additional_fee, shipment_fee]);
 
   return (
     <Item
-      label="Total"
+      label={`Total (${currency})`}
       labelCol={{ span: 11 }}
       style={{ marginBottom: 0 }}>
       <Input disabled
-        value={/* formatCurrency(value.toString())*/ value}
+        value={formatCurrency((value ?? 0).toString())}
         style={{ width: '100%' }} />
     </Item>
   );

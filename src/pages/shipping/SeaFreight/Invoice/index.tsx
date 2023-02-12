@@ -14,10 +14,36 @@ const Invoice: FC<IPageProps> = props => {
       title=""
       collection=""
       columns={[
-        // TODO
+        { dataIndex: '_id', title: 'Nomor Faktur' },
+        { dataIndex: 'marking', title: 'Marking' },
+        { dataIndex: 'container_number', title: 'Nomor Container' },
+        { dataIndex: 'quantity', title: 'Kuantitas' },
+        { dataIndex: 'price', title: 'Harga' }
       ]}
       viewItems={[
-        // TODO
+        { key: 'user', label: 'User' },
+        { key: 'print_date', label: 'tanggal_cetak', render: value => dateToString(value) },
+        { key: 'marking', label: 'Marking' },
+        { key: '', label: '' }, // TODO
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' },
+        { key: '', label: '' }
       ]}
       viewExtra={values => (
         <Button onClick={() => print(values, 'sf-faktur')}>
