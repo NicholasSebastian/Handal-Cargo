@@ -4,7 +4,7 @@ import { Form, Table, InputNumber, Button, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { ICustomComponentProps } from "../../../components/basics/BasicForm";
-import SearchMarking from "../../../components/basics/SearchMarking";
+import SearchMarking from "../../../components/specialized/SearchMarking";
 
 const { useFormInstance } = Form;
 const check = <CheckOutlined style={{ color: 'green' }} />
@@ -204,7 +204,7 @@ export { columns, markingAggregation, aggregationLookup };
 export default MarkingTable;
 
 const Container = styled.div`
-  width: 750px; // Because of a stupid bug, this has to be an absolute value.
+  width: 735px; // Because of a stupid bug, this has to be an absolute value.
 
   > div:first-child {
     display: flex;

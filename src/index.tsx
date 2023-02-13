@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { DatabaseProvider } from './data/useDatabase';
 import { ProfileProvider } from './data/useProfile';
 import { routes } from './data/useRoute';
-import Layout from './components/compounds/Layout';
+import Layout from './components/specialized/Layout';
 import Login from './pages/Login';
 import { insertStringAtPos, IShortcut } from "./pages/Shortcuts";
 import './normalize.css';

@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import { Layout as AntLayout, Tabs, TabsProps, PageHeader } from 'antd';
 import { toSlug, fromSlug } from '../../utils';
-import Header from '../basics/Header';
-import Sider from '../basics/Sider';
+import Header from '../specialized/Header';
+import Sider from './Sider';
 
 type TabsCallback = Required<TabsProps>['onEdit'];
 

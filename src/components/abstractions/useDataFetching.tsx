@@ -26,7 +26,9 @@ function useDataFetching(collectionName: string, defaultSearchKey: string, custo
     setLoading(true);
     fetchData()
       ?.then(results => {
-        if (results) setData(results);
+        if (results) {
+          setData(results);
+        }
       })
       .finally(() => setLoading(false));
   };

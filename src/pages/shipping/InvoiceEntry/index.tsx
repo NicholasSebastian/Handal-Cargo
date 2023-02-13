@@ -1,6 +1,8 @@
 import { FC } from "react";
 import TableTemplate from "../../../components/compounds/TableTemplate";
 
+// TODO: Use ViewTableTemplate instead and add an edit form.
+
 const InvoiceEntry: FC = () => {
   return (
     <TableTemplate

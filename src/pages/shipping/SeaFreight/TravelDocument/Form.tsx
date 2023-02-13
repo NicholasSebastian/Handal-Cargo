@@ -1,14 +1,14 @@
-import { FC, Fragment, useEffect, useMemo, useRef } from "react";
-import { Form, InputNumber, Button, message } from "antd";
+import { FC, Fragment, useRef } from "react";
+import { Button, message } from "antd";
 import moment from "moment";
 import useDatabase from "../../../../data/useDatabase";
-import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
+import BasicForm from "../../../../components/basics/BasicForm";
 import { useCloseModal } from "../../../../components/compounds/TableTemplate";
 import { IFormProps } from "../View";
+import InputMeasurement from "../../../../components/specialized/InputMeasurement";
+import CustomerFetcher from "../../../../components/specialized/CustomerFetcher";
 import print from "../../../../print";
 import { momentsToDates } from "../../../../utils";
-
-const { Item, useFormInstance, useWatch } = Form;
 
 const TravelDocumentForm: FC<IFormProps> = props => {
   const { values, setCurrentPage } = props;
@@ -34,7 +34,7 @@ const TravelDocumentForm: FC<IFormProps> = props => {
     <BasicForm twoColumns
       initialValues={values}
       onSubmit={handleSubmit}
-      labelSpan={10}
+      labelSpan={11}
       items={[
         { key: 'marking', label: 'Marking', disabled: true },
         { key: 'date', label: 'Tanggal', type: 'date', defaultValue: moment(), required: true },
@@ -80,45 +80,6 @@ const TravelDocumentForm: FC<IFormProps> = props => {
         </Fragment>
       } />
   );
-}
-
-const InputMeasurement: FC<ICustomComponentProps> = props => {
-  const { value } = props;
-  const form = useFormInstance();
-  const measurementOption = useWatch('measurement_option', form);
-
-  return (
-    <Item required
-      label={measurementOption ?? 'Kubikasi / Berat'} 
-      labelCol={{ span: 10 }} 
-      style={{ marginBottom: 0 }}>
-      <InputNumber 
-        value={value} // Very memory inefficient way to handle the onChange but oh well.
-        onChange={measurement => form.setFieldsValue({ ...form.getFieldsValue(true), measurement })}
-        style={{ width: '100%' }} />
-    </Item>
-  );
-} 
-
-const CustomerFetcher: FC = () => {
-  const database = useDatabase();
-  const form = useFormInstance();
-  const marking = useMemo(() => form.getFieldValue('marking'), []);
-
-  useEffect(() => {
-    database?.collection('Customers')
-      .aggregate([
-        { $match: { markings: marking } },
-        { $project: { _id: 0, customer: '$name', address: 1, city: 1, home_number: 1, phone_number: 1 } }
-      ])
-      .then(result => {
-        if (result && result.length > 0) {
-          form.setFieldsValue({ ...form.getFieldsValue(true), ...result[0] });
-        }
-      });
-  }, []);
-  
-  return <Fragment />
 }
 
 export default TravelDocumentForm;

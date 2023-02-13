@@ -1,15 +1,16 @@
-import { FC, Fragment, useEffect, useMemo } from "react";
-import { Form, Button, Input, InputNumber, message } from "antd";
+import { FC, Fragment } from "react";
+import { Button, message } from "antd";
 import moment from "moment";
-import useDatabase, { useUser } from "../../../../data/useDatabase";
+import useDatabase from "../../../../data/useDatabase";
 import { useCloseModal } from "../../../../components/compounds/TableTemplate";
-import BasicForm, { ICustomComponentProps } from "../../../../components/basics/BasicForm";
+import BasicForm from "../../../../components/basics/BasicForm";
 import createDependentValue from "../../../../components/basics/DependentValue";
 import { IFormProps } from "../View";
+import InputMeasurement from "../../../../components/specialized/InputMeasurement";
+import DisplayTotal from "../../../../components/specialized/DisplayTotal";
+import DataSetter from "../../../../components/specialized/DataSetter";
 import print from "../../../../print";
 import { momentsToDates, formatCurrency } from "../../../../utils";
-
-const { Item, useFormInstance, useWatch } = Form;
 
 const InvoiceForm: FC<IFormProps> = props => {
   const { values, setCurrentPage } = props;
@@ -87,78 +88,6 @@ const InvoiceForm: FC<IFormProps> = props => {
         </Fragment>
       } />
   );
-}
-
-const InputMeasurement: FC<ICustomComponentProps> = props => {
-  const { value } = props;
-  const form = useFormInstance();
-  const measurementOption = useWatch('measurement_option', form);
-
-  return (
-    <Item required
-      label={measurementOption ?? 'Kubikasi / Berat'} 
-      labelCol={{ span: 11 }} 
-      style={{ marginBottom: 0 }}>
-      <InputNumber 
-        value={value} // Very memory inefficient way to handle the onChange but oh well.
-        onChange={measurement => form.setFieldsValue({ ...form.getFieldsValue(true), measurement })}
-        style={{ width: '100%' }} />
-    </Item>
-  );
-} 
-
-const DisplayTotal: FC<ICustomComponentProps> = props => {
-  const { value } = props;
-  const form = useFormInstance();
-
-  const currency = useWatch('currency', form);
-  const measurement = useWatch('measurement', form);
-  const price = useWatch('price', form);
-  const additional_fee = useWatch('additional_fee', form);
-  const shipment_fee = useWatch('shipment_fee', form);
-
-  useEffect(() => {
-    const total = ((measurement ?? 0) * price) + additional_fee + shipment_fee;
-    form.setFieldsValue({ ...form.getFieldsValue(true), total });
-  }, [measurement, price, additional_fee, shipment_fee]);
-
-  return (
-    <Item
-      label={`Total (${currency})`}
-      labelCol={{ span: 11 }}
-      style={{ marginBottom: 0 }}>
-      <Input disabled
-        value={formatCurrency((value ?? 0).toString())}
-        style={{ width: '100%' }} />
-    </Item>
-  );
-}
-
-const DataSetter: FC = () => {
-  const database = useDatabase();
-  const user = useUser();
-  const form = useFormInstance();
-  const marking = useMemo(() => form.getFieldValue('marking'), []);
-
-  useEffect(() => {
-    // Sets the 'user' field.
-    const username = user?.profile.name;
-    form.setFieldsValue({ ...form.getFieldsValue(true), user: username });
-
-    // Fetches and sets the 'measurement_details' field.
-    database?.collection('Customers')
-      .aggregate([
-        { $match: { markings: marking } },
-        { $project: { _id: 0, measurement_details: 1 } }
-      ])
-      .then(result => {
-        if (result && result.length > 0) {
-          form.setFieldsValue({ ...form.getFieldsValue(true), ...result[0] });
-        }
-      });
-  }, []);
-
-  return <Fragment />
 }
 
 export default InvoiceForm;
