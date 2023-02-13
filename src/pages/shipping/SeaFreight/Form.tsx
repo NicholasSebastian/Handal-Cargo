@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import { RenderItem } from "../../../components/basics/BasicForm";
-import { HandledFormPropType } from "../../../components/compounds/FallbackForm";
 import createDependentValue from "../../../components/basics/DependentValue";
+import { HandledFormProps } from "../../../components/compounds/TableTemplate";
 import MarkingTable from "./MarkingTable";
 import { formatCurrency } from "../../../utils";
 
-const SeaFreightForm: HandledFormPropType = {
+const SeaFreightForm: HandledFormProps = {
   labelSpan: 11,
   twoColumns: true,
-  formItems: [
+  items: [
     { key: 'container_number', label: 'Nomor Container', required: true },
     { key: 'container_group', label: 'Kelompok Container', type: 'select', items: 'ContainerGroups' },
     { key: 'muat_date', label: 'Tanggal Muat', type: 'date' },

@@ -4,7 +4,7 @@ import { message } from 'antd';
 import useDatabase from "../../data/useDatabase";
 import useRoute from '../../data/useRoute';
 import { momentsToDates } from '../../utils';
-import useDataFetching from './useDataFetching';
+import useDataFetching, { Query } from './useDataFetching';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
 
@@ -15,7 +15,7 @@ function withTemplateHandling<P extends ISharedProps>(Component: ComponentType<P
     const { title } = useRoute()!;
     const database = useDatabase();
   
-    const { data, loading, searchKey, setSearch, setSearchKey, refreshData } = useDataFetching(collectionName, searchBy);
+    const { data, loading, searchKey, setSearch, setSearchKey, refreshData } = useDataFetching(collectionName, searchBy, query);
     const [modal, setModal] = useState<ModalState>(null);
   
     const modalTitle = useMemo(() => {
@@ -114,5 +114,3 @@ type ModalState = null
   | { mode: 'add' } 
   | { mode: 'view', id: BSON.ObjectId } 
   | { mode: 'edit', id: BSON.ObjectId };
-
-type Query = (collectionName: string, search: RegExp | undefined, searchBy: string) => Promise<any> | undefined;

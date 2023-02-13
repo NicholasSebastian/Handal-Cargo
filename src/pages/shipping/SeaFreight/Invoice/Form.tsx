@@ -32,7 +32,7 @@ const InvoiceForm: FC<IFormProps> = props => {
       initialValues={values}
       onSubmit={handleSubmit}
       labelSpan={11}
-      formItems={[
+      items={[
         { key: 'user', label: 'User', disabled: true },
         { key: 'print_date', label: 'Tanggal Cetak', type: 'date', defaultValue: moment(), disabled: true },
         { key: 'marking', label: 'Marking', disabled: true },

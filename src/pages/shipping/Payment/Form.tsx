@@ -18,6 +18,8 @@ const PaymentForm: FC<IInjectedProps> = props => {
   const [amount, setAmount] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
+  const total = items.reduce((acc: number, item: any) => acc + item.amount, 0);
+
   const handleAdd = () => {
     if (type.length === 0 || amount.length === 0 || description.length === 0) {
       message.error("Ada input yang belum diisi.");
@@ -52,7 +54,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
           </span>
           <span>
             <Text strong>Total Pembayaran: </Text> 
-            Rp.{formatCurrency(items.reduce((acc: number, item: any) => acc + item.amount, 0) ?? 0)}
+            Rp.{total ? formatCurrency(total) : 0}
           </span>
         </div>
         <Divider style={{ margin: '10px' }} />

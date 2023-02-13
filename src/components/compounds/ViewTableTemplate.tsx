@@ -39,7 +39,7 @@ const BasicTableTemplate: FC<ITemplateProps> = props => {
         bodyStyle={ModalStyles}>
         <BasicView
           values={modal}
-          viewItems={viewItems} />
+          items={viewItems} />
         {viewExtra && viewExtra(modal)}
       </Modal>
     </Container>

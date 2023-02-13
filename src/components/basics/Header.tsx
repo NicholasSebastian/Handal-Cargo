@@ -4,7 +4,7 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Layout as AntLayout, Dropdown, Button, Avatar, Menu } from 'antd';
-import { UserOutlined, FontColorsOutlined, ReadOutlined, UpSquareOutlined, LogoutOutlined } from "@ant-design/icons";
+import { UserOutlined, FontColorsOutlined, WhatsAppOutlined, UpSquareOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useUser, logoutAndClose } from '../../data/useDatabase';
 import { dateToString } from '../../utils';
 
@@ -34,9 +34,9 @@ const Header: FC<IHeaderProps> = props => {
       onClick: () => navigate('/shortcuts') 
     },
     {
-      key: 'exchange-rates',
-      label: 'Cek Kurs',
-      icon: <ReadOutlined />,
+      key: 'whatsapp',
+      label: 'WhatsApp',
+      icon: <WhatsAppOutlined />,
       onClick: () => new WebviewWindow("whatsapp-window", {
         center: true, 
         focus: true, 

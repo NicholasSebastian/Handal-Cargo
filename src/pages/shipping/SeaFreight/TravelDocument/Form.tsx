@@ -35,7 +35,7 @@ const TravelDocumentForm: FC<IFormProps> = props => {
       initialValues={values}
       onSubmit={handleSubmit}
       labelSpan={10}
-      formItems={[
+      items={[
         { key: 'marking', label: 'Marking', disabled: true },
         { key: 'date', label: 'Tanggal', type: 'date', defaultValue: moment(), required: true },
         { key: 'container_number', label: 'Nomor Container', disabled: true },

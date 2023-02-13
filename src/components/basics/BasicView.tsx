@@ -8,14 +8,14 @@ const { Item } = Descriptions;
 // Creates a basic view out of the given data values.
 
 const BasicView: FC<IViewProps> = (props) => {
-  const { title, viewItems, values } = props;
+  const { title, items, values } = props;
 
   return (
     <Container 
       title={title} 
-      column={(viewItems.length > 8) ? 2 : 1}
+      column={(items.length > 8) ? 2 : 1}
       labelStyle={{ fontWeight: 500 }}>
-      {viewItems.map(item => (
+      {items.map(item => (
         <Item 
           key={item.key}
           label={item.label}>
@@ -26,7 +26,7 @@ const BasicView: FC<IViewProps> = (props) => {
   );
 }
 
-export type { IViewItem };
+export type { IViewProps, IViewItem };
 export default BasicView;
 
 const Container = styled(Descriptions)`
@@ -39,7 +39,7 @@ const Container = styled(Descriptions)`
 
 interface IViewProps extends IInjectedProps {
   title?: string
-  viewItems: Array<IViewItem>
+  items: Array<IViewItem>
 }
 
 interface IViewItem {

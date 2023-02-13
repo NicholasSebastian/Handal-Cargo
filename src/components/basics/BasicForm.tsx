@@ -16,22 +16,22 @@ const { Option } = Select;
 // Creates a functional form out of the given props.
 
 const BasicForm: FC<IFormProps> = (props) => {
-  const { formItems, initialValues, onSubmit, twoColumns, labelSpan, customButton } = props;
+  const { items, initialValues, onSubmit, twoColumns, labelSpan, customButton } = props;
   const [form] = useForm();
 
   // Hooks handling delegated logic.
-  const { currentPage, pages, steps, buttons } = usePageHandling(formItems, customButton);
-  const referenceValues = useReferenceHandling(formItems);
-  const currency = useCurrencyHandling(form, formItems);
+  const { currentPage, pages, steps, buttons } = usePageHandling(items, customButton);
+  const referenceValues = useReferenceHandling(items);
+  const currency = useCurrencyHandling(form, items);
 
   // Sets all the given default values into the form at the beginning.
   useEffect(() => {
-    formItems.forEach(item => {
+    items.forEach(item => {
       if ((typeof item === 'object') && ('defaultValue' in item) && (!form.getFieldValue(item.key))) {
         form.setFieldsValue({ [item.key]: item.defaultValue });
       }
     });
-  }, [formItems]);
+  }, [items]);
 
   // Returns the respective component based on the given item type.
   const renderInput = (item: DefinedItem) => {
@@ -144,7 +144,7 @@ const Container = styled(Form)`
 `;
 
 interface IFormProps extends IInjectedProps {
-  formItems: Array<FormItem>
+  items: Array<FormItem>
   twoColumns?: boolean
   labelSpan?: number
   customButton?: ReactNode

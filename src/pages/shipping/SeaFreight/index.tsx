@@ -26,13 +26,13 @@ const SeaFreight: FC = () => {
           searchBy="container_number"
           width={1050}
           modalWidth={850}
-          query={(collectionName, search, searchBy) => {
-            // TODO: The 'paid' column should display true/false, signifying whether the marking has been paid for through Entri Faktur.
-            // TODO: The 'remainder' column should display an integer, signifying the quantity that has not been sent through Surat Jalan.
-            // TODO: The 'travel_documents' column should display an integer, signifying the number of surat jalan that has been made.
-            // TODO: The 'invoices' column should display an integer, signifying the number of faktur (invoices) that has been made.
-            return undefined;
-          }}
+          // query={(collectionName, search, searchBy) => {
+          //   // TODO: The 'paid' column should display true/false, signifying whether the marking has been paid for through Entri Faktur.
+          //   // TODO: The 'remainder' column should display an integer, signifying the quantity that has not been sent through Surat Jalan.
+          //   // TODO: The 'travel_documents' column should display an integer, signifying the number of surat jalan that has been made.
+          //   // TODO: The 'invoices' column should display an integer, signifying the number of faktur (invoices) that has been made.
+          //   return undefined;
+          // }}
           showIndicator={values => values.paid}
           view={SeaFreightView}
           form={SeaFreightForm}

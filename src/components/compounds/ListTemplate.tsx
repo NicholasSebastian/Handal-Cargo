@@ -2,8 +2,10 @@ import styled from "styled-components";
 import { List, Button, Modal, Popconfirm, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import withTemplateHandling, { ISharedProps } from "../abstractions/withTemplateHandling";
-import { ModalStyles } from "./TableTemplate";
-import FallbackForm, { FormPropType } from "./FallbackForm";
+import withFormHandling from '../abstractions/withFormHandling';
+import useFallback from '../abstractions/useFallback';
+import BasicForm from '../basics/BasicForm';
+import { ModalStyles, FormPropType } from "./TableTemplate";
 import Search from '../basics/Search';
 
 const { Item } = List;
@@ -13,8 +15,12 @@ const ListTemplate = withTemplateHandling<ITemplateProps>(props => {
     collectionName, data, loading, modal, modalTitle, 
     setSearch, setModal, secondaryColumn, form, handlers 
   } = props;
+
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
+
+  const FallbackForm = useFallback(form, BasicForm);
+  const HandledForm = withFormHandling(FallbackForm);
 
   return (
     <Container>
@@ -63,7 +69,7 @@ const ListTemplate = withTemplateHandling<ITemplateProps>(props => {
         footer={null}
         width={600} 
         bodyStyle={ModalStyles}>
-        <FallbackForm 
+        <HandledForm 
           collectionName={collectionName}
           form={form}
           handleAdd={handleAdd}

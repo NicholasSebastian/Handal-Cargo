@@ -99,7 +99,7 @@ const Shortcuts: FC = () => {
         <BasicForm 
           key={useId()}
           onSubmit={values => addShortcut(values)}
-          formItems={[
+          items={[
             { key: 'key', label: 'Tombol' },
             { key: 'value', label: 'Sama Dengan' }
           ]} />

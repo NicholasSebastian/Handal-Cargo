@@ -1,12 +1,16 @@
-import { CSSProperties, ReactNode, createContext, useContext } from 'react';
+import { CSSProperties, ReactNode, createContext, useContext, ComponentType } from 'react';
 import styled from 'styled-components';
 import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
 import withTemplateHandling, { ISharedProps, IData } from '../abstractions/withTemplateHandling';
-import FallbackView, { ViewPropType } from './FallbackView';
-import FallbackForm, { FormPropType } from "./FallbackForm";
+import withInitialData, { IInjectedProps as InjectedViewProps } from '../abstractions/withInitialData';
+import withFormHandling, { IInjectedProps as InjectedFormProps } from '../abstractions/withFormHandling';
+import useFallback from '../abstractions/useFallback';
+import BasicView, { IViewProps, IViewItem } from '../basics/BasicView';
+import BasicForm, { IFormProps, FormItem } from '../basics/BasicForm';
 import Search from '../basics/Search';
+import { Subtract } from '../../utils';
 
 const { Text } = Typography;
 const ModalContext = createContext<() => void>(() => {});
@@ -22,7 +26,14 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
     width, modalWidth, data, loading, modalTitle, searchKey, modal, 
     showIndicator, setSearch, setSearchKey, setModal, handlers 
   } = props;
+
   const { handleAdd, handleEdit, handleDelete } = handlers;
+  
+  const FallbackView = useFallback(view, BasicView);
+  const FallbackForm = useFallback(form, BasicForm);
+
+  const HandledView = withInitialData(FallbackView);
+  const HandledForm = withFormHandling(FallbackForm);
 
   return (
     <Container>
@@ -91,17 +102,16 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
         <ModalContext.Provider value={() => setModal(null)}>
           {(modal != null) && (
             (modal.mode === 'view') ? (
-              <FallbackView
+              <HandledView
                 id={modal.id}
                 collectionName={collectionName}
                 view={view ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
             ) : (
-              <FallbackForm
+              <HandledForm
                 id={('id' in modal) ? modal.id : undefined}
                 collectionName={collectionName}
                 handleAdd={handleAdd}
-                handleEdit={handleEdit}
-                form={form} />
+                handleEdit={handleEdit} />
             )
           )}
         </ModalContext.Provider>
@@ -111,6 +121,7 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
 });
 
 export { ModalStyles, useCloseModal };
+export type { HandledViewProps, HandledFormProps, FormPropType };
 export default TableTemplate;
 
 const Container = styled.div`
@@ -158,13 +169,17 @@ const ModalStyles: CSSProperties = {
 
 interface ITemplateProps extends ISharedProps {
   columns: ColumnsType<IData>
-  view: ViewPropType
-  form: FormPropType
+  view: ViewPropType;
+  form: FormPropType;
   extra?: ReactNode
   width?: number
   modalWidth?: number
   showIndicator?: (entry: any) => boolean
 }
 
+type ViewPropType = ComponentType<InjectedViewProps> | Array<IViewItem> | HandledViewProps;
+type FormPropType = ComponentType<InjectedFormProps> | Array<FormItem> | HandledFormProps;
+type HandledViewProps = Subtract<IViewProps, InjectedViewProps>;
+type HandledFormProps = Subtract<IFormProps, InjectedFormProps>;
 type ClickHandler1 = React.MouseEventHandler<HTMLElement>;
 type ClickHandler2 = ((e?: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => void) | undefined;

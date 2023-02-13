@@ -57,7 +57,7 @@ const CompanySetup: FC = () => {
       </Button>
       <div>
         <BasicView
-          viewItems={items}
+          items={items}
           values={values} />
         {values.via_transfer && (
           <Card title="Via Transfer">
@@ -75,7 +75,7 @@ const CompanySetup: FC = () => {
         <BasicForm
           initialValues={values}
           onSubmit={values => handleUpdate(values)}
-          formItems={[
+          items={[
             ...items,
             { key: 'via_transfer', label: 'Via Transfer', type: 'textarea', required: false }
           ]} />

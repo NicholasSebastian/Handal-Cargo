@@ -8,6 +8,7 @@ const { Item } = Descriptions;
 
 const PaymentView: FC<IInjectedProps> = props => {
   const { values } = props;
+  const total = values.items.reduce((acc: number, item: any) => acc + item.amount, 0);
   return (
     <ViewContainer
       column={1}
@@ -16,7 +17,7 @@ const PaymentView: FC<IInjectedProps> = props => {
         {values['_id'].toString()}
       </Item>
       <Item label="Total Pembayaran">
-        Rp.{formatCurrency(values.items.reduce((acc: number, item: any) => acc + item.amount, 0))}
+        Rp.{total ? formatCurrency(total) : 0}
       </Item>
       <Item>
         <Table bordered
