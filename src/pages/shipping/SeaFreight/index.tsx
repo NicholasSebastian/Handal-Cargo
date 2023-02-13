@@ -4,7 +4,7 @@ import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import TableTemplate from "../../../components/compounds/TableTemplate";
 import SeaFreightView from "./View";
 import SeaFreightForm from "./Form";
-import { markingAggregation } from "./MarkingTable";
+import { markingAggregation, aggregationLookup } from "./MarkingTable";
 import TravelDocument from "./TravelDocument";
 import Invoice from "./Invoice";
 import useDatabase from "../../../data/useDatabase";
@@ -34,7 +34,9 @@ const SeaFreight: FC = () => {
           itemQuery={(collectionName, id) => database?.collection(collectionName)
             .aggregate([
               { $match: { _id: id } },
-              { $set: { 'markings': markingAggregation } }
+              ...aggregationLookup.map(args => ({ $lookup: args })),
+              { $set: { 'markings': markingAggregation } },
+              { $project: Object.fromEntries(aggregationLookup.map(args => ([args.as, false]))) }
             ])
             .then(results => results[0])
           }

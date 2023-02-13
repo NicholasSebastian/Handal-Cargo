@@ -27,30 +27,39 @@ const columns: ColumnsType<any> = [
   { dataIndex: 'invoices', title: 'Faktur' }
 ];
 
-// TODO: The 'paid' column should display true/false, signifying whether the marking has been paid for through Entri Faktur.
-// TODO: The 'remainder' column should display an integer, signifying the quantity that has not been sent through Surat Jalan.
-// TODO: The 'travel_documents' column should display an integer, signifying the number of surat jalan that has been made.
-// TODO: The 'invoices' column should display an integer, signifying the number of faktur (invoices) that has been made.
+const aggregationLookup: Array<ILookup> = [
+  {
+    from: 'TravelPermits',
+    localField: 'markings.marking',
+    foreignField: 'marking',
+    as: 'travel_permits'
+  },
+  {
+    from: 'Invoices',
+    localField: 'markings.marking',
+    foreignField: 'marking',
+    as: 'invoices'
+  },
+  {
+    from: 'Payments',
+    localField: 'invoices.payment',
+    foreignField: '_id',
+    as: 'payments'
+  }
+];
 
 const markingAggregation = {
   $map: {
     input: "$markings",
     as: "marking",
     in: {
-      // TODO: Lookup here.
-      // $lookup: {
-      //   from: '',
-      //   localField: '',
-      //   foreignField: '',
-      //   as: ''
-      // },
       $mergeObjects: [
         "$$marking",
         { 
-          paid: true,
-          remainder: 0,
-          travel_documents: 0,
-          invoices: 0
+          paid: { $gt: [{ $sum: "$payments.items.amount" }, { $sum: "$invoices.price" }] },
+          remainder: { $sum: "$travel_permits.quantity" },
+          travel_documents: { $size: "$travel_permits" },
+          invoices: { $size: "$invoices" }
         }
       ]
     }
@@ -191,7 +200,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
   );
 }
 
-export { columns, markingAggregation };
+export { columns, markingAggregation, aggregationLookup };
 export default MarkingTable;
 
 const Container = styled.div`
@@ -218,3 +227,10 @@ const Container = styled.div`
     }
   }
 `;
+
+interface ILookup {
+  from: string
+  localField: string
+  foreignField: string
+  as: string
+}
