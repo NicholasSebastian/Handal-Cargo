@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { Table, Space, Descriptions, Button, Tooltip, message } from "antd";
+import { Table, Space, Descriptions, Button, Tooltip } from "antd";
 import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 import { dateToString, formatCurrency } from "../../../utils";

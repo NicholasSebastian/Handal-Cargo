@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BSON } from "realm-web";
 import useDatabase from "../../data/useDatabase";
 
 // TODO: Implement pagination.
@@ -17,7 +18,7 @@ function useDataFetching(collectionName: string, defaultSearchKey: string, custo
       return database?.collection(collectionName).find();
     else 
       return database?.collection(collectionName).find({ 
-        [searchKey]: { $regex: search, $options: 'i' } 
+        [searchKey]: { $regex: search } 
       });
   };
 
@@ -34,7 +35,32 @@ function useDataFetching(collectionName: string, defaultSearchKey: string, custo
   return { data, loading, searchKey, setSearch, setSearchKey, refreshData };
 }
 
-export type { Query };
+function useBasicDataFetching(collectionName: string, id: ID, setValues: ResultDump, customQuery?: BasicQuery) {
+  const database = useDatabase();
+
+  const fetchData = () => {
+    if (customQuery) 
+      return customQuery(collectionName, id!);
+    else 
+      return database?.collection(collectionName).findOne({ _id: id });
+  }
+
+  useEffect(() => {
+    if (id != null) {
+      fetchData()?.then(results => {
+        if (results) {
+          setValues(results);
+        }
+      });
+    }
+  }, []);
+}
+
+export type { Query, BasicQuery };
+export { useBasicDataFetching };
 export default useDataFetching;
 
 type Query = (collectionName: string, search: RegExp | undefined, searchBy: string) => Promise<any> | undefined;
+type BasicQuery = (collectionName: string, id: BSON.ObjectId) => Promise<any> | undefined;
+type ID = BSON.ObjectId | undefined;
+type ResultDump = React.Dispatch<React.SetStateAction<any>>;

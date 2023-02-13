@@ -22,7 +22,7 @@ const useCloseModal = () => useContext(ModalContext);
 
 const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
   const { 
-    collectionName, columns, view, form, extra, 
+    collectionName, columns, view, form, extra, itemQuery,
     width, modalWidth, data, loading, modalTitle, searchKey, modal, 
     showIndicator, setSearch, setSearchKey, setModal, handlers 
   } = props;
@@ -32,8 +32,8 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
   const FallbackView = useFallback(view, BasicView);
   const FallbackForm = useFallback(form, BasicForm);
 
-  const HandledView = withInitialData(FallbackView);
-  const HandledForm = withFormHandling(FallbackForm);
+  const HandledView = withInitialData(FallbackView, itemQuery);
+  const HandledForm = withFormHandling(FallbackForm, itemQuery);
 
   return (
     <Container>
@@ -103,11 +103,13 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
           {(modal != null) && (
             (modal.mode === 'view') ? (
               <HandledView
+                key={Date.now()}
                 id={modal.id}
                 collectionName={collectionName}
                 view={view ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
             ) : (
               <HandledForm
+                key={Date.now()}
                 id={('id' in modal) ? modal.id : undefined}
                 collectionName={collectionName}
                 handleAdd={handleAdd}

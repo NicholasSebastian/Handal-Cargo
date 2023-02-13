@@ -1,37 +1,25 @@
-import { FC, ComponentType, useState, useEffect } from "react";
-import { BSON } from "realm-web";
+import { FC, ComponentType, useState } from "react";
 import { Spin } from "antd";
-import useDatabase from "../../data/useDatabase";
+import { BSON } from "realm-web";
+import { useBasicDataFetching, BasicQuery } from "./useDataFetching";
 import { Subtract } from "../../utils";
 
 // Abstracts over the components to handle either 'Add' or 'Edit' cases.
 
-function withFormHandling<P extends IInjectedProps>(FormComponent: ComponentType<P>): 
+function withFormHandling<P extends IInjectedProps>(FormComponent: ComponentType<P>, customQuery?: BasicQuery): 
   FC<IEnhancedProps & Subtract<P, IInjectedProps>> {
   return props => {
     const { collectionName, id, handleAdd, handleEdit, ...otherProps } = props;
-    const database = useDatabase();
-    const [initialValues, setInitialValues] = useState<any>();
-
-    // When the form gets instantiated, check if an id is given.
-    useEffect(() => {
-      if (id) {
-        // If an id is given, we fetch its data from the database to be the form's initial values.
-        database?.collection(collectionName)
-          .findOne({ _id: id })
-          .then(results => {
-            if (results) setInitialValues(results);
-          });
-      }
-    }, []);
+    const [values, setValues] = useState<any>();
+    useBasicDataFetching(collectionName, id, setValues, customQuery);
 
     // If an id is given, it is therefore an 'edit' form.
     if (id) {
       // Wait for the initial values to finish being loaded before rendering.
-      if (initialValues) return (
+      if (values) return (
         <FormComponent 
           {...otherProps as unknown as P}
-          initialValues={initialValues} 
+          initialValues={values} 
           onSubmit={values => handleEdit(id, values)} />
       );
       return <Spin />

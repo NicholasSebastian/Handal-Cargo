@@ -21,7 +21,7 @@ const columns: ColumnsType<any> = [
   { dataIndex: 'hbkg', title: 'HB (kg)', render: value => value && (value + ' kg') },
   { dataIndex: 'custm3', title: 'Cust (m³)', render: value => value && (value + ' m³') },
   { dataIndex: 'custkg', title: 'Cust (kg)', render: value => value && (value + ' kg') },
-  { dataIndex: 'paid', title: 'Lunas', render: () => false ? check : cross },
+  { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
   { dataIndex: 'remainder', title: 'Sisa' },
   { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 100 },
   { dataIndex: 'invoices', title: 'Faktur' }

@@ -4,7 +4,7 @@ import { message } from 'antd';
 import useDatabase from "../../data/useDatabase";
 import useRoute from '../../data/useRoute';
 import { momentsToDates } from '../../utils';
-import useDataFetching, { Query } from './useDataFetching';
+import useDataFetching, { Query, BasicQuery } from './useDataFetching';
 
 // Abstracts over TableTemplate and ListTemplate to handle common logic.
 
@@ -81,6 +81,7 @@ export default withTemplateHandling;
 
 interface ISharedProps {
   collectionName: string
+  itemQuery?: BasicQuery
 }
 
 interface IEnhancedProps {
