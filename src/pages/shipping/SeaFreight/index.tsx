@@ -4,20 +4,18 @@ import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import TableTemplate from "../../../components/compounds/TableTemplate";
 import SeaFreightView from "./View";
 import SeaFreightForm from "./Form";
+import { markingAggregation } from "./MarkingTable";
 import TravelDocument from "./TravelDocument";
 import Invoice from "./Invoice";
 import useDatabase from "../../../data/useDatabase";
 import { dateToString, dateDiffInDays } from "../../../utils";
 
-// TODO: The 'paid' column should display true/false, signifying whether the marking has been paid for through Entri Faktur.
-// TODO: The 'remainder' column should display an integer, signifying the quantity that has not been sent through Surat Jalan.
-// TODO: The 'travel_documents' column should display an integer, signifying the number of surat jalan that has been made.
-// TODO: The 'invoices' column should display an integer, signifying the number of faktur (invoices) that has been made.
-
 const SeaFreight: FC = () => {
   const database = useDatabase();
   const [currentPage, setCurrentPage] = useState<PageState>('default');
-  const pageProps: IPageProps = { goBack: () => setCurrentPage('default') };
+  const pageProps: IPageProps = { 
+    goBack: () => setCurrentPage('default') 
+  };
 
   switch (currentPage) {
     case 'travel_permits':
@@ -33,32 +31,12 @@ const SeaFreight: FC = () => {
           searchBy="container_number"
           width={1050}
           modalWidth={850}
-          itemQuery={(collectionName, id) => 
-            database?.collection(collectionName)
-              .aggregate([
-                { 
-                  $set: {
-                    'markings': {
-                      $map: {
-                        input: "$markings",
-                        as: "marking",
-                        in: {
-                          $mergeObjects: [
-                            "$$marking",
-                            { 
-                              paid: true,
-                              remainder: 0,
-                              travel_documents: 0,
-                              invoices: 0
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  } 
-                }
-              ])
-              .then(results => results[0])
+          itemQuery={(collectionName, id) => database?.collection(collectionName)
+            .aggregate([
+              { $match: { _id: id } },
+              { $set: { 'markings': markingAggregation } }
+            ])
+            .then(results => results[0])
           }
           showIndicator={values => values.paid}
           view={SeaFreightView}
