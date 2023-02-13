@@ -37,7 +37,14 @@ const markingAggregation = {
     input: "$markings",
     as: "marking",
     in: {
-      $mergeObjects: [ // HINT: Use $lookup.
+      // TODO: Lookup here.
+      // $lookup: {
+      //   from: '',
+      //   localField: '',
+      //   foreignField: '',
+      //   as: ''
+      // },
+      $mergeObjects: [
         "$$marking",
         { 
           paid: true,
