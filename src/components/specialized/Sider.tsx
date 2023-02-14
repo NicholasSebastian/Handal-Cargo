@@ -2,7 +2,7 @@ import { FC, useState, useEffect, useMemo, isValidElement } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Layout, Typography, Menu, MenuProps, Alert } from "antd";
-import { AppstoreOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, PrinterOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import useDatabase from '../../data/useDatabase';
 import useProfile from '../../data/useProfile';
 import pages from '../../navigation';
@@ -10,7 +10,7 @@ import { toSlug } from '../../utils';
 
 const { Sider: AntSider } = Layout;
 const { Title } = Typography;
-const icons = [ AppstoreOutlined, AppstoreOutlined, PlusCircleOutlined, SettingOutlined ];
+const icons = [ AppstoreOutlined, PrinterOutlined, PlusCircleOutlined, SettingOutlined ];
 const DEFAULT_GROUP = 'shipping';
 
 // Intended for use within the Layout component.

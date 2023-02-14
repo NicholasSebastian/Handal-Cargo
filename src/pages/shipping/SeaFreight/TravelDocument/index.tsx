@@ -38,7 +38,7 @@ const TravelDocument: FC<IPageProps> = props => {
         { key: 'description', label: 'Keterangan Kirim' }
       ]}
       viewExtra={values => (
-        <Space>
+        <Space style={{ marginTop: '-30px', marginBottom: '10px' }}>
           <Button onClick={() => print(values, 'sf-surat-jalan')}>
             Print Ulang Surat Jalan
           </Button>

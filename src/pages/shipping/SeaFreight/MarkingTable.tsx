@@ -11,7 +11,7 @@ const check = <CheckOutlined style={{ color: 'green' }} />
 const cross = <CloseOutlined style={{ color:'red' }} />
 
 const columns: ColumnsType<any> = [
-  { dataIndex: 'marking', title: 'Marking' },
+  { fixed: 'left', dataIndex: 'marking', title: 'Marking' },
   { dataIndex: 'quantity', title: 'Kuantitas' },
   { dataIndex: 'listm3', title: 'List (m³)', render: value => value && (value + ' m³') },
   { dataIndex: 'listkg', title: 'List (kg)', render: value => value && (value + ' kg') },
@@ -23,7 +23,7 @@ const columns: ColumnsType<any> = [
   { dataIndex: 'custkg', title: 'Cust (kg)', render: value => value && (value + ' kg') },
   { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
   { dataIndex: 'remainder', title: 'Sisa' },
-  { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 100 },
+  { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 90 },
   { dataIndex: 'invoices', title: 'Faktur' }
 ];
 

@@ -58,13 +58,14 @@ const InvoiceForm: FC<IFormProps> = props => {
         { 
           type: 'custom', 
           render: createDependentValue({
-            label: "Biaya Tambahan (Rp)",
+            label: "Biaya Tambahan (Rp.)",
             dependencies: ['additional_fee', 'exchange_rate'],
             calculateValue: ([additional_fee, exchange_rate]) => {
               const value = additional_fee * exchange_rate;
               return formatCurrency(value.toString());
             },
-            defaultValue: 0
+            defaultValue: 0,
+            prefix: 'Rp.'
           })
         },
         { key: 'travel_number', label: 'No. Surat Jalan Expedisi' },

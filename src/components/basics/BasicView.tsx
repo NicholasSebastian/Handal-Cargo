@@ -19,7 +19,7 @@ const BasicView: FC<IViewProps> = (props) => {
         <Item 
           key={item.key}
           label={item.label}>
-          {item.render ? item.render(values[item.key]) : values[item.key]}
+          {item.render ? item.render(values[item.key], values) : values[item.key]}
         </Item>
       ))} 
     </Container>
@@ -45,5 +45,5 @@ interface IViewProps extends IInjectedProps {
 interface IViewItem {
   key: string
   label: string
-  render?: (value: any) => any
+  render?: (value: any, values: Record<string, any>) => any
 }

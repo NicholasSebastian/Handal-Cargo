@@ -1,8 +1,6 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import TableTemplate from "../../../components/compounds/ViewTableTemplate";
 import { dateToString } from "../../../utils";
-
-// TODO: Add an edit form.
 
 const InvoiceEntry: FC = () => {
   return (
@@ -48,7 +46,11 @@ const InvoiceEntry: FC = () => {
         { key: "other_fee", label: "Biaya Lain-Lain" },
         { key: "total", label: "Total" },
         { key: "description", label: "Keterangan" }
-      ]} />
+      ]}
+      extra={
+        // TODO: Add an input and a button to set the 'payment_id' field.
+        <Fragment />
+      } />
   );
 }
 

@@ -22,22 +22,29 @@ export function fromSlug(slug: string) {
 
 export function momentsToDates(values: any): any {
   if (!values) return values;
-  return Object.fromEntries(
-    Object.entries(values)
-      .map(([key, value]) => [key, isMoment(value) ? value.toDate() : value]));
+  
+  const entries = Object
+    .entries(values)
+    .map(([key, value]) => [key, isMoment(value) ? value.toDate() : value]);
+
+  return Object.fromEntries(entries);
 }
 
 export function datesToMoments(values: any): any {
   if (!values) return values;
-  return Object.fromEntries(
-    Object.entries(values)
-      .map(([key, value]) => [key, (value instanceof Date) ? moment(value) : value]));
+
+  const entries = Object
+    .entries(values)
+    .map(([key, value]) => [key, (value instanceof Date) ? moment(value) : value]);
+
+  return Object.fromEntries(entries);
 }
 
 export function dateDiffInDays(a: Date, b: Date): number {
   // Discard the time and time-zone information.
   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
   const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  
   return Math.floor((utc1 - utc2) / MS_PER_DAY);
 }
 
@@ -47,8 +54,13 @@ export function isInputElement(element: Element): element is HTMLInputElement | 
 
 export function dateToString(date: Date) {
   if (!date) return undefined;
+  
   return date.toLocaleDateString("id-ID", { 
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
 }
 
 export function formatCurrency(value: string | number) {
