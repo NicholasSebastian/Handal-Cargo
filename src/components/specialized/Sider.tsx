@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useMemo, isValidElement } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Layout, Typography, Menu, MenuProps, Alert, Timeline, notification } from "antd";
+import { Layout, Typography, Menu, MenuProps, Alert, notification } from "antd";
 import { AppstoreOutlined, PrinterOutlined, PlusCircleOutlined, AccountBookOutlined, SettingOutlined } from '@ant-design/icons';
 import useDatabase from '../../data/useDatabase';
 import useProfile from '../../data/useProfile';
