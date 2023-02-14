@@ -6,7 +6,7 @@ import TableTemplate from "../../../components/compounds/TableTemplate";
 import AirCargoForm from "./Form";
 // import TravelDocument from "./TravelDocument";
 // import Invoice from "./Invoice";
-import { markingAggregation, aggregationLookup } from "../aggregation";
+import { markingAggregation, aggregationLookup } from "../marking-aggregation";
 import useDatabase from "../../../data/useDatabase";
 import { dateToString } from "../../../utils";
 

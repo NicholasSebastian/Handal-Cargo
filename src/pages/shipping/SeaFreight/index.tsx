@@ -6,7 +6,7 @@ import SeaFreightView from "./View";
 import SeaFreightForm from "./Form";
 import TravelDocument from "./TravelDocument";
 import Invoice from "./Invoice";
-import { markingAggregation, aggregationLookup } from "../aggregation";
+import { markingAggregation, aggregationLookup } from "../marking-aggregation";
 import useDatabase from "../../../data/useDatabase";
 import { dateToString, dateDiffInDays } from "../../../utils";
 
