@@ -44,7 +44,7 @@ const elements = (
           <Suspense fallback={<Center><Spin /></Center>}>
             <Routes>
               <Route path='/' element={<Navigate to={'/home'} />} />
-              <Route path='/home' element={<Center><Logo src="logo.png" /></Center>} />
+              <Route path='/home' element={<Center><Logo src="word-art.png" /></Center>} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/shortcuts' element={<Shortcuts />} />
               {routes}
