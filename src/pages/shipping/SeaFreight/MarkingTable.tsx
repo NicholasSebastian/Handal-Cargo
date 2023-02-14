@@ -57,7 +57,7 @@ const markingAggregation = {
         "$$marking",
         { 
           paid: { $gt: [{ $sum: "$payments.items.amount" }, { $sum: "$invoices.price" }] },
-          remainder: { $sum: "$travel_permits.quantity" },
+          remainder: { $subtract: ["$$marking.quantity", { $sum: "$travel_permits.quantity" }] },
           travel_documents: { $size: "$travel_permits" },
           invoices: { $size: "$invoices" }
         }
