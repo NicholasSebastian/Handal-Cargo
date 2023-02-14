@@ -2,8 +2,8 @@ import { register, isRegistered } from "@tauri-apps/api/globalShortcut";
 import { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Spin } from 'antd';
 import styled from 'styled-components';
+import { Spin } from 'antd';
 import { DatabaseProvider } from './data/useDatabase';
 import { ProfileProvider } from './data/useProfile';
 import { routes } from './data/useRoute';
@@ -11,8 +11,6 @@ import Layout from './components/specialized/Layout';
 import Login from './pages/Login';
 import { insertStringAtPos, IShortcut } from "./pages/Shortcuts";
 import './normalize.css';
-
-const DEFAULT_PAGE = '/sea-freight';
 
 // This file marks the base of the entire app.
 
@@ -24,6 +22,13 @@ const Center = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+`;
+
+const Logo = styled.img`
+  width: 70%;
+  max-width: 700px;
+  user-select: none;
+  pointer-events: none;
 `;
 
 // Pages are separated into different routes, which are all wrapped
@@ -38,7 +43,8 @@ const elements = (
         <Layout>
           <Suspense fallback={<Center><Spin /></Center>}>
             <Routes>
-              <Route path='/' element={<Navigate to={DEFAULT_PAGE} />} />
+              <Route path='/' element={<Navigate to={'/home'} />} />
+              <Route path='/home' element={<Center><Logo src="logo.png" /></Center>} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/shortcuts' element={<Shortcuts />} />
               {routes}

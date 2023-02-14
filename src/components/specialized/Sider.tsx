@@ -1,8 +1,9 @@
+import { open as goto } from "@tauri-apps/api/shell";
 import { FC, useState, useEffect, useMemo, isValidElement } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Layout, Typography, Menu, MenuProps, Alert } from "antd";
-import { AppstoreOutlined, PrinterOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { Layout, Typography, Menu, MenuProps, Alert, notification } from "antd";
+import { AppstoreOutlined, PrinterOutlined, PlusCircleOutlined, AccountBookOutlined, SettingOutlined } from '@ant-design/icons';
 import useDatabase from '../../data/useDatabase';
 import useProfile from '../../data/useProfile';
 import pages from '../../navigation';
@@ -10,8 +11,10 @@ import { toSlug } from '../../utils';
 
 const { Sider: AntSider } = Layout;
 const { Title } = Typography;
-const icons = [ AppstoreOutlined, PrinterOutlined, PlusCircleOutlined, SettingOutlined ];
+const icons = [ AppstoreOutlined, PrinterOutlined, PlusCircleOutlined, AccountBookOutlined, SettingOutlined ];
+
 const DEFAULT_GROUP = 'shipping';
+const REPOSITORY_URL = 'https://github.com/NicholasSebastian/Handal-Cargo';
 
 // Intended for use within the Layout component.
 
@@ -61,7 +64,15 @@ const Sider: FC<ISiderProps> = props => {
 
   return (
     <AntSider trigger={null} width={220}>
-      <Title level={3}>Handal Cargo</Title>
+      <Logo 
+        level={3} 
+        onClick={() => notification.open({
+          message: "Product Information",
+          description,
+          placement: 'bottomRight'
+        })}>
+        Handal Cargo
+      </Logo>
       <Menu theme='dark' 
         mode='inline' 
         items={menuItems}
@@ -74,7 +85,31 @@ const Sider: FC<ISiderProps> = props => {
   );
 }
 
+const description = (
+  <dl>
+    <dt>This product is made for:</dt>
+    <dd>PT. Handal Cargo</dd>
+    <dt>Version 1.0.0</dt>
+    <dd>
+      <a onClick={() => goto(REPOSITORY_URL)}>
+        {REPOSITORY_URL}
+      </a>
+    </dd>
+    <dt>Developer Credits</dt>
+    <dd>
+      Nicholas Sebastian Hendrata<br />
+      Jacky Richie Bahary
+    </dd>
+  </dl>
+);
+
 export default Sider;
+
+const Logo = styled(Title)`
+  :hover {
+    cursor: help;
+  }
+`;
 
 const Message = styled(Alert)`
   position: absolute;

@@ -9,7 +9,7 @@ const CLUSTER_NAME = "mongodb-atlas";
 const DATABASE_NAME = "Primary";
 
 const DEFAULT_WINDOW_SIZE = new LogicalSize(1280, 720);
-const MIN_WINDOW_SIZE = new LogicalSize(1000, 640);
+const MIN_WINDOW_SIZE = new LogicalSize(1000, 720);
 const TIME_TO_CENTER = 100;
 
 const instance = new Realm.App({ id: REALM_APP_ID });

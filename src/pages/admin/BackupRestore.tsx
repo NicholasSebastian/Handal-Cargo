@@ -26,7 +26,8 @@ const collections = [
   "SeaFreight",
   "Singletons",
   "Staff",
-  "StaffGroups"
+  "StaffGroups",
+  "TravelPermits"
 ];
 
 const BackupRestore: FC = () => {
