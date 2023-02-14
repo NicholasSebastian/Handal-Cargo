@@ -4,9 +4,9 @@ import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import TableTemplate from "../../../components/compounds/TableTemplate";
 import SeaFreightView from "./View";
 import SeaFreightForm from "./Form";
-import { markingAggregation, aggregationLookup } from "./MarkingTable";
 import TravelDocument from "./TravelDocument";
 import Invoice from "./Invoice";
+import { markingAggregation, aggregationLookup } from "./aggregation";
 import useDatabase from "../../../data/useDatabase";
 import { dateToString, dateDiffInDays } from "../../../utils";
 
