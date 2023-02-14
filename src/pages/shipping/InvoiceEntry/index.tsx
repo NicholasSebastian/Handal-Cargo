@@ -1,5 +1,6 @@
 import { FC } from "react";
 import TableTemplate from "../../../components/compounds/ViewTableTemplate";
+import { dateToString } from "../../../utils";
 
 // TODO: Add an edit form.
 
@@ -8,11 +9,16 @@ const InvoiceEntry: FC = () => {
     <TableTemplate 
       collectionName="Invoices"
       width={1500}
+      modalWidth={700}
+      query={(collectionName, search, searchBy) => {
+        // TODO: Aggregate and use $lookup to retrive the corresponding 'SeaFreight' or 'AirCargo' data.
+        return undefined;
+      }}
       columns={[
-        { dataIndex: "arrival_date", title: "Tanggal Tiba" },
-        { dataIndex: "muat_date", title: "Tanggal Muat" },
-        { dataIndex: "_id", title: "Kode Faktur" },
-        { dataIndex: "payment_id", title: "Kode Pembayaran" },
+        { dataIndex: "arrival_date", title: "Tanggal Tiba", render: value => dateToString(value) },
+        { dataIndex: "muat_date", title: "Tanggal Muat", render: value => dateToString(value) },
+        { dataIndex: "_id", title: "Kode Faktur", render: value => value?.toString() },
+        { dataIndex: "payment_id", title: "Kode Pembayaran", render: value => value?.toString() },
         { dataIndex: "container_number", title: "Nomor Container" },
         { dataIndex: "marking", title: "Marking" },
         { dataIndex: "quantity", title: "Kuantitas" },
@@ -26,10 +32,10 @@ const InvoiceEntry: FC = () => {
         { dataIndex: "total", title: "Total" }
       ]}
       viewItems={[
-        { key: "arrival_date", label: "Tanggal Tiba" },
-        { key: "muat_date", label: "Tanggal Muat" },
-        { key: "_id", label: "Kode Faktur" },
-        { key: "payment_id", label: "Kode Pembayaran" },
+        { key: "arrival_date", label: "Tanggal Tiba", render: value => dateToString(value) },
+        { key: "muat_date", label: "Tanggal Muat", render: value => dateToString(value) },
+        { key: "_id", label: "Kode Faktur", render: value => value?.toString() },
+        { key: "payment_id", label: "Kode Pembayaran", render: value => value?.toString() },
         { key: "container_number", label: "Nomor Container" },
         { key: "marking", label: "Marking" },
         { key: "quantity", label: "Kuantitas" },

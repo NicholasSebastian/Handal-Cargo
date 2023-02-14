@@ -56,10 +56,36 @@ const markingAggregation = {
       $mergeObjects: [
         "$$marking",
         { 
-          paid: { $gt: [{ $sum: "$payments.items.amount" }, { $sum: "$invoices.price" }] },
-          remainder: { $subtract: ["$$marking.quantity", { $sum: "$travel_permits.quantity" }] },
-          travel_documents: { $size: "$travel_permits" },
-          invoices: { $size: "$invoices" }
+          paid: { // TODO: Whatever the fuck this is.
+            $gt: [
+              { $sum: "$payments.items.amount" }, 
+              { $sum: "$invoices.price" }
+            ] 
+          },
+          remainder: {
+            $subtract: [
+              "$$marking.quantity", 
+              { $sum: "$travel_permits.quantity" } // TODO: Sum of travel_permits.quantity that match the current marking.
+            ] 
+          }, 
+          travel_documents: {
+            $size: {
+              $filter: {
+                input: "$travel_permits",
+                as: "travel_permit",
+                cond: { $eq: ["$$travel_permit.marking", "$$marking.marking"] }
+              }
+            }
+          }, 
+          invoices: {
+            $size: {
+              $filter: {
+                input: "$invoices",
+                as: "invoice",
+                cond: { $eq: ["$$invoice.marking", "$$marking.marking"] }
+              }
+            }
+          }
         }
       ]
     }
@@ -204,7 +230,7 @@ export { columns, markingAggregation, aggregationLookup };
 export default MarkingTable;
 
 const Container = styled.div`
-  width: 735px; // Because of a stupid bug, this has to be an absolute value.
+  width: 733px; // Because of a stupid bug, this has to be an absolute value.
 
   > div:first-child {
     display: flex;

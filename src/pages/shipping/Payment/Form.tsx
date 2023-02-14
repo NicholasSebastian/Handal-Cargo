@@ -21,7 +21,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
   const total = items.reduce((acc: number, item: any) => acc + item.amount, 0);
 
   const handleAdd = () => {
-    if (type.length === 0 || amount.length === 0 || description.length === 0) {
+    if (type.length === 0 || amount.length === 0) {
       message.error("Ada input yang belum diisi.");
     }
     else {

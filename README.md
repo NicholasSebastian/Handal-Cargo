@@ -19,6 +19,7 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 - Shipping
   - AirCargo
   - Invoice Entry
+  - Customer History
 - Reports
 - Minor features
   - Limit table height; pagination.

@@ -7,6 +7,7 @@ const Staff: FC = () => {
     <TableTemplate 
       collectionName="Staff"
       searchBy="name"
+      modalWidth={700}
       columns={[
         { dataIndex: 'name', title: 'Nama' },
         { dataIndex: 'access_level', title: 'Level Akses' },

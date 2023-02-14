@@ -14,7 +14,7 @@ const Invoice: FC<IPageProps> = props => {
       title="Faktur Sea Freight"
       collectionName="Invoices"
       columns={[
-        { dataIndex: '_id', title: 'Nomor Faktur' },
+        { dataIndex: '_id', title: 'Nomor Faktur', render: value => value?.toString() },
         { dataIndex: 'marking', title: 'Marking' },
         { dataIndex: 'container_number', title: 'Nomor Container' },
         { dataIndex: 'quantity', title: 'Kuantitas' },
@@ -22,9 +22,9 @@ const Invoice: FC<IPageProps> = props => {
       ]}
       viewItems={[
         { key: 'user', label: 'User' },
-        { key: 'print_date', label: 'tanggal_cetak', render: value => dateToString(value) },
+        { key: 'print_date', label: 'Tanggal Cetak', render: value => dateToString(value) },
         { key: 'marking', label: 'Marking' },
-        { key: 'date', label: 'Tanggal' },
+        { key: 'date', label: 'Tanggal', render: value => dateToString(value) },
         { key: 'container_number', label: 'Nomor Container' },
         { key: 'measurement_details', label: 'Keterangan Ukuran' },
         { key: 'quantity', label: 'Kuantitas' },

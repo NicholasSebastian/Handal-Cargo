@@ -5,14 +5,14 @@ import { ColumnsType } from "antd/lib/table";
 import { ModalStyles } from "./TableTemplate";
 import BasicView, { IViewItem } from "../basics/BasicView";
 import Search from "../basics/Search";
-import useDataFetching from "../abstractions/useDataFetching";
+import useDataFetching, { Query } from "../abstractions/useDataFetching";
 import useRoute from "../../data/useRoute";
 
 const BasicTableTemplate: FC<ITemplateProps> = props => {
-  const { title, collectionName, columns, width, viewItems, viewExtra, extra } = props;
+  const { title, collectionName, columns, width, modalWidth, viewItems, viewExtra, extra, query } = props;
   const { title: defaultTitle } = useRoute()!;
   const initSearchKey = (columns[0] as any).dataIndex;
-  const { data, loading, searchKey, setSearch, setSearchKey } = useDataFetching(collectionName, initSearchKey);
+  const { data, loading, searchKey, setSearch, setSearchKey } = useDataFetching(collectionName, initSearchKey, query);
   const [modal, setModal] = useState<any>();
 
   return (
@@ -38,7 +38,7 @@ const BasicTableTemplate: FC<ITemplateProps> = props => {
         visible={modal}
         onCancel={() => setModal(undefined)}
         footer={null}
-        width={650}
+        width={modalWidth ?? 650}
         bodyStyle={ModalStyles}>
         <BasicView
           values={modal}
@@ -72,7 +72,9 @@ interface ITemplateProps {
   collectionName: string
   columns: ColumnsType<any>
   width?: number
+  modalWidth?: number
   viewItems: Array<IViewItem>
   viewExtra?: (values: Record<string, any>) => ReactNode
   extra?: ReactNode
+  query?: Query
 }

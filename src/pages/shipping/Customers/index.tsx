@@ -50,7 +50,7 @@ const Customers: FC = () => {
         { type: 'divider' },
         { key: 'measurement_details', label: 'Keterangan Ukuran' },
         { key: 'transport_details', label: 'Keterangan Kirim', type: 'select', items: 'Expeditions' },
-        { key: 'others', label: 'Lain-Lain' },
+        { key: 'others', label: 'Lain-Lain', type: 'textarea' },
         'pagebreak',
         { key: 'markings', type: 'custom', render: MarkingTable },
         'pagebreak',

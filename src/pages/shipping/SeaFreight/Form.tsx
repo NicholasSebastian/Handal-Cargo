@@ -58,9 +58,9 @@ const SeaFreightForm: HandledFormProps = {
       type: 'custom', 
       render: createDependentValue({
         label: 'Total Biaya (Rp.)',
-        dependencies: ['muat_fee', 'additional_fee', 'other_fee', 'exchange_rate'],
-        calculateValue: ([muat_fee, additional_fee, other_fee, exchange_rate]) => {
-          const value = (muat_fee + additional_fee + other_fee) * exchange_rate;
+        dependencies: ['muat_fee', 'additional_fee', 'other_fee', 'clearance_fee', 'exchange_rate'],
+        calculateValue: ([muat_fee, additional_fee, other_fee, clearance_fee, exchange_rate]) => {
+          const value = (muat_fee + additional_fee + other_fee + clearance_fee) * exchange_rate;
           return formatCurrency(value.toString());
         },
         defaultValue: 0,
