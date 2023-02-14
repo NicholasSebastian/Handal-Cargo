@@ -12,8 +12,6 @@ import { toSlug } from '../../utils';
 const { Sider: AntSider } = Layout;
 const { Title } = Typography;
 
-const DEFAULT_GROUP = 'shipping';
-
 const icons = [ 
   AppstoreOutlined, 
   PrinterOutlined, 
@@ -30,7 +28,7 @@ const Sider: FC<ISiderProps> = props => {
   const database = useDatabase();
   const navigate = useNavigate();
   
-  const [open, setOpen] = useState(DEFAULT_GROUP);
+  const [open, setOpen] = useState<string>();
   const [loading, setLoading] = useState(false);
 
   // Formats the app's pages for interpretation as menu items for navigation.
@@ -85,7 +83,7 @@ const Sider: FC<ISiderProps> = props => {
       <Menu theme='dark' 
         mode='inline' 
         items={menuItems}
-        openKeys={[open]} 
+        openKeys={open ? [open] : []} 
         onOpenChange={keys => setOpen(keys.find(key => key !== open)!)}
         selectedKeys={[active]} 
         onSelect={e => navigate(e.key)} />

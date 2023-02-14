@@ -2,8 +2,8 @@ import { FC, useState } from "react";
 import { Space, Button } from "antd";
 import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import TableTemplate from "../../../components/compounds/TableTemplate";
-// import SeaFreightView from "./View";
-// import SeaFreightForm from "./Form";
+// import AirCargoView from "./View";
+import AirCargoForm from "./Form";
 // import TravelDocument from "./TravelDocument";
 // import Invoice from "./Invoice";
 import { markingAggregation, aggregationLookup } from "../aggregation";
@@ -42,7 +42,7 @@ const AirCargo: FC = () => {
           }
           showIndicator={values => values.paid}
           view={() => <div />} // TODO
-          form={() => <div />} // TODO
+          form={AirCargoForm}
           columns={[
             { dataIndex: "arrival_date", title: "Tanggal Tiba", width: 190, render: value => dateToString(value) },
             { dataIndex: "airwaybill_number", title: "No. Air Waybill" },

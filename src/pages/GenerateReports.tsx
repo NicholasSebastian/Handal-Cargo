@@ -7,7 +7,7 @@ const GenerateReports: FC = () => {
     <Container>
       <Alert 
         type="warning" 
-        message="Fitur ini masih Work in Progress." />
+        message="Fitur ini telah dibatalkan." />
       {/* TODO */}
     </Container>
   );

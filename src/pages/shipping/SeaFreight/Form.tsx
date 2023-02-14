@@ -1,12 +1,14 @@
-import styled from "styled-components";
 import { RenderItem } from "../../../components/basics/BasicForm";
 import createDependentValue from "../../../components/basics/DependentValue";
 import { HandledFormProps } from "../../../components/compounds/TableTemplate";
 import MarkingTable from "./MarkingTable";
+import MarkingTableDetails from "./MarkingTableDetails";
 import { formatCurrency } from "../../../utils";
 
+const gap: RenderItem = { type: 'custom', render: () => <div /> };
+
 const SeaFreightForm: HandledFormProps = {
-  labelSpan: 11,
+  labelSpan: 12,
   twoColumns: true,
   items: [
     { key: 'container_number', label: 'Nomor Container', required: true },
@@ -53,7 +55,7 @@ const SeaFreightForm: HandledFormProps = {
       } as RenderItem
     ]))
     .flat(),
-    { key: 'clearance_fee', label: 'B. Custom Clearance', type: 'currency', defaultValue: 0, required: true },
+    { key: 'clearance_fee', label: 'Biaya Custom Clearance', type: 'currency', defaultValue: 0, required: true },
     { 
       type: 'custom', 
       render: createDependentValue({
@@ -69,40 +71,9 @@ const SeaFreightForm: HandledFormProps = {
     },
     'pagebreak',
     { key: 'markings', type: 'custom', render: MarkingTable },
-    { type: 'divider' }, // This is here to brute-force an issue with the 'display: grid'.
-    { type: 'custom', render: () => (
-      <MarkingTableDetails>
-        {[
-          { key: 'listm3', label: 'Total Kubikasi (List)', suffix: 'm³' },
-          { key: 'listkg', label: 'Total Berat (List)', suffix: 'kg' },
-          { key: 'dlistm3', label: 'Total Kubikasi (DList)', suffix: 'm³' },
-          { key: 'dlistkg', label: 'Total Berat (DList)', suffix: 'kg' },
-          { key: 'hbm3', label: 'Total Kubikasi (HB)', suffix: 'm³' },
-          { key: 'hbkg', label: 'Total Berat (HB)', suffix: 'kg' },
-          { key: 'custm3', label: 'Total Kubikasi (Cust)', suffix: 'm³' },
-          { key: 'custkg', label: 'Total Berat (Cust)', suffix: 'kg' },
-          { key: 'quantity', label: 'Total Muatan', suffix: 'Colly / Ball' }
-        ]
-        .map(field => createDependentValue({
-          label: field.label,
-          suffix: field.suffix,
-          labelSpan: 12,
-          defaultValue: 0,
-          dependencies: ['markings'],
-          calculateValue: ([markings]) => {
-            return markings.reduce((acc: number, marking: any) => acc + marking[field.key], 0);
-          }
-        }))
-        .map(Display => <Display />)}
-      </MarkingTableDetails>
-    )}
+    gap,
+    { type: 'custom', render: MarkingTableDetails }
   ]
 };
 
 export default SeaFreightForm;
-
-const MarkingTableDetails = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  margin-top: 10px;
-`;
