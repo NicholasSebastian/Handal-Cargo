@@ -6,11 +6,13 @@ import { ModalStyles } from "./TableTemplate";
 import BasicView, { IViewItem } from "../basics/BasicView";
 import Search from "../basics/Search";
 import useDataFetching from "../abstractions/useDataFetching";
+import useRoute from "../../data/useRoute";
 
 const BasicTableTemplate: FC<ITemplateProps> = props => {
-  const { title, collection, columns, viewItems, viewExtra, extra } = props;
+  const { title, collectionName, columns, width, viewItems, viewExtra, extra } = props;
+  const { title: defaultTitle } = useRoute()!;
   const initSearchKey = (columns[0] as any).dataIndex;
-  const { data, loading, searchKey, setSearch, setSearchKey } = useDataFetching(collection, initSearchKey);
+  const { data, loading, searchKey, setSearch, setSearchKey } = useDataFetching(collectionName, initSearchKey);
   const [modal, setModal] = useState<any>();
 
   return (
@@ -26,12 +28,13 @@ const BasicTableTemplate: FC<ITemplateProps> = props => {
       <Table
         size="small"
         pagination={false}
+        scroll={width ? { x: width } : undefined}
         dataSource={data}
         loading={loading}
         onRow={entry => ({ onClick: () => setModal(entry) })}
         columns={columns} />
       <Modal centered maskClosable
-        title={title}
+        title={title ?? defaultTitle}
         visible={modal}
         onCancel={() => setModal(undefined)}
         footer={null}
@@ -65,9 +68,10 @@ const Container = styled.div`
 `;
 
 interface ITemplateProps {
-  title: string
-  collection: string
+  title?: string
+  collectionName: string
   columns: ColumnsType<any>
+  width?: number
   viewItems: Array<IViewItem>
   viewExtra?: (values: Record<string, any>) => ReactNode
   extra?: ReactNode

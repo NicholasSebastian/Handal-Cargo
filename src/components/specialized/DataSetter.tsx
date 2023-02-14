@@ -5,6 +5,8 @@ import { useUser } from "../../data/useDatabase";
 
 const { useFormInstance } = Form;
 
+// Intended for use in SeaFreight and AirCargo's invoices pages.
+
 const DataSetter: FC = () => {
   const database = useDatabase();
   const user = useUser();

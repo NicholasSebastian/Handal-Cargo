@@ -12,7 +12,7 @@ const Invoice: FC<IPageProps> = props => {
   return (
     <TableTemplate
       title="Faktur Sea Freight"
-      collection="Invoices"
+      collectionName="Invoices"
       columns={[
         { dataIndex: '_id', title: 'Nomor Faktur' },
         { dataIndex: 'marking', title: 'Marking' },

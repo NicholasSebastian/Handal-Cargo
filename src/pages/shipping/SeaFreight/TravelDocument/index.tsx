@@ -12,7 +12,7 @@ const TravelDocument: FC<IPageProps> = props => {
   return (
     <TableTemplate 
       title="Surat Jalan Sea Freight"
-      collection='TravelPermits'
+      collectionName='TravelPermits'
       columns={[
         { dataIndex: 'marking', title: 'Marking' },
         { dataIndex: 'container_number', title: 'Nomor Container' },

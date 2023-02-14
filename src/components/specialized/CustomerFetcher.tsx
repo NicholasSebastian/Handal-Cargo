@@ -4,6 +4,8 @@ import useDatabase from "../../data/useDatabase";
 
 const { useFormInstance } = Form;
 
+// Intended for use in SeaFreight and AirCargo's travel documents pages.
+
 const CustomerFetcher: FC = () => {
   const database = useDatabase();
   const form = useFormInstance();

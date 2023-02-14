@@ -5,6 +5,8 @@ import { formatCurrency } from "../../utils";
 
 const { useFormInstance, useWatch, Item } = Form;
 
+// Intended for use in SeaFreight and AirCargo's invoices pages.
+
 const DisplayTotal: FC<ICustomComponentProps> = props => {
   const { value } = props;
   const form = useFormInstance();

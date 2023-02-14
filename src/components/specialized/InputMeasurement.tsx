@@ -4,6 +4,8 @@ import { ICustomComponentProps } from "../basics/BasicForm";
 
 const { useFormInstance, useWatch, Item } = Form;
 
+// Intended for use in SeaFreight and AirCargo's travel documents and invoices pages.
+
 const InputMeasurement: FC<ICustomComponentProps> = props => {
   const { value } = props;
   const form = useFormInstance();

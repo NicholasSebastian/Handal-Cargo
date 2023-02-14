@@ -6,10 +6,10 @@ import { toSlug, fromSlug } from '../../utils';
 import Header from '../specialized/Header';
 import Sider from './Sider';
 
-type TabsCallback = Required<TabsProps>['onEdit'];
-
 const { Content } = AntLayout;
 const { TabPane } = Tabs;
+
+// Intended for use at the base of the app, wrapping around all other pages.
 
 const Layout: FC<PropsWithChildren<{}>> = (props) => {
   const navigate = useNavigate();
@@ -119,3 +119,5 @@ const Container = styled(AntLayout)`
     padding: 8px 24px;
   }
 `;
+
+type TabsCallback = Required<TabsProps>['onEdit'];
