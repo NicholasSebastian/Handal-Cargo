@@ -17,12 +17,8 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 ## TO DO LIST
 
 - Shipping
-  - SeaFreight
   - AirCargo
   - Invoice Entry
-- Printing
-  - Surat Jalan
-  - Faktur
 - Reports
 - Minor features
   - Limit table height; pagination.
