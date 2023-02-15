@@ -5,10 +5,10 @@ import useDatabase from "../../../../data/useDatabase";
 import { useCloseModal } from "../../../../components/compounds/TableTemplate";
 import BasicForm from "../../../../components/basics/BasicForm";
 import createDependentValue from "../../../../components/basics/DependentValue";
-import { IFormProps } from "../View";
+import getFormInjector, { injectUser } from "../../../../components/abstractions/getFormInjector";
 import InputMeasurement from "../../../../components/specialized/InputMeasurement";
 import DisplayTotal from "../../../../components/specialized/DisplayTotal";
-import DataSetter from "../../../../components/specialized/DataSetter";
+import { IFormProps } from "../View";
 import print from "../../../../print";
 import { momentsToDates, formatCurrency } from "../../../../utils";
 
@@ -16,6 +16,13 @@ const InvoiceForm: FC<IFormProps> = props => {
   const { values, setCurrentPage } = props;
   const database = useDatabase();
   const closeModal = useCloseModal();
+
+  const injectAdditionalValues = getFormInjector({
+    collectionName: 'Customers',
+    localField: 'marking',
+    foreignField: 'markings',
+    projection: { measurement_details: 1 }
+  });
 
   const handleSubmit = (submittedValues: any) => {
     database?.collection('Invoices')
@@ -34,6 +41,8 @@ const InvoiceForm: FC<IFormProps> = props => {
       onSubmit={handleSubmit}
       labelSpan={11}
       items={[
+        injectUser,
+        injectAdditionalValues,
         { key: 'user', label: 'User', disabled: true },
         { key: 'print_date', label: 'Tanggal Cetak', type: 'date', defaultValue: moment(), disabled: true },
         { key: 'marking', label: 'Marking', disabled: true },
@@ -71,8 +80,7 @@ const InvoiceForm: FC<IFormProps> = props => {
         { key: 'travel_number', label: 'No. Surat Jalan Expedisi' },
         { key: 'shipment_fee', label: 'Ongkos Kirim', type: 'currency', defaultValue: 0 },
         { key: 'nb', label: 'NB', type: 'textarea' },
-        { key: 'total', type: 'custom', render: DisplayTotal },
-        { type: 'custom', render: DataSetter }
+        { key: 'total', type: 'custom', render: DisplayTotal }
       ]}
       customButton={
         <Fragment>

@@ -1,3 +1,4 @@
+import { Command } from '@tauri-apps/api/shell';
 import moment, { isMoment } from 'moment';
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -74,6 +75,29 @@ export function clearLocalStorage(startsWith: string) {
     if (key.startsWith(startsWith)) keys.push(key);
   }
   keys.forEach(key => localStorage.removeItem(key));
+}
+
+export async function getCpuUsage() {
+  const command = new Command('wmic', ['cpu', 'get', 'loadpercentage']);
+  const response = await command.execute();
+  const cpuUsage = response.stdout.replace(/\D/g, '');
+  return cpuUsage + '%';
+}
+
+export async function getMemoryUsage() {
+  const command1 = new Command('wmic', ['ComputerSystem', 'get', 'TotalPhysicalMemory']);
+  const command2 = new Command('wmic', ['OS', 'get', 'FreePhysicalMemory']);
+  const response1 = await command1.execute();
+  const response2 = await command2.execute();
+
+  const totalMemoryInBytes = parseInt(response1.stdout.replace(/\D/g, ''));
+  const totalMemoryInGB = (totalMemoryInBytes / 1000000000).toFixed(1);
+  const freeMemoryInKB = parseInt(response2.stdout.replace(/\D/g, ''));
+  const usedMemoryInBytes = totalMemoryInBytes - (freeMemoryInKB * 1000);
+  const usedMemoryInGB = (usedMemoryInBytes / 1000000000).toFixed(1);
+
+  const memoryUsage = Math.round(((usedMemoryInBytes / totalMemoryInBytes) * 100));
+  return `${memoryUsage}% (${usedMemoryInGB}GB dari ${totalMemoryInGB}GB)`;
 }
 
 export type Subtract<T extends T1, T1 extends object> = Pick<T, SetComplement<keyof T, keyof T1>>;

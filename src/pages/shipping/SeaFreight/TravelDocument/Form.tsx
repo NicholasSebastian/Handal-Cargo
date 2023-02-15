@@ -2,11 +2,11 @@ import { FC, Fragment, useRef } from "react";
 import { Button, message } from "antd";
 import moment from "moment";
 import useDatabase from "../../../../data/useDatabase";
-import BasicForm from "../../../../components/basics/BasicForm";
 import { useCloseModal } from "../../../../components/compounds/TableTemplate";
-import { IFormProps } from "../View";
+import BasicForm from "../../../../components/basics/BasicForm";
+import getFormInjector from "../../../../components/abstractions/getFormInjector";
 import InputMeasurement from "../../../../components/specialized/InputMeasurement";
-import CustomerFetcher from "../../../../components/specialized/CustomerFetcher";
+import { IFormProps } from "../View";
 import print from "../../../../print";
 import { momentsToDates } from "../../../../utils";
 
@@ -15,6 +15,13 @@ const TravelDocumentForm: FC<IFormProps> = props => {
   const database = useDatabase();
   const closeModal = useCloseModal();
   const isDaerahType = useRef<boolean>();
+
+  const injectAdditionalValues = getFormInjector({
+    collectionName: 'Customers',
+    localField: 'marking',
+    foreignField: 'markings',
+    projection: { customer: '$name', address: 1, city: 1, home_number: 1, phone_number: 1 }
+  })
 
   const handleSubmit = (submittedValues: any) => {
     database?.collection('TravelPermits')
@@ -36,6 +43,7 @@ const TravelDocumentForm: FC<IFormProps> = props => {
       onSubmit={handleSubmit}
       labelSpan={11}
       items={[
+        injectAdditionalValues,
         { key: 'marking', label: 'Marking', disabled: true },
         { key: 'date', label: 'Tanggal', type: 'date', defaultValue: moment(), required: true },
         { key: 'container_number', label: 'Nomor Container', disabled: true },
@@ -55,8 +63,7 @@ const TravelDocumentForm: FC<IFormProps> = props => {
         { key: 'customer', label: 'Customer' }, 
         { key: 'city', label: 'Kota' },
         { key: 'address', label: 'Alamat', type: 'textarea' },
-        { key: 'description', label: 'Keterangan Kirim', type: 'textarea' },
-        { type: 'custom', render: CustomerFetcher }
+        { key: 'description', label: 'Keterangan Kirim', type: 'textarea' }
       ]}
       customButton={
         <Fragment>

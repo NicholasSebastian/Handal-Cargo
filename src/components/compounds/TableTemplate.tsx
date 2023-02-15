@@ -6,7 +6,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import withTemplateHandling, { ISharedProps, IData } from '../abstractions/withTemplateHandling';
 import withInitialData, { IInjectedProps as InjectedViewProps } from '../abstractions/withInitialData';
 import withFormHandling, { IInjectedProps as InjectedFormProps } from '../abstractions/withFormHandling';
-import useFallback from '../abstractions/useFallback';
+import withFallback from '../abstractions/withFallback';
 import BasicView, { IViewProps, IViewItem } from '../basics/BasicView';
 import BasicForm, { IFormProps, FormItem } from '../basics/BasicForm';
 import Search from '../basics/Search';
@@ -29,8 +29,8 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
 
   const { handleAdd, handleEdit, handleDelete } = handlers;
   
-  const FallbackView = useFallback(view, BasicView);
-  const FallbackForm = useFallback(form, BasicForm);
+  const FallbackView = withFallback(view, BasicView);
+  const FallbackForm = withFallback(form, BasicForm);
 
   const HandledView = withInitialData(FallbackView, itemQuery);
   const HandledForm = withFormHandling(FallbackForm, itemQuery);

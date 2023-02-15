@@ -11,6 +11,7 @@ function withInitialData<P extends IInjectedProps>(Component: ComponentType<P>, 
   return props => {
     const { collectionName, id, ...otherProps } = props;
     const [values, setValues] = useState();
+    
     useBasicDataFetching(collectionName, id, setValues, customQuery);
     
     // Render the component with the data injected once its ready.

@@ -3,7 +3,7 @@ import { List, Button, Modal, Popconfirm, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import withTemplateHandling, { ISharedProps } from "../abstractions/withTemplateHandling";
 import withFormHandling from '../abstractions/withFormHandling';
-import useFallback from '../abstractions/useFallback';
+import withFallback from '../abstractions/withFallback';
 import BasicForm from '../basics/BasicForm';
 import { ModalStyles, FormPropType } from "./TableTemplate";
 import Search from '../basics/Search';
@@ -19,7 +19,7 @@ const ListTemplate = withTemplateHandling<ITemplateProps>(props => {
   const { handleAdd, handleEdit, handleDelete } = handlers;
   const modalHasId = (modal !== null && 'id' in modal);
 
-  const FallbackForm = useFallback(form, BasicForm);
+  const FallbackForm = withFallback(form, BasicForm);
   const HandledForm = withFormHandling(FallbackForm);
 
   return (

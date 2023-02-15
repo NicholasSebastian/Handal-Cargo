@@ -13,7 +13,16 @@
   },
   "tauri": {
     "allowlist": {
-      "all": true
+      "all": true,
+      "shell": {
+        "scope": [
+          {
+            "name": "wmic",
+            "cmd": "wmic",
+            "args": true
+          }
+        ]
+      }
     },
     "bundle": {
       "active": true,

@@ -11,19 +11,20 @@ function withFormHandling<P extends IInjectedProps>(FormComponent: ComponentType
   return props => {
     const { collectionName, id, handleAdd, handleEdit, ...otherProps } = props;
     const [values, setValues] = useState<any>();
+
     useBasicDataFetching(collectionName, id, setValues, customQuery);
 
     // If an id is given, it is therefore an 'edit' form.
     if (id) {
-      // Wait for the initial values to finish being loaded before rendering.
-      if (values) return (
+      if (values == undefined) return <Spin />
+      return (
         <FormComponent 
           {...otherProps as unknown as P}
           initialValues={values} 
           onSubmit={values => handleEdit(id, values)} />
       );
-      return <Spin />
     }
+    
     // If an id is not given, it is therefore just an empty 'add' form.
     return (
       <FormComponent 
