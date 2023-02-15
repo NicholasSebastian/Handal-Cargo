@@ -1,11 +1,10 @@
-import { RenderItem } from "../../../components/basics/BasicForm";
+import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
+import { RenderItem, gap } from "../../../components/basics/BasicForm";
 import createDependentValue from "../../../components/basics/DependentValue";
 import { HandledFormProps } from "../../../components/compounds/TableTemplate";
 import MarkingTable from "./MarkingTable";
 import MarkingTableDetails from "./MarkingTableDetails";
 import { formatCurrency } from "../../../utils";
-
-const gap: RenderItem = { type: 'custom', render: () => <div /> };
 
 const DisplayDateDiff = createDependentValue({
   label: 'Lama Tiba',
@@ -16,34 +15,34 @@ const DisplayDateDiff = createDependentValue({
 });
 
 const DisplayTotal = createDependentValue({
-  label: 'Total Biaya (Rp.)',
-  dependencies: ['muat_fee', 'additional_fee', 'other_fee', 'clearance_fee', 'exchange_rate'],
-  calculateValue: ([muat_fee, additional_fee, other_fee, clearance_fee, exchange_rate]) => {
-    const value = (muat_fee + additional_fee + other_fee + clearance_fee) * exchange_rate;
+  label: `Total Biaya (${DEFAULT_SYMBOL})`,
+  dependencies: ['muat_fee', 'additional_fee', 'clearance_fee', 'other_fee', 'exchange_rate'],
+  calculateValue: ([muat_fee, additional_fee, clearance_fee, other_fee, exchange_rate]) => {
+    const value = ((muat_fee + additional_fee + clearance_fee) * exchange_rate) + other_fee;
     return formatCurrency(value.toString());
   },
   defaultValue: 0,
-  prefix: 'Rp.'
+  prefix: DEFAULT_SYMBOL
 });
 
 const fees = [
   { key: 'muat_fee', label: 'Biaya Muat' },
   { key: 'additional_fee', label: 'Biaya Tambahan' },
-  { key: 'other_fee', label: 'Biaya Lain-Lain' }
+  { key: 'clearance_fee', label: 'B. Custom Clearance' }
 ]
 .map(field => ([
   { ...field, type: 'currency', defaultValue: 0, required: true } as RenderItem,
   { 
     type: 'custom',
     render: createDependentValue({
-      label: `${field.label} (Rp.)`,
+      label: `${field.label} (${DEFAULT_SYMBOL})`,
       dependencies: [field.key, 'exchange_rate'],
       calculateValue: ([fieldKey, exchange_rate]) => {
         const value = fieldKey * exchange_rate;
         return formatCurrency(value.toString());
       },
       defaultValue: 0,
-      prefix: 'Rp.'
+      prefix: DEFAULT_SYMBOL
     })
   } as RenderItem
 ]))
@@ -67,7 +66,7 @@ const SeaFreightForm: HandledFormProps = {
     { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies', required: true },
     { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1, required: true },
     ...fees,
-    { key: 'clearance_fee', label: 'Biaya Custom Clearance', type: 'currency', defaultValue: 0, required: true },
+    { key: 'other_fee', label: 'Biaya Lain-Lain', type: 'currency', prefix: DEFAULT_SYMBOL, defaultValue: 0, required: true },
     { type: 'custom', render: DisplayTotal },
     'pagebreak',
     { key: 'markings', type: 'custom', render: MarkingTable },

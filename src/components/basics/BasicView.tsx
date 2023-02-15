@@ -1,49 +1,56 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 import { Descriptions } from 'antd';
 import { IInjectedProps } from '../abstractions/withInitialData';
 
 const { Item } = Descriptions;
+const gap = { render: () => <div /> };
 
 // Creates a basic view out of the given data values.
 
 const BasicView: FC<IViewProps> = (props) => {
-  const { title, items, values } = props;
+  const { title, items, values, extra } = props;
 
   return (
-    <Container 
-      title={title} 
-      column={(items.length > 8) ? 2 : 1}
-      labelStyle={{ fontWeight: 500 }}>
-      {items.map(item => (
-        <Item 
-          key={item.key}
-          label={item.label}>
-          {item.render ? item.render(values[item.key], values) : values[item.key]}
-        </Item>
-      ))} 
+    <Container>
+      <Descriptions 
+        title={title} 
+        column={(items.length > 8) ? 2 : 1}
+        labelStyle={{ fontWeight: 500 }}>
+        {items.map((item, i) => {
+          const value = item.key ? values[item.key] : null;
+          const node = item.render ? item.render(value, values) : value;
+          return (
+            <Item 
+              key={item.key ?? i}
+              label={item.label}>
+              {node}
+            </Item>
+          );
+        })} 
+      </Descriptions>
+      {extra}
     </Container>
   );
 }
 
 export type { IViewProps, IViewItem };
+export { gap };
 export default BasicView;
 
-const Container = styled(Descriptions)`
+const Container = styled.div`
   width: calc(100% - 100px);
-
-  > div {
-    padding-bottom: 50px;
-  }
+  padding-bottom: 50px;
 `;
 
 interface IViewProps extends IInjectedProps {
   title?: string
   items: Array<IViewItem>
+  extra?: ReactNode
 }
 
 interface IViewItem {
-  key: string
-  label: string
+  key?: string
+  label?: string
   render?: (value: any, values: Record<string, any>) => any
 }

@@ -1,11 +1,10 @@
-import { RenderItem } from "../../../components/basics/BasicForm";
+import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
+import { RenderItem, gap } from "../../../components/basics/BasicForm";
 import createDependentValue from "../../../components/basics/DependentValue";
 import { HandledFormProps } from "../../../components/compounds/TableTemplate";
 import MarkingTable from "./MarkingTable";
 import MarkingTableDetails from "./MarkingTableDetails";
 import { formatCurrency } from "../../../utils";
-
-const gap: RenderItem = { type: 'custom', render: () => <div /> };
 
 const DisplayDateDiff = createDependentValue({
   label: 'Lama Tiba',
@@ -15,86 +14,113 @@ const DisplayDateDiff = createDependentValue({
   suffix: 'hari'
 });
 
+const DisplayAdditionalFeeRp = createDependentValue({
+  label: `Biaya Tambahan (${DEFAULT_SYMBOL})`,
+  dependencies: ['additional_fee', 'exchange_rate'],
+  calculateValue: ([fieldKey, exchange_rate]) => {
+    const value = fieldKey * exchange_rate;
+    return formatCurrency(value.toString());
+  },
+  defaultValue: 0,
+  prefix: DEFAULT_SYMBOL
+});
+
 const DisplayTotal = createDependentValue({
-  label: 'Total Biaya (Rp.)',
+  label: `Total Biaya (${DEFAULT_SYMBOL})`,
   dependencies: [
-    'freight_fee', 'freight_weight',
-    'commission_fee', 'commission_weight',
-    'clearance_fee', 'clearance_weight',
-    'additional_fee', 'other_fee', 'exchange_rate'
+    'freight_fee', 
+    'freight_weight',
+    'commission_fee', 
+    'commission_weight',
+    'clearance_fee', 
+    'clearance_weight',
+    'additional_fee', 
+    'other_fee', 
+    'exchange_rate'
   ],
   calculateValue: ([
-    freight_fee, freight_weight, 
-    commission_fee, commission_weight, 
-    clearance_fee, clearance_weight, 
-    additional_fee, other_fee, exchange_rate
+    freight_fee, 
+    freight_weight, 
+    commission_fee, 
+    commission_weight, 
+    clearance_fee, 
+    clearance_weight, 
+    additional_fee, 
+    other_fee, 
+    exchange_rate
   ]) => {
     const value1 = freight_fee * freight_weight;
     const value2 = commission_fee * commission_weight;
     const value3 = clearance_fee * clearance_weight;
-    const value = (value1 + value2 + value3 + additional_fee + other_fee) * exchange_rate;
+    const value = ((value1 + value2 + value3 + additional_fee) * exchange_rate) + other_fee;
     return formatCurrency(value.toString());
   },
   defaultValue: 0,
-  prefix: 'Rp.'
+  prefix: DEFAULT_SYMBOL
 });
 
 const feeWeightTotal = [
   {
-    field1: { key: 'freight_fee', label: 'Freight Charge / kg' },
-    field2: { key: 'freight_weight', label: 'Berat Freight (kg)' },
+    field1: { 
+      key: 'freight_fee', 
+      label: 'Freight Charge / kg' 
+    },
+    field2: { 
+      key: 'freight_weight', 
+      label: 'Berat Freight (kg)' 
+    },
     field3: 'Total Freight'
   },
   {
-    field1: { key: 'commission_fee', label: 'Komisi / kg' },
-    field2: { key: 'commission_weight', label: 'Berat Komisi (kg)' },
+    field1: { 
+      key: 'commission_fee', 
+      label: 'Komisi / kg' 
+    },
+    field2: { 
+      key: 'commission_weight', 
+      label: 'Berat Komisi (kg)' 
+    },
     field3: 'Total Komisi'
   },
   {
-    field1: { key: 'clearance_fee', label: 'Biaya Custom Clearance' },
-    field2: { key: 'clearance_weight', label: 'Berat Clearance (kg)' },
-    field3: 'Total Freight'
+    field1: { 
+      key: 'clearance_fee', 
+      label: 'Biaya Custom Clearance' 
+    },
+    field2: { 
+      key: 'clearance_weight', 
+      label: 'Berat Clearance (kg)' 
+    },
+    field3: 'Total C. Clearance'
   }
 ]
 .map(row => ([
-  { ...row.field1, type: 'currency', defaultValue: 0, required: true } as RenderItem,
+  { 
+    ...row.field1, 
+    type: 'currency', 
+    defaultValue: 0, 
+    required: true 
+  } as RenderItem,
   {
     type: 'custom',
     render: createDependentValue({
-      label: `${row.field3} (Rp.)`,
+      label: `${row.field3} (${DEFAULT_SYMBOL})`,
       dependencies: [row.field1.key, row.field2.key, 'exchange_rate'],
       calculateValue: ([field1Key, field2Key, exchange_rate]) => {
         const value = field1Key * field2Key * exchange_rate;
         return formatCurrency(value.toString());
       },
       defaultValue: 0,
-      prefix: 'Rp.'
+      prefix: DEFAULT_SYMBOL
     })
   } as RenderItem,
-  { ...row.field2, type: 'number', defaultValue: 0, required: true } as RenderItem,
+  { 
+    ...row.field2, 
+    type: 'number', 
+    defaultValue: 0, 
+    required: true 
+  } as RenderItem,
   gap
-]))
-.flat();
-
-const moreFees = [
-  { key: 'additional_fee', label: 'Biaya Tambahan' },
-  { key: 'other_fee', label: 'Biaya Lain-Lain' }
-]
-.map(field => ([
-  { ...field, type: 'currency', defaultValue: 0, required: true } as RenderItem,
-  {
-    type: 'custom',
-    render: createDependentValue({
-      label: `${field.label} (Rp.)`,
-      dependencies: [field.key, 'exchange_rate'],
-      calculateValue: ([fieldKey, exchange_rate]) => {
-        const value = fieldKey * exchange_rate;
-        return formatCurrency(value.toString());
-      },
-      defaultValue: 0,
-      prefix: 'Rp.'
-    })
-  } as RenderItem
 ]))
 .flat();
 
@@ -114,8 +140,9 @@ const AirCargoForm: HandledFormProps = {
     { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies', required: true },
     { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1, required: true },
     ...feeWeightTotal,
-    ...moreFees,
-    gap,
+    { key: 'additional_fee', label: 'Biaya Tambahan', type: 'currency', defaultValue: 0, required: true },
+    { type: 'custom', render: DisplayAdditionalFeeRp },
+    { key: 'other_fee', label: 'Biaya Lain-Lain', type: 'currency', prefix: DEFAULT_SYMBOL, defaultValue: 0, required: true },
     { type: 'custom', render: DisplayTotal },
     'pagebreak',
     { key: 'markings', type: 'custom', render: MarkingTable },

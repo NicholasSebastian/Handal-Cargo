@@ -2,10 +2,10 @@ import { FC, useState } from "react";
 import { Space, Button } from "antd";
 import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import TableTemplate from "../../../components/compounds/TableTemplate";
-// import AirCargoView from "./View";
+import AirCargoView from "./View";
 import AirCargoForm from "./Form";
-// import TravelDocument from "./TravelDocument";
-// import Invoice from "./Invoice";
+import TravelDocument from "./TravelDocument";
+import Invoice from "./Invoice";
 import { markingAggregation, aggregationLookup } from "../marking-aggregation";
 import useDatabase from "../../../data/useDatabase";
 import { dateToString } from "../../../utils";
@@ -18,11 +18,11 @@ const AirCargo: FC = () => {
   };
 
   switch (currentPage) {
-    // case 'travel_permits':
-    //   return <TravelDocument {...pageProps} />
+    case 'travel_permits':
+      return <TravelDocument {...pageProps} />
 
-    // case 'invoices':
-    //   return <Invoice {...pageProps} />
+    case 'invoices':
+      return <Invoice {...pageProps} />
 
     default:
       return (
@@ -41,7 +41,7 @@ const AirCargo: FC = () => {
             .then(results => results[0])
           }
           showIndicator={values => values.paid}
-          view={() => <div />} // TODO
+          view={AirCargoView}
           form={AirCargoForm}
           columns={[
             { dataIndex: "arrival_date", title: "Tanggal Tiba", width: 190, render: value => dateToString(value) },

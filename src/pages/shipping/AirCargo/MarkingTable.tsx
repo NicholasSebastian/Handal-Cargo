@@ -106,7 +106,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
       </div>
       <Table bordered 
         size="small"
-        scroll={{ x: 990 }}
+        scroll={{ x: 950 }}
         pagination={false}
         dataSource={value}
         columns={[

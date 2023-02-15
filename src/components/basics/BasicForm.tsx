@@ -13,6 +13,8 @@ const { Item, useForm } = Form;
 const { Password, TextArea } = Input;
 const { Option } = Select;
 
+const gap: RenderItem = { type: 'custom', render: () => <div /> };
+
 // Creates a functional form out of the given props.
 
 const BasicForm: FC<IFormProps> = (props) => {
@@ -56,7 +58,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       case 'password':
         return <Password disabled={item.disabled} />
       case 'currency':
-        return <InputCurrency prefix={currency} disabled={item.disabled} />
+        return <InputCurrency prefix={item.prefix ?? currency} disabled={item.disabled} />
       default:
         return <Input disabled={item.disabled} />
     }
@@ -131,6 +133,7 @@ const BasicForm: FC<IFormProps> = (props) => {
 }
 
 export type { IFormProps, FormItem, RenderItem, ISelectItem, ICustomComponentProps };
+export { gap };
 export default BasicForm;
 
 const Container = styled(Form)`
@@ -159,11 +162,21 @@ interface IFormItem {
   disabled?: boolean
 }
 
+interface ICurrencyItem {
+  key: string
+  label: string
+  type: 'currency'
+  prefix?: string
+  required?: boolean
+  defaultValue?: any
+  disabled?: boolean
+}
+
 interface ISelectItem {
   key: string
   label: string
   type: 'select'
-  items?: string | Array<string> // For only 'select' types.
+  items: string | Array<string> // For only 'select' types.
   required?: boolean
 }
 
@@ -189,7 +202,7 @@ interface ICustomComponentProps {
   value?: any
 }
 
-type InputType = 'string' | 'textarea' | 'password' | 'number' | 'currency' | 'boolean' | 'date';
-type DefinedItem = IFormItem | ISelectItem;
+type InputType = 'string' | 'textarea' | 'password' | 'number' | 'boolean' | 'date';
+type DefinedItem = IFormItem | ISelectItem | ICurrencyItem;
 type RenderItem = DefinedItem | IDividerItem | IHeaderItem | ICustomItem;
 type FormItem = RenderItem | 'pagebreak';

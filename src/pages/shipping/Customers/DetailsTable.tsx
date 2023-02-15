@@ -2,8 +2,8 @@ import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Form, Table, Select, Button, Popconfirm, message } from "antd";
 import { PlusOutlined } from '@ant-design/icons';
-import { useUser } from "../../../data/useDatabase";
-import useDatabase from "../../../data/useDatabase";
+import useDatabase, { useUser } from "../../../data/useDatabase";
+import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 import InputCurrency from "../../../components/basics/InputCurrency";
 import { formatCurrency } from "../../../utils";
@@ -112,7 +112,7 @@ const DetailsTable: FC<ICustomComponentProps> = props => {
           { 
             dataIndex: 'price', 
             title: 'Harga', 
-            render: value => 'Rp.' + formatCurrency(value) 
+            render: value => DEFAULT_SYMBOL + formatCurrency(value) 
           },
           { dataIndex: 'user', title: 'User' },
           {

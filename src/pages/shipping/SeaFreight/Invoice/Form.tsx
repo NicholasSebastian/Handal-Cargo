@@ -5,6 +5,7 @@ import useDatabase from "../../../../data/useDatabase";
 import { useCloseModal } from "../../../../components/compounds/TableTemplate";
 import BasicForm from "../../../../components/basics/BasicForm";
 import createDependentValue from "../../../../components/basics/DependentValue";
+import { DEFAULT_SYMBOL } from "../../../../components/abstractions/useCurrencyHandling";
 import getFormInjector, { injectUser } from "../../../../components/abstractions/getFormInjector";
 import InputMeasurement from "../../../../components/specialized/InputMeasurement";
 import DisplayTotal from "../../../../components/specialized/DisplayTotal";
@@ -67,14 +68,14 @@ const InvoiceForm: FC<IFormProps> = props => {
         { 
           type: 'custom', 
           render: createDependentValue({
-            label: "Biaya Tambahan (Rp.)",
+            label: `Biaya Tambahan (${DEFAULT_SYMBOL})`,
             dependencies: ['additional_fee', 'exchange_rate'],
             calculateValue: ([additional_fee, exchange_rate]) => {
               const value = additional_fee * exchange_rate;
               return formatCurrency(value.toString());
             },
             defaultValue: 0,
-            prefix: 'Rp.'
+            prefix: DEFAULT_SYMBOL
           })
         },
         { key: 'travel_number', label: 'No. Surat Jalan Expedisi' },

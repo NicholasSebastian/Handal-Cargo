@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Descriptions, Table } from "antd";
 import { formatCurrency, dateToString } from "../../../utils";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
+import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 
 const { Item } = Descriptions;
 
@@ -17,7 +18,7 @@ const PaymentView: FC<IInjectedProps> = props => {
         {values['_id'].toString()}
       </Item>
       <Item label="Total Pembayaran">
-        Rp.{total ? formatCurrency(total) : 0}
+        {DEFAULT_SYMBOL}{total ? formatCurrency(total) : 0}
       </Item>
       <Item>
         <Table bordered
@@ -27,7 +28,7 @@ const PaymentView: FC<IInjectedProps> = props => {
           columns={[
             { dataIndex: 'date', title: 'Tanggal', width: 190, render: value => dateToString(value) },
             { dataIndex: 'type', title: 'Jenis Pembayaran', width: 140 },
-            { dataIndex: 'amount', title: 'Jumlah', width: 130, render: value => 'Rp.' + formatCurrency(value) },
+            { dataIndex: 'amount', title: 'Jumlah', width: 130, render: value => DEFAULT_SYMBOL + formatCurrency(value) },
             { dataIndex: 'description', title: 'Keterangan' }
           ]}
           style={{ width: '100%' }} />

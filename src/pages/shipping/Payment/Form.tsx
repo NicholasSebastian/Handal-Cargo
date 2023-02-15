@@ -4,6 +4,7 @@ import { Typography, Table, Input, DatePicker, Button, Popconfirm, Divider, mess
 import { PlusOutlined } from '@ant-design/icons';
 import moment from "moment";
 import { IInjectedProps } from "../../../components/abstractions/withFormHandling";
+import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import InputCurrency from "../../../components/basics/InputCurrency";
 import { formatCurrency, dateToString } from "../../../utils";
 
@@ -54,7 +55,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
           </span>
           <span>
             <Text strong>Total Pembayaran: </Text> 
-            Rp.{total ? formatCurrency(total) : 0}
+            {DEFAULT_SYMBOL}{total ? formatCurrency(total) : 0}
           </span>
         </div>
         <Divider style={{ margin: '10px' }} />
@@ -101,7 +102,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
             { 
               dataIndex: 'amount', 
               title: 'Jumlah',
-              render: value => 'Rp.' + formatCurrency(value)
+              render: value => DEFAULT_SYMBOL + formatCurrency(value)
             },
             { dataIndex: 'description', title: 'Keterangan' },
             {
