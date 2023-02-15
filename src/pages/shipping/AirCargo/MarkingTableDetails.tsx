@@ -12,7 +12,7 @@ const [TotalQuantity, TotalList, TotalHB] = [
   labelSpan: 12,
   dependencies: ['markings'],
   calculateValue: ([markings]) => {
-    return markings.reduce((acc: number, marking: any) => acc + marking[field.key], 0);
+    return markings.reduce((acc: number, marking: any) => acc + (marking[field.key] ?? 0), 0);
   },
   defaultValue: 0,
   suffix: 'kg'
@@ -23,9 +23,9 @@ const RealDifference = createDependentValue({
   labelSpan: 12,
   dependencies: ['markings'],
   calculateValue: ([markings]) => {
-    const totalHB = markings.reduce((acc: number, marking: any) => acc + marking.hbkg, 0);
-    const totalList = markings.reduce((acc: number, marking: any) => acc + marking.listkg, 0);
-    return totalHB - totalList;
+    const totalHB = markings.reduce((acc: number, marking: any) => acc + (marking.hbkg ?? 0), 0);
+    const totalList = markings.reduce((acc: number, marking: any) => acc + (marking.listkg ?? 0), 0);
+    return (totalHB - totalList).toFixed(1);
   },
   defaultValue: 0,
   suffix: 'kg'
@@ -36,8 +36,8 @@ const MasterDifference = createDependentValue({
   labelSpan: 12,
   dependencies: ['markings', 'clearance_weight'],
   calculateValue: ([markings, clearance_weight]) => {
-    const totalHB = markings.reduce((acc: number, marking: any) => acc + marking.hbkg, 0);
-    return totalHB - clearance_weight;
+    const totalHB = markings.reduce((acc: number, marking: any) => acc + (marking.hbkg ?? 0), 0);
+    return (totalHB - clearance_weight).toFixed(1);
   },
   defaultValue: 0,
   suffix: 'kg'

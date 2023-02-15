@@ -95,6 +95,8 @@ const Sider: FC<ISiderProps> = props => {
 export default Sider;
 
 const Logo = styled(Title)`
+  user-select: none;
+
   :hover {
     cursor: help;
   }

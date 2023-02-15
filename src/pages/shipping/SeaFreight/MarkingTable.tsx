@@ -22,9 +22,9 @@ const columns: ColumnsType<any> = [
   { dataIndex: 'custm3', title: 'Cust (m³)', render: value => value && (value + ' m³') },
   { dataIndex: 'custkg', title: 'Cust (kg)', render: value => value && (value + ' kg') },
   { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
-  { dataIndex: 'remainder', title: 'Sisa' },
-  { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 90 },
-  { dataIndex: 'invoices', title: 'Faktur' }
+  { dataIndex: 'remainder', title: 'Sisa', render: (value, record) => value ? value : record.quantity },
+  { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 90, render: value => value ?? 0 },
+  { dataIndex: 'invoices', title: 'Faktur', render: value => value ?? 0 }
 ];
 
 const MarkingTable: FC<ICustomComponentProps> = props => {

@@ -18,7 +18,7 @@ const valueDisplays = [
   labelSpan: 12,
   dependencies: ['markings'],
   calculateValue: ([markings]) => {
-    return markings.reduce((acc: number, marking: any) => acc + marking[field.key], 0);
+    return markings.reduce((acc: number, marking: any) => acc + (marking[field.key] ?? 0), 0);
   },
   defaultValue: 0,
   suffix: field.suffix

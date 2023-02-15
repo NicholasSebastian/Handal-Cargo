@@ -16,10 +16,11 @@ const columns: ColumnsType<any> = [
   { dataIndex: 'listkg', title: 'List (kg)', render: value => value && (value + ' kg') },
   { dataIndex: 'hbkg', title: 'HB (kg)', render: value => value && (value + ' kg') },
   { dataIndex: 'standardkg', title: 'Standard (kg)', render: value => value && (value + ' kg'), width: 105 },
+  { dataIndex: 'volume_charge', title: 'Volume Charge', render: value => value && (value + ' kg'), width: 115 },
   { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
-  { dataIndex: 'remainder', title: 'Sisa' },
-  { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 90 },
-  { dataIndex: 'invoices', title: 'Faktur' }
+  { dataIndex: 'remainder', title: 'Sisa', render: (value, record) => value ? value : record.quantity },
+  { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 90, render: value => value ?? 0 },
+  { dataIndex: 'invoices', title: 'Faktur', render: value => value ?? 0 }
 ];
 
 const MarkingTable: FC<ICustomComponentProps> = props => {
@@ -50,7 +51,8 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
         quantity: qty, 
         listkg: listkg ? parseFloat(listkg) : undefined, 
         hbkg: hbkg ? parseFloat(hbkg) : undefined, 
-        standardkg: standardkg ? parseFloat(standardkg) : undefined
+        standardkg: standardkg ? parseFloat(standardkg) : undefined,
+        volume_charge: (standardkg ? parseFloat(standardkg) : 0) - (hbkg ? parseFloat(hbkg) : 0)
       };
       if (value) {
         handleChange([...value, newValue]);
@@ -104,7 +106,7 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
       </div>
       <Table bordered 
         size="small"
-        scroll={{ x: 880 }}
+        scroll={{ x: 990 }}
         pagination={false}
         dataSource={value}
         columns={[

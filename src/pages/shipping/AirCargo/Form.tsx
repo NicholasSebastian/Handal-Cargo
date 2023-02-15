@@ -42,17 +42,17 @@ const DisplayTotal = createDependentValue({
 const feeWeightTotal = [
   {
     field1: { key: 'freight_fee', label: 'Freight Charge / kg' },
-    field2: { key: 'freight_weight', label: 'Berat Freight' },
+    field2: { key: 'freight_weight', label: 'Berat Freight (kg)' },
     field3: 'Total Freight'
   },
   {
     field1: { key: 'commission_fee', label: 'Komisi / kg' },
-    field2: { key: 'commission_weight', label: 'Berat Komisi' },
+    field2: { key: 'commission_weight', label: 'Berat Komisi (kg)' },
     field3: 'Total Komisi'
   },
   {
     field1: { key: 'clearance_fee', label: 'Biaya Custom Clearance' },
-    field2: { key: 'clearance_weight', label: 'Berat Clearance' },
+    field2: { key: 'clearance_weight', label: 'Berat Clearance (kg)' },
     field3: 'Total Freight'
   }
 ]
