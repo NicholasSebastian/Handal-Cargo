@@ -123,7 +123,7 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
 });
 
 export { ModalStyles, useCloseModal };
-export type { HandledViewProps, HandledFormProps, FormPropType };
+export type { HandledViewProps, HandledFormProps, ViewPropType, FormPropType };
 export default TableTemplate;
 
 const Container = styled.div`

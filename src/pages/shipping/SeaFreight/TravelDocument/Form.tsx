@@ -1,92 +1,36 @@
-import { FC, Fragment, useRef } from "react";
-import { Button, message } from "antd";
+import { FC } from "react";
 import moment from "moment";
-import useDatabase from "../../../../data/useDatabase";
-import { useCloseModal } from "../../../../components/compounds/TableTemplate";
-import BasicForm from "../../../../components/basics/BasicForm";
-import getFormInjector from "../../../../components/abstractions/getFormInjector";
+import Form from "../../../../components/specialized/ShippingTemplate/TravelDocumentForm";
+import { IFormProps } from "../../../../components/specialized/ShippingTemplate/View";
 import InputMeasurement from "../../../../components/specialized/InputMeasurement";
-import { IFormProps } from "../View";
-import print from "../../../../print";
-import { momentsToDates } from "../../../../utils";
 
-const TravelDocumentForm: FC<IFormProps> = props => {
-  const { values, setCurrentPage } = props;
-  const database = useDatabase();
-  const closeModal = useCloseModal();
-  const isDaerahType = useRef<boolean>();
-
-  const injectAdditionalValues = getFormInjector({
-    collectionName: 'Customers',
-    localField: 'marking',
-    foreignField: 'markings',
-    projection: { customer: '$name', address: 1, city: 1, home_number: 1, phone_number: 1 }
-  })
-
-  const handleSubmit = (submittedValues: any) => {
-    database?.collection('TravelPermits')
-      .insertOne(momentsToDates(submittedValues))
-      .then(() => {
-        message.success("Surat Jalan telah disimpan.");
-        closeModal();
-
-        // Proceed to the printing process.
-        const preset = isDaerahType.current ? 'sf-surat-jalan-daerah' : 'sf-surat-jalan';
-        print(submittedValues, preset);
-      })
-      .catch(() => message.error("Error terjadi. Data gagal disimpan."));
-  }
-
-  return (
-    <BasicForm twoColumns
-      initialValues={values}
-      onSubmit={handleSubmit}
-      labelSpan={11}
-      items={[
-        injectAdditionalValues,
-        { key: 'marking', label: 'Marking', disabled: true },
-        { key: 'date', label: 'Tanggal', type: 'date', defaultValue: moment(), required: true },
-        { key: 'container_number', label: 'Nomor Container', disabled: true },
-        { key: 'route', label: 'Rute', type: 'select', items: 'Routes' },
-        { key: 'quantity', label: 'Kuantitas Kirim', type: 'number', required: true },
-        { key: 'carrier', label: 'Shipper', type: 'select', items: 'Carriers' },
-        { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', required: true, 
-          items: ['List (m³)', 'List (kg)', 'DList (m³)', 'DList (kg)', 'HB (m³)', 'HB (kg)', 'Cust (m³)', 'Cust (kg)'] 
-        },
-        { key: 'expedition', label: 'Expedisi', type: 'select', items: 'Expeditions' },
-        { key: 'measurement', type: 'custom', render: InputMeasurement },
-        { key: 'home_number', label: 'Nomor Telepon' },
-        { key: 'unit', label: 'Satuan', type: 'select', 
-          items: ['Colly', 'Ball', 'Roll', 'Kardus', 'Pcs', 'Kodi', 'Lusin'] 
-        },
-        { key: 'phone_number', label: 'Nomor HP' },
-        { key: 'customer', label: 'Customer' }, 
-        { key: 'city', label: 'Kota' },
-        { key: 'address', label: 'Alamat', type: 'textarea' },
-        { key: 'description', label: 'Keterangan Kirim', type: 'textarea' }
-      ]}
-      customButton={
-        <Fragment>
-          <Button 
-            htmlType="button"
-            onClick={() => setCurrentPage('default')}>
-            Kembali
-          </Button>
-          <Button 
-            type='primary'
-            htmlType="submit"
-            onClick={() => { isDaerahType.current = false }}>
-            Print Surat Jalan
-          </Button>
-          <Button 
-            type='primary'
-            htmlType="submit"
-            onClick={() => { isDaerahType.current = true }}>
-            Print Surat Jalan Daerah
-          </Button>
-        </Fragment>
-      } />
-  );
-}
+const TravelDocumentForm: FC<IFormProps> = props => (
+  <Form
+    {...props}
+    printPreset='sf-surat-jalan'
+    printDaerahPreset='sf-surat-jalan-daerah'
+    items={[
+      { key: 'marking', label: 'Marking', disabled: true },
+      { key: 'date', label: 'Tanggal', type: 'date', defaultValue: moment(), required: true },
+      { key: 'container_number', label: 'Nomor Container', disabled: true },
+      { key: 'route', label: 'Rute', type: 'select', items: 'Routes' },
+      { key: 'quantity', label: 'Kuantitas Kirim', type: 'number', required: true },
+      { key: 'carrier', label: 'Shipper', type: 'select', items: 'Carriers' },
+      { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', required: true, 
+        items: ['List (m³)', 'List (kg)', 'DList (m³)', 'DList (kg)', 'HB (m³)', 'HB (kg)', 'Cust (m³)', 'Cust (kg)'] 
+      },
+      { key: 'expedition', label: 'Expedisi', type: 'select', items: 'Expeditions' },
+      { key: 'measurement', type: 'custom', render: InputMeasurement },
+      { key: 'home_number', label: 'Nomor Telepon' },
+      { key: 'unit', label: 'Satuan', type: 'select', 
+        items: ['Colly', 'Ball', 'Roll', 'Kardus', 'Pcs', 'Kodi', 'Lusin'] 
+      },
+      { key: 'phone_number', label: 'Nomor HP' },
+      { key: 'customer', label: 'Customer' }, 
+      { key: 'city', label: 'Kota' },
+      { key: 'address', label: 'Alamat', type: 'textarea' },
+      { key: 'description', label: 'Keterangan Kirim', type: 'textarea' }
+    ]} />
+);
 
 export default TravelDocumentForm;

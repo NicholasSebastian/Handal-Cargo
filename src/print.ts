@@ -30,4 +30,5 @@ function print(submittedValues: any, presetName: Presets) {
   });
 }
 
+export type { Presets };
 export default print;

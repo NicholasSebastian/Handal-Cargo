@@ -1,18 +1,19 @@
-import { FC, useState, useEffect } from "react";
-import { Button } from "antd";
-import { LeftOutlined } from "@ant-design/icons";
-import TableTemplate from "../../../../components/compounds/ViewTableTemplate";
-import { IPageProps } from "../index";
-import useDatabase from "../../../../data/useDatabase";
-import print from "../../../../print";
-import { dateToString, formatCurrency } from "../../../../utils";
+import { FC } from "react";
+import Page from "../../../../components/specialized/ShippingTemplate/Invoice";
+import { IPageProps } from "../../../../components/specialized/ShippingTemplate";
+import { dateToString } from "../../../../utils";
 
-const Invoice: FC<IPageProps> = props => {
-  const { goBack } = props;
-  const database = useDatabase();
-  const [currencySymbols, setCurrencySymbols] = useState<Record<string, string>>();
-
-  return <div />
-}
+const Invoice: FC<IPageProps> = props => (
+  <Page
+    {...props}
+    title="Faktur Air Cargo"
+    printPreset="ac-faktur"
+    columns={formatCurrency => [
+      // TODO
+    ]}
+    viewItems={formatCurrency => [
+      // TODO
+    ]} />
+);
 
 export default Invoice;

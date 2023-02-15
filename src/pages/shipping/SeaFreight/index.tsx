@@ -1,83 +1,28 @@
-import { FC, useState } from "react";
-import { Space, Button } from "antd";
-import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
-import TableTemplate from "../../../components/compounds/TableTemplate";
+import { FC } from "react";
+import Shipping from "../../../components/specialized/ShippingTemplate";
 import SeaFreightView from "./View";
 import SeaFreightForm from "./Form";
 import TravelDocument from "./TravelDocument";
 import Invoice from "./Invoice";
-import { markingAggregation, aggregationLookup } from "../marking-aggregation";
-import useDatabase from "../../../data/useDatabase";
-import { dateToString, dateDiffInDays } from "../../../utils";
+import { dateDiffInDays, dateToString } from "../../../utils";
 
-const SeaFreight: FC = () => {
-  const database = useDatabase();
-  const [currentPage, setCurrentPage] = useState<PageState>('default');
-  const pageProps: IPageProps = { 
-    goBack: () => setCurrentPage('default') 
-  };
+const SeaFreight: FC = () => (
+  <Shipping
+    collectionName="SeaFreight"
+    searchBy="container_number"
+    View={SeaFreightView}
+    Form={SeaFreightForm}
+    TravelDocument={TravelDocument}
+    Invoice={Invoice}
+    columns={[
+      { dataIndex: "arrival_date", title: "Tanggal Tiba", width: 190, render: value => dateToString(value) },
+      { dataIndex: "container_number", title: "No. Container" },
+      { dataIndex: "route", title: "Rute" },
+      { dataIndex: "handler", title: "Pengurus" },
+      { dataIndex: "carrier", title: "Shipper" },
+      { dataIndex: "container_group", title: "Kel. Container" },
+      { title: "Lama Tiba", render: (_, values) => dateDiffInDays(values.arrival_date, values.muat_date) + ' Hari' }
+    ]} />
+);
 
-  switch (currentPage) {
-    case 'travel_permits':
-      return <TravelDocument {...pageProps} />
-
-    case 'invoices':
-      return <Invoice {...pageProps} />
-
-    default:
-      return (
-        <TableTemplate
-          collectionName="SeaFreight"
-          searchBy="container_number"
-          width={1050}
-          modalWidth={850}
-          itemQuery={(collectionName, id) => database?.collection(collectionName)
-            .aggregate([
-              { $match: { _id: id } },
-              ...aggregationLookup.map(args => ({ $lookup: args })),
-              { $set: { 'markings': markingAggregation } },
-              { $project: Object.fromEntries(aggregationLookup.map(args => ([args.as, false]))) }
-            ])
-            .then(results => results[0])
-          }
-          showIndicator={values => values.paid}
-          view={SeaFreightView}
-          form={SeaFreightForm}
-          columns={[
-            { dataIndex: "arrival_date", title: "Tanggal Tiba", width: 190, render: value => dateToString(value) },
-            { dataIndex: "container_number", title: "No. Container" },
-            { dataIndex: "route", title: "Rute" },
-            { dataIndex: "handler", title: "Pengurus" },
-            { dataIndex: "carrier", title: "Shipper" },
-            { dataIndex: "container_group", title: "Kel. Container" },
-            { 
-              title: "Lama Tiba", 
-              render: (_, values) => dateDiffInDays(values.arrival_date, values.muat_date) + ' Hari'
-            }
-          ]}
-          extra={
-            <Space>
-              <Button 
-                icon={<FileDoneOutlined />}
-                onClick={() => setCurrentPage('travel_permits')}>
-                Surat Jalan
-              </Button>
-              <Button 
-                icon={<AuditOutlined />}
-                onClick={() => setCurrentPage('invoices')}>
-                Faktur
-              </Button>
-            </Space>
-          } />
-      );
-  }
-}
-
-export type { IPageProps };
 export default SeaFreight;
-
-interface IPageProps {
-  goBack: () => void
-}
-
-type PageState = 'default' | 'travel_permits' | 'invoices'

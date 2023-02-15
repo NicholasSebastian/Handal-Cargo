@@ -1,24 +1,17 @@
-import { FC, Fragment, useRef } from "react";
-import { Button, message } from "antd";
+import { FC } from "react";
 import moment from "moment";
-import useDatabase from "../../../../data/useDatabase";
-import { useCloseModal } from "../../../../components/compounds/TableTemplate";
-import BasicForm from "../../../../components/basics/BasicForm";
-import getFormInjector from "../../../../components/abstractions/getFormInjector";
+import Form from "../../../../components/specialized/ShippingTemplate/TravelDocumentForm";
+import { IFormProps } from "../../../../components/specialized/ShippingTemplate/View";
 import InputMeasurement from "../../../../components/specialized/InputMeasurement";
-import { IFormProps } from "../View";
-import print from "../../../../print";
-import { momentsToDates } from "../../../../utils";
 
-const TravelDocumentForm: FC<IFormProps> = props => {
-  const { values, setCurrentPage } = props;
-  const database = useDatabase();
-  const closeModal = useCloseModal();
-  const isDaerahType = useRef<boolean>();
-
-  // TODO
-
-  return <div />
-}
+const TravelDocumentForm: FC<IFormProps> = props => (
+  <Form
+    {...props}
+    printPreset="ac-surat-jalan"
+    printDaerahPreset="ac-surat-jalan-daerah"
+    items={[
+      // TODO
+    ]} />
+);
 
 export default TravelDocumentForm;
