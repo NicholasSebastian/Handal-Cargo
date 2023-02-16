@@ -4,10 +4,10 @@ import { ColumnsType } from "antd/lib/table";
 import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import { IInjectedProps } from "../../abstractions/withInitialData";
 import BasicView, { IViewItem } from "../../basics/BasicView";
-import print from "../../../print";
+import print, { Presets } from "../../../print";
 
 const View: FC<IViewProps> = props => {
-  const { items, columns, TravelDocumentForm, InvoiceForm } = props;
+  const { items, columns, TravelDocumentForm, InvoiceForm, printPreset } = props;
   const { markings, ...values } = props.values;
   const [currentPage, setCurrentPage] = useState<PageState>('default');
 
@@ -62,7 +62,7 @@ const View: FC<IViewProps> = props => {
             ]} />
           <div>
             <Button 
-              onClick={() => print(markings, 'sf-rugi-laba')}
+              onClick={() => print(markings, printPreset)}
               style={{ marginTop: '25px', float: 'right' }}>
               Laporan Rugi Laba
             </Button>
@@ -80,6 +80,7 @@ interface IViewProps extends IInjectedProps {
   columns: ColumnsType<any>
   TravelDocumentForm: ComponentType<IFormProps>
   InvoiceForm: ComponentType<IFormProps>
+  printPreset: Presets
 }
 
 interface IFormProps extends IInjectedProps {

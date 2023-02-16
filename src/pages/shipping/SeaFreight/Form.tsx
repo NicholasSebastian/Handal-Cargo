@@ -25,6 +25,17 @@ const DisplayTotal = createDependentValue({
   prefix: DEFAULT_SYMBOL
 });
 
+const toDisplayRp = (field: any) => createDependentValue({
+  label: `${field.label} (${DEFAULT_SYMBOL})`,
+  dependencies: [field.key, 'exchange_rate'],
+  calculateValue: ([fieldKey, exchange_rate]) => {
+    const value = fieldKey * exchange_rate;
+    return formatCurrency(value.toString());
+  },
+  defaultValue: 0,
+  prefix: DEFAULT_SYMBOL
+});
+
 const fees = [
   { key: 'muat_fee', label: 'Biaya Muat' },
   { key: 'additional_fee', label: 'Biaya Tambahan' },
@@ -32,19 +43,7 @@ const fees = [
 ]
 .map(field => ([
   { ...field, type: 'currency', defaultValue: 0, required: true } as RenderItem,
-  { 
-    type: 'custom',
-    render: createDependentValue({
-      label: `${field.label} (${DEFAULT_SYMBOL})`,
-      dependencies: [field.key, 'exchange_rate'],
-      calculateValue: ([fieldKey, exchange_rate]) => {
-        const value = fieldKey * exchange_rate;
-        return formatCurrency(value.toString());
-      },
-      defaultValue: 0,
-      prefix: DEFAULT_SYMBOL
-    })
-  } as RenderItem
+  { type: 'custom', render: toDisplayRp(field) } as RenderItem
 ]))
 .flat();
 

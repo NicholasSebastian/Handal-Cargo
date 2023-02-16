@@ -11,6 +11,7 @@ import { dateToString, formatCurrency } from "../../../utils";
 const SeaFreightView: FC<IInjectedProps> = props => (
   <View
     {...props}
+    printPreset="sf-rugi-laba"
     TravelDocumentForm={TravelDocumentForm}
     InvoiceForm={InvoiceForm}
     columns={columns}
@@ -24,7 +25,7 @@ const SeaFreightView: FC<IInjectedProps> = props => (
       { key: 'route', label: 'Rute' },
       { key: 'currency', label: 'Mata Uang' },
       { key: 'handler', label: 'Pengurus' },
-      { key: 'exchange_rate', label: 'Kurs', render: (value, record) => `${DEFAULT_SYMBOL}${formatCurrency(value)} / ${record.currency}` },
+      { key: 'exchange_rate', label: 'Kurs', render: formatExchangeRate },
       { key: 'muat_fee', label: 'Biaya Muat', render: formatForeignCurrency },
       { key: 'additional_fee', label: 'Biaya Tambahan', render: formatForeignCurrency },
       { key: 'clearance_fee', label: 'Biaya Custom Clearance', render: formatForeignCurrency },
@@ -35,6 +36,10 @@ const SeaFreightView: FC<IInjectedProps> = props => (
       { key: 'description', label: 'Keterangan' }
     ]} />
 );
+
+function formatExchangeRate(value: any, record: Record<string, any>) {
+  return `${DEFAULT_SYMBOL}${formatCurrency(value)} / ${record.currency}`;
+}
 
 function formatForeignCurrency(value: any, record: Record<string, any>) {
   const { exchange_rate } = record;

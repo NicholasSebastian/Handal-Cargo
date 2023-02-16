@@ -11,6 +11,7 @@ import { dateToString, formatCurrency } from "../../../utils";
 const AirCargoView: FC<IInjectedProps> = props => (
   <View
     {...props}
+    printPreset="ac-rugi-laba"
     TravelDocumentForm={TravelDocumentForm}
     InvoiceForm={InvoiceForm}
     columns={columns}
@@ -22,7 +23,7 @@ const AirCargoView: FC<IInjectedProps> = props => (
       { key: 'route', label: 'Rute' },
       { key: 'currency', label: 'Mata Uang' },
       { key: 'plane', label: 'Pesawat' },
-      { key: 'exchange_rate', label: 'Kurs', render: (value, record) => `${DEFAULT_SYMBOL}${formatCurrency(value)} / ${record.currency}` },
+      { key: 'exchange_rate', label: 'Kurs', render: formatExchangeRate },
       { key: 'freight_fee', label: 'Freight Charge / kg', render: formatForeignCurrency },
       { label: 'Total Freight', render: (_, record) => calculateTotalFreight(record) },
       { key: 'freight_weight', label: 'Berat Freight (kg)', render: value => value + ' kg' },
@@ -39,6 +40,10 @@ const AirCargoView: FC<IInjectedProps> = props => (
       { key: 'description', label: 'Keterangan' }
     ]} />
 );
+
+function formatExchangeRate(value: any, record: Record<string, any>) {
+  return `${DEFAULT_SYMBOL}${formatCurrency(value)} / ${record.currency}`;
+}
 
 function formatForeignCurrency(value: any, record: Record<string, any>) {
   const { exchange_rate } = record;

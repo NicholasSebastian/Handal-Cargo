@@ -25,30 +25,21 @@ const DisplayAdditionalFeeRp = createDependentValue({
   prefix: DEFAULT_SYMBOL
 });
 
+const toDisplayPrice = (label: string, field1: any, field2: any) => createDependentValue({
+  label: `${label} (${DEFAULT_SYMBOL})`,
+  dependencies: [field1.key, field2.key, 'exchange_rate'],
+  calculateValue: ([field1Key, field2Key, exchange_rate]) => {
+    const value = field1Key * field2Key * exchange_rate;
+    return formatCurrency(value.toString());
+  },
+  defaultValue: 0,
+  prefix: DEFAULT_SYMBOL
+});
+
 const DisplayTotal = createDependentValue({
   label: `Total Biaya (${DEFAULT_SYMBOL})`,
-  dependencies: [
-    'freight_fee', 
-    'freight_weight',
-    'commission_fee', 
-    'commission_weight',
-    'clearance_fee', 
-    'clearance_weight',
-    'additional_fee', 
-    'other_fee', 
-    'exchange_rate'
-  ],
-  calculateValue: ([
-    freight_fee, 
-    freight_weight, 
-    commission_fee, 
-    commission_weight, 
-    clearance_fee, 
-    clearance_weight, 
-    additional_fee, 
-    other_fee, 
-    exchange_rate
-  ]) => {
+  dependencies: ['freight_fee', 'freight_weight', 'commission_fee', 'commission_weight', 'clearance_fee', 'clearance_weight', 'additional_fee', 'other_fee', 'exchange_rate'],
+  calculateValue: ([freight_fee, freight_weight, commission_fee, commission_weight, clearance_fee, clearance_weight, additional_fee, other_fee, exchange_rate]) => {
     const value1 = freight_fee * freight_weight;
     const value2 = commission_fee * commission_weight;
     const value3 = clearance_fee * clearance_weight;
@@ -61,65 +52,25 @@ const DisplayTotal = createDependentValue({
 
 const feeWeightTotal = [
   {
-    field1: { 
-      key: 'freight_fee', 
-      label: 'Freight Charge / kg' 
-    },
-    field2: { 
-      key: 'freight_weight', 
-      label: 'Berat Freight (kg)' 
-    },
+    field1: { key: 'freight_fee', label: 'Freight Charge / kg' },
+    field2: { key: 'freight_weight', label: 'Berat Freight (kg)' },
     field3: 'Total Freight'
   },
   {
-    field1: { 
-      key: 'commission_fee', 
-      label: 'Komisi / kg' 
-    },
-    field2: { 
-      key: 'commission_weight', 
-      label: 'Berat Komisi (kg)' 
-    },
+    field1: { key: 'commission_fee', label: 'Komisi / kg' },
+    field2: { key: 'commission_weight', label: 'Berat Komisi (kg)' },
     field3: 'Total Komisi'
   },
   {
-    field1: { 
-      key: 'clearance_fee', 
-      label: 'Biaya Custom Clearance' 
-    },
-    field2: { 
-      key: 'clearance_weight', 
-      label: 'Berat Clearance (kg)' 
-    },
+    field1: { key: 'clearance_fee', label: 'Biaya Custom Clearance' },
+    field2: { key: 'clearance_weight', label: 'Berat Clearance (kg)' },
     field3: 'Total C. Clearance'
   }
 ]
 .map(row => ([
-  { 
-    ...row.field1, 
-    type: 'currency', 
-    defaultValue: 0, 
-    required: true 
-  } as RenderItem,
-  {
-    type: 'custom',
-    render: createDependentValue({
-      label: `${row.field3} (${DEFAULT_SYMBOL})`,
-      dependencies: [row.field1.key, row.field2.key, 'exchange_rate'],
-      calculateValue: ([field1Key, field2Key, exchange_rate]) => {
-        const value = field1Key * field2Key * exchange_rate;
-        return formatCurrency(value.toString());
-      },
-      defaultValue: 0,
-      prefix: DEFAULT_SYMBOL
-    })
-  } as RenderItem,
-  { 
-    ...row.field2, 
-    type: 'number', 
-    defaultValue: 0, 
-    required: true 
-  } as RenderItem,
+  { ...row.field1, type: 'currency', defaultValue: 0, required: true } as RenderItem,
+  { type: 'custom', render: toDisplayPrice(row.field3, row.field1, row.field2) } as RenderItem,
+  { ...row.field2, type: 'number', defaultValue: 0, required: true } as RenderItem,
   gap
 ]))
 .flat();
