@@ -76,6 +76,7 @@ const toDisplayPrice = (label: string, field1: any, field2: any) => createDepend
 
 const DisplayTotal = createDependentValue({
   label: `Total Biaya (${DEFAULT_SYMBOL})`,
+  labelSpan: 11,
   dependencies: ['freight_fee', 'freight_weight', 'commission_fee', 'commission_weight', 'clearance_fee', 'clearance_weight', 'additional_fee', 'other_fee', 'exchange_rate'],
   calculateValue: ([freight_fee, freight_weight, commission_fee, commission_weight, clearance_fee, clearance_weight, additional_fee, other_fee, exchange_rate]) => {
     const value1 = freight_fee * freight_weight;

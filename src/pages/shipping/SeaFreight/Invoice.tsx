@@ -1,4 +1,5 @@
 import moment from "moment";
+import { gap as viewGap } from "../../../components/basics/BasicView";
 import InputMeasurement from "../../../components/specialized/InputMeasurement";
 import { IInvoicesStuff } from "../../../components/compounds/ShippingTemplate";
 import { DisplayTotal, toDisplayRp } from "./ViewAndForm";
@@ -6,6 +7,7 @@ import { dateToString } from "../../../utils";
 
 const invoicesStuff: IInvoicesStuff = {
   invoicePrintPreset: 'sf-faktur',
+  invoiceFilter: { container_number: { $exists: true } },
   invoiceColumns: formatCurrency => [
     { dataIndex: '_id', title: 'Nomor Faktur', render: value => value?.toString() },
     { dataIndex: 'marking', title: 'Marking' },
@@ -19,24 +21,25 @@ const invoicesStuff: IInvoicesStuff = {
     { key: 'marking', label: 'Marking' },
     { key: 'date', label: 'Tanggal', render: dateToString },
     { key: 'container_number', label: 'Nomor Container' },
-    { key: 'measurement_details', label: 'Keterangan Ukuran' },
-    { key: 'quantity', label: 'Kuantitas' },
     { key: 'route', label: 'Rute' },
-    { key: 'two_various', label: '2 Various', render: value => value ? 'Iya' : 'Tidak' },
+    { key: 'quantity', label: 'Kuantitas' },
     { key: 'carrier', label: 'Shipper' },
+    { key: 'two_various', label: '2 Various', render: value => value ? 'Iya' : 'Tidak' },
+    { key: 'measurement_details', label: 'Keterangan Ukuran' },
     { key: 'via_transfer', label: 'Via Transfer', render: value => value ? 'Iya' : 'Tidak' },
     { key: 'product_detail', label: 'Keterangan Barang' },
     { key: 'measurement_option', label: 'Pilihan Ukuran' },
     { key: 'currency', label: 'Mata Uang' },
     { key: 'measurement', label: 'Ukuran' },
     { key: 'exchange_rate', label: 'Kurs' },
-    { key: 'price', label: 'Harga', render: (value, { currency }) => formatCurrency(value, currency) },
-    { key: 'additional_fee', label: 'Biaya Tambahan', render: (value, { currency }) => formatCurrency(value, currency) },
     { key: 'expedition', label: 'Expedisi' },
+    { key: 'price', label: 'Harga', render: (value, { currency }) => formatCurrency(value, currency) },
     { key: 'travel_number', label: 'No. Surat Jalan Expedisi' },
+    { key: 'additional_fee', label: 'Biaya Tambahan', render: (value, { currency }) => formatCurrency(value, currency) },
+    { key: 'nb', label: 'NB' },
     { key: 'shipment_fee', label: 'Ongkos Kirim', render: (value, { currency }) => formatCurrency(value, currency) },
-    { key: 'total', label: 'Total', render: (value, { currency }) => formatCurrency(value, currency) },
-    { key: 'nb', label: 'NB' }
+    viewGap,
+    { key: 'total', label: 'Total', render: (value, { currency }) => formatCurrency(value, currency) }
   ],
   invoiceFormItems: [
     { key: 'user', label: 'User', disabled: true },

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import createDependentValue from "../../../components/basics/DependentValue";
 import { IMarkingsStuff } from "../../../components/compounds/ShippingTemplate";
 
@@ -68,7 +69,7 @@ const markingsStuff: IMarkingsStuff = {
     { 
       key: 'volume_charge', 
       label: 'Volume Charge', 
-      render: value => value && (value + ' kg'), 
+      render: value => value && (DEFAULT_SYMBOL + value), 
       width: 115,
       parser: (_, record) => (record.standardkg ? parseFloat(record.standardkg) : 0) - (record.hbkg ? parseFloat(record.hbkg) : 0)
     }

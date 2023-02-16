@@ -5,16 +5,13 @@ import { IData } from "../../abstractions/withTemplateHandling";
 import { IViewItem } from "../../basics/BasicView";
 import { FormItem, gap } from "../../basics/BasicForm";
 import { Presets } from "../../../print";
-import { MarkingField, fieldsToMarkingColumns } from "./MarkingTable";
+import TableTemplate from "./Table";
+import View from "./View";
+import MarkingTable, { MarkingField, fieldsToMarkingColumns } from "./MarkingTable";
+import TravelDocument from "./TravelDocument";
 import TravelDocumentForm from "./TravelDocumentForm";
-import { CurrencyFormatter } from "./Invoice";
+import Invoice, { CurrencyFormatter } from "./Invoice";
 import InvoiceForm from "./InvoiceForm";
-
-const TableTemplate = lazy(() => import("./Table"));
-const View = lazy(() => import("./View"));
-const MarkingTable = lazy(() => import("./MarkingTable"));
-const TravelDocument = lazy(() => import("./TravelDocument"));
-const Invoice = lazy(() => import("./Invoice"));
 
 // Intended for use to build the AirCargo and SeaFreight pages.
 
@@ -24,6 +21,7 @@ const ShippingTemplate: FC<IShippingProps> = props => {
   const { formItems, MarkingTableDetails } = props;
   const { travelDocumentColumns, travelDocumentViewItems, travelDocumentFormItems } = props;
   const { invoiceColumns, invoiceViewItems, invoiceFormItems } = props;
+  const { travelDocumentFilter, invoiceFilter } = props;
   const { travelDocumentPrintPreset, travelDocumentDaerahPrintPreset } = props;
   const { profitLossPrintPreset, invoicePrintPreset } = props;
   const { title } = useRoute()!;
@@ -85,7 +83,8 @@ const ShippingTemplate: FC<IShippingProps> = props => {
           printPreset={travelDocumentPrintPreset}
           printDaerahPreset={travelDocumentDaerahPrintPreset}
           columns={travelDocumentColumns}
-          viewItems={travelDocumentViewItems} />
+          viewItems={travelDocumentViewItems}
+          filter={travelDocumentFilter} />
       )}
       Invoice={props => (
         <Invoice
@@ -93,7 +92,8 @@ const ShippingTemplate: FC<IShippingProps> = props => {
           title={`Faktur ${title}`}
           printPreset={invoicePrintPreset}
           columns={invoiceColumns}
-          viewItems={invoiceViewItems} />
+          viewItems={invoiceViewItems}
+          filter={invoiceFilter} />
       )} />
   );
 }
@@ -125,6 +125,7 @@ interface ITravelDocumentsStuff {
   travelDocumentFormItems: Array<FormItem>
   travelDocumentPrintPreset: Presets
   travelDocumentDaerahPrintPreset: Presets
+  travelDocumentFilter: Record<string, { $exists: true }>
 }
 
 interface IInvoicesStuff {
@@ -132,4 +133,5 @@ interface IInvoicesStuff {
   invoiceViewItems: (currencyFmt: CurrencyFormatter) => Array<IViewItem>
   invoiceFormItems: Array<FormItem>
   invoicePrintPreset: Presets
+  invoiceFilter: Record<string, { $exists: true }>
 }

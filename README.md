@@ -14,13 +14,6 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 
 <https://www.mongodb.com/community/forums/t/cant-resolve-crypto-in-node-modules-bson-dist-react/143227>
 
-## TO DO LIST
+## POSSIBLE FUTURE FEATURES
 
-- Shipping
-  - AirCargo
-  - Invoice Entry
-  - Customer History
-- Reports
-- Minor features
-  - Limit table height; pagination.
-  - Sort tables by specified column.
+- Sort tables by specified column.

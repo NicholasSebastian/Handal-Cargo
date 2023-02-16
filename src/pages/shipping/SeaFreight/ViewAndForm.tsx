@@ -43,6 +43,7 @@ const DisplayDateDiff = createDependentValue({
 
 const DisplayTotal = createDependentValue({
   label: `Total Biaya (${DEFAULT_SYMBOL})`,
+  labelSpan: 11,
   dependencies: ['muat_fee', 'additional_fee', 'clearance_fee', 'other_fee', 'exchange_rate'],
   calculateValue: ([muat_fee, additional_fee, clearance_fee, other_fee, exchange_rate]) => {
     const value = ((muat_fee + additional_fee + clearance_fee) * exchange_rate) + other_fee;

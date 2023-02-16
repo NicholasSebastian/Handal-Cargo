@@ -6,6 +6,7 @@ import { dateToString } from "../../../utils";
 const travelDocumentsStuff: ITravelDocumentsStuff = {
   travelDocumentPrintPreset: 'sf-surat-jalan',
   travelDocumentDaerahPrintPreset: 'sf-surat-jalan-daerah',
+  travelDocumentFilter: { container_number: { $exists: true } },
   travelDocumentColumns: [
     { dataIndex: 'marking', title: 'Marking' },
     { dataIndex: 'container_number', title: 'Nomor Container' },

@@ -8,7 +8,7 @@ const SeaFreight = lazy(() => import('./pages/shipping/SeaFreight'));
 const InvoiceEntry = lazy(() => import('./pages/shipping/InvoiceEntry'));
 const Payment = lazy(() => import('./pages/shipping/Payment'));
 const Customers = lazy(() => import('./pages/shipping/Customers'));
-const GenerateReports = lazy(() => import('./pages/GenerateReports'));
+const Reports = lazy(() => import('./pages/Reports'));
 const ContainerGroups = lazy(() => import('./pages/references/ContainerGroups'));
 const Carriers = lazy(() => import('./pages/references/Carriers'));
 const Routes = lazy(() => import('./pages/references/Rutes'));
@@ -33,7 +33,7 @@ const pages: Paths = {
     'Pembayaran': <Payment />,
     'Customers': <Customers />
   },
-  'Reports': <GenerateReports />,
+  'Reports': <Reports />,
   'References': {
     'Kelompok Container': <ContainerGroups />,
     'Shipper': <Carriers />,

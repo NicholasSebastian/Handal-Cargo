@@ -1,16 +1,16 @@
 import { FC, useState, useEffect } from "react";
 import { Button } from "antd";
+import { ColumnsType } from "antd/lib/table";
 import { LeftOutlined } from "@ant-design/icons";
+import useDatabase from "../../../data/useDatabase";
+import { IViewItem } from "../../basics/BasicView";
 import TableTemplate from "../ViewTableTemplate";
 import { IPageProps } from "./Table";
-import useDatabase from "../../../data/useDatabase";
 import print, { Presets } from "../../../print";
 import { formatCurrency } from "../../../utils";
-import { ColumnsType } from "antd/lib/table";
-import { IViewItem } from "../../basics/BasicView";
 
 const Invoice: FC<ITableProps> = props => {
-  const { title, columns, viewItems, printPreset, goBack } = props;
+  const { title, columns, viewItems, filter, printPreset, goBack } = props;
   const database = useDatabase();
   const [currencySymbols, setCurrencySymbols] = useState<Record<string, string>>();
 
@@ -34,7 +34,16 @@ const Invoice: FC<ITableProps> = props => {
   return (
     <TableTemplate
       title={title}
-      collectionName="Invoices"
+      collectionName='Invoices'
+      query={(collectionName, search, searchBy) => {
+        if (!search) 
+          return database?.collection(collectionName).find(filter);
+        else
+          return database?.collection(collectionName).find({
+            ...filter,
+            [searchBy]: { $regex: search } 
+          });
+      }}
       columns={columns(currencyFormatter)}
       viewItems={viewItems(currencyFormatter)}
       viewExtra={values => (
@@ -61,6 +70,7 @@ interface ITableProps extends IPageProps {
   title: string
   columns: (currencyFmt: CurrencyFormatter) => ColumnsType<any>
   viewItems: (currencyFmt: CurrencyFormatter) => Array<IViewItem>
+  filter: Record<string, { $exists: true }>
   printPreset: Presets
 }
 

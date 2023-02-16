@@ -2,6 +2,12 @@ import { FC, Fragment } from "react";
 import TableTemplate from "../../../components/compounds/ViewTableTemplate";
 import { dateToString } from "../../../utils";
 
+// TODO: 'marking-aggregation.ts', implement the lunas feature.
+// TODO: Entri Faktur page and features.
+// TODO: Customer History.
+// TODO: Print formats.
+// TODO: Table Pagination.
+
 const InvoiceEntry: FC = () => {
   return (
     <TableTemplate 
