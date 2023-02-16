@@ -3,7 +3,7 @@ import { ColumnsType } from "antd/lib/table";
 import useRoute from "../../../data/useRoute";
 import { IData } from "../../abstractions/withTemplateHandling";
 import { IViewItem } from "../../basics/BasicView";
-import { RenderItem } from "../../basics/BasicForm";
+import { FormItem, RenderItem } from "../../basics/BasicForm";
 import { MarkingField } from "./MarkingTable";
 import { CurrencyFormatter } from "./Invoice";
 import { Presets } from "../../../print";
@@ -31,6 +31,9 @@ interface IShippingProps {
   // View page.
   viewItems: Array<IViewItem> // Note: get the view marking columns from the marking fields below.
   profitLossPrintPreset: Presets
+
+  // Form page.
+  formItems: Array<FormItem> // TODO: consider combining the viewItems and formItems into one prop.
 
   // Markings.
   markingFields: Array<MarkingField>
