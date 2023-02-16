@@ -29,6 +29,14 @@ const travelPermitQuantities = {
   }
 };
 
+const invoicePrices = {
+  $map: {
+    input: invoices,
+    as: "invoice",
+    in: "$$invoice.total"
+  }
+}
+
 export const markingAggregation = {
   $map: {
     input: "$markings",
@@ -37,10 +45,10 @@ export const markingAggregation = {
       $mergeObjects: [
         "$$marking",
         { 
-          paid: { // TODO: Whatever the fuck this is.
+          paid: {
             $gt: [
-              { $sum: "$payments.items.amount" }, 
-              { $sum: "$invoices.price" }
+              { $sum: "$payments.items.amount" }, // TODO: Whatever the fuck this is.
+              { $sum: invoicePrices }
             ] 
           },
           remainder: {
@@ -76,7 +84,7 @@ export const aggregationLookup: Array<ILookup> = [
   },
   {
     from: 'Payments',
-    localField: 'invoices.payment',
+    localField: 'invoices.payment', // TODO: Maybe fix this one too.
     foreignField: '_id',
     as: 'payments'
   }
