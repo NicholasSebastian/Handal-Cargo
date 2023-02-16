@@ -4,10 +4,10 @@ import { ColumnsType } from "antd/lib/table";
 import { LeftOutlined } from "@ant-design/icons";
 import TableTemplate from "../../compounds/ViewTableTemplate";
 import { IViewItem } from "../../basics/BasicView";
-import { IPageProps } from "./index";
+import { IPageProps } from "./Table";
 import print, { Presets } from "../../../print";
 
-const TravelDocument: FC<IProps> = props => {
+const TravelDocument: FC<ITableProps> = props => {
   const { title, columns, viewItems, printPreset, printDaerahPreset, goBack } = props;
   return (
     <TableTemplate 
@@ -37,7 +37,7 @@ const TravelDocument: FC<IProps> = props => {
 
 export default TravelDocument;
 
-interface IProps extends IPageProps {
+interface ITableProps extends IPageProps {
   title: string
   columns: ColumnsType<any>
   viewItems: Array<IViewItem>

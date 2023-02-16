@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Page from "../../../../components/specialized/ShippingTemplate/TravelDocument";
-import { IPageProps } from "../../../../components/specialized/ShippingTemplate";
+import { IPageProps } from "../../../../components/specialized/ShippingTemplate/Table";
 import { dateToString } from "../../../../utils";
 
 const TravelDocument: FC<IPageProps> = props => (

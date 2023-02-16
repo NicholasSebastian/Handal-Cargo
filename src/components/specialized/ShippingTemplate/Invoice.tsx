@@ -2,14 +2,14 @@ import { FC, useState, useEffect } from "react";
 import { Button } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import TableTemplate from "../../compounds/ViewTableTemplate";
-import { IPageProps } from "./index";
+import { IPageProps } from "./Table";
 import useDatabase from "../../../data/useDatabase";
 import print, { Presets } from "../../../print";
 import { formatCurrency } from "../../../utils";
 import { ColumnsType } from "antd/lib/table";
 import { IViewItem } from "../../basics/BasicView";
 
-const Invoice: FC<IProps> = props => {
+const Invoice: FC<ITableProps> = props => {
   const { title, columns, viewItems, printPreset, goBack } = props;
   const database = useDatabase();
   const [currencySymbols, setCurrencySymbols] = useState<Record<string, string>>();
@@ -54,9 +54,10 @@ const Invoice: FC<IProps> = props => {
   );
 }
 
+export type { CurrencyFormatter };
 export default Invoice;
 
-interface IProps extends IPageProps {
+interface ITableProps extends IPageProps {
   title: string
   columns: (currencyFmt: CurrencyFormatter) => ColumnsType<any>
   viewItems: (currencyFmt: CurrencyFormatter) => Array<IViewItem>

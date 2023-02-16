@@ -1,5 +1,5 @@
 import { FC } from "react";
-import Shipping from "../../../components/specialized/ShippingTemplate";
+import Shipping from "../../../components/specialized/ShippingTemplate/Table";
 import SeaFreightView from "./View";
 import SeaFreightForm from "./Form";
 import TravelDocument from "./TravelDocument";
