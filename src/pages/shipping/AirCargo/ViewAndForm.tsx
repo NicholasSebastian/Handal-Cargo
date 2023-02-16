@@ -44,6 +44,19 @@ function calculateTotal(record: Record<string, any>) {
   return DEFAULT_SYMBOL + formatCurrency(value);
 }
 
+function toDisplayPrice(label: string, field1: any, field2: any) {
+  return createDependentValue({
+    label: `${label} (${DEFAULT_SYMBOL})`,
+    dependencies: [field1.key, field2.key, 'exchange_rate'],
+    calculateValue: ([field1Key, field2Key, exchange_rate]) => {
+      const value = field1Key * field2Key * exchange_rate;
+      return formatCurrency(value.toString());
+    },
+    defaultValue: 0,
+    prefix: DEFAULT_SYMBOL
+  });
+}
+
 const DisplayDateDiff = createDependentValue({
   label: 'Lama Tiba',
   dependencies: ['arrival_date', 'muat_date'], 
@@ -57,17 +70,6 @@ const DisplayAdditionalFeeRp = createDependentValue({
   dependencies: ['additional_fee', 'exchange_rate'],
   calculateValue: ([fieldKey, exchange_rate]) => {
     const value = fieldKey * exchange_rate;
-    return formatCurrency(value.toString());
-  },
-  defaultValue: 0,
-  prefix: DEFAULT_SYMBOL
-});
-
-const toDisplayPrice = (label: string, field1: any, field2: any) => createDependentValue({
-  label: `${label} (${DEFAULT_SYMBOL})`,
-  dependencies: [field1.key, field2.key, 'exchange_rate'],
-  calculateValue: ([field1Key, field2Key, exchange_rate]) => {
-    const value = field1Key * field2Key * exchange_rate;
     return formatCurrency(value.toString());
   },
   defaultValue: 0,
