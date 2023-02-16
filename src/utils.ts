@@ -77,14 +77,14 @@ export function clearLocalStorage(startsWith: string) {
   keys.forEach(key => localStorage.removeItem(key));
 }
 
-export async function getCpuUsage() {
+export async function getCpuLoad() {
   const command = new Command('wmic', ['cpu', 'get', 'loadpercentage']);
   const response = await command.execute();
   const cpuUsage = response.stdout.replace(/\D/g, '');
-  return cpuUsage + '%';
+  return `CPU Load: ${cpuUsage}%`;
 }
 
-export async function getMemoryUsage() {
+export async function getMemoryLoad() {
   const command1 = new Command('wmic', ['ComputerSystem', 'get', 'TotalPhysicalMemory']);
   const command2 = new Command('wmic', ['OS', 'get', 'FreePhysicalMemory']);
   const response1 = await command1.execute();
@@ -97,7 +97,20 @@ export async function getMemoryUsage() {
   const usedMemoryInGB = (usedMemoryInBytes / 1000000000).toFixed(1);
 
   const memoryUsage = Math.round(((usedMemoryInBytes / totalMemoryInBytes) * 100));
-  return `${memoryUsage}% (${usedMemoryInGB}GB dari ${totalMemoryInGB}GB)`;
+  return `Memory Load: ${memoryUsage}% (${usedMemoryInGB}GB dari ${totalMemoryInGB}GB)`;
+}
+
+// Don't use. Apparently this function is very heavy and causes CPU usage spikes.
+export async function getMemoryUsage() {
+  const command = new Command('tasklist');
+  const response = await command.execute();
+  const result = (/^handalcargo.{53}(.+).{2}$/m).exec(response.stdout);
+
+  if (result && result.length > 1) {
+    const memoryUseInKB = parseInt(result[1].trimStart().replace(',', ''));
+    const memoryUseInMB = (memoryUseInKB / 1000).toFixed(1);
+    return `App Memory Usage: ${memoryUseInMB}MB`;
+  }
 }
 
 export type Subtract<T extends T1, T1 extends object> = Pick<T, SetComplement<keyof T, keyof T1>>;

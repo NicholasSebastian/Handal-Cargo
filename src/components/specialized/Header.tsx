@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Layout as AntLayout, Dropdown, Button, Avatar, Menu } from 'antd';
 import { UserOutlined, FontColorsOutlined, WhatsAppOutlined, UpSquareOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useUser, logoutAndClose } from '../../data/useDatabase';
-import { dateToString, getCpuUsage, getMemoryUsage } from '../../utils';
+import { dateToString, getCpuLoad, getMemoryLoad, getMemoryUsage } from '../../utils';
 
 const { Header: AntHeader } = AntLayout;
 const currentDate = dateToString(new Date());
@@ -20,12 +20,13 @@ const Header: FC<IHeaderProps> = props => {
   const { showServerButton } = props;
   const user = useUser();
   const navigate = useNavigate();
-  const [cpuUsage, setCpuUsage] = useState<string>();
-  const [ramUsage, setRamUsage] = useState<string>();
+
+  const [cpuLoad, setCpuLoad] = useState<string>();
+  const [ramLoad, setRamLoad] = useState<string>();
 
   const updateStats = () => {
-    getCpuUsage().then(setCpuUsage);
-    getMemoryUsage().then(setRamUsage);
+    getCpuLoad().then(setCpuLoad);
+    getMemoryLoad().then(setRamLoad);
   };
 
   useEffect(() => {
@@ -76,8 +77,8 @@ const Header: FC<IHeaderProps> = props => {
   return (
     <Container>
       <div>
-        <span>CPU Usage: {cpuUsage}</span>
-        <span>Memory Usage: {ramUsage}</span>
+        <span>{cpuLoad}</span>
+        <span>{ramLoad}</span>
       </div>
       <div>
         <div>{currentDate}</div>
@@ -107,14 +108,12 @@ const Container = styled(AntHeader)`
   justify-content: space-between;
   align-items: center;
 
-  > div:first-child {
+  > div:first-child > span {
+    display: block;
+    line-height: 15px;
     font-size: 11px;
+    font-family: monospace;
     user-select: none;
-
-    > span {
-      display: block;
-      line-height: 15px;
-    }
   }
 
   > div:last-child {

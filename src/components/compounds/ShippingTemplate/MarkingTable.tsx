@@ -10,41 +10,9 @@ const { useFormInstance } = Form;
 const check = <CheckOutlined style={{ color: 'green' }} />
 const cross = <CloseOutlined style={{ color:'red' }} />
 
-function fieldsToMarkingColumns(fields: Array<MarkingField>): ColumnsType<any> {
-  return [
-    { dataIndex: 'marking', title: 'Marking', fixed: 'left' },
-    { dataIndex: 'quantity', title: 'Kuantitas' },
-    ...fields.map(field => ({ dataIndex: field.key, title: field.label, width: field.width, render: field.render })),
-    { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
-    { dataIndex: 'remainder', title: 'Sisa', render: (value, record) => value ? value : record.quantity },
-    { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 90, render: value => value ?? 0 },
-    { dataIndex: 'invoices', title: 'Faktur', render: value => value ?? 0 }
-  ];
-}
-
-function createInitialState(fields: Array<MarkingField>): Record<string, string> {
-  return Object.fromEntries(fields.map(field => [field.key, '']));
-}
-
-function reducer(state: Record<string, string>, action: DispatchArg) {
-  if (action) {
-    // The new state is to have the designated key-value pair updated.
-    return {
-      ...state,
-      [action.key]: action.value
-    };
-  }
-  else {
-    // The new state is to have all the values set to an empty string.
-    const newEntries = Object.keys(state).map(key => [key, '']);
-    return Object.fromEntries(newEntries);
-  }
-}
-
 const MarkingTable: FC<IMarkingTableProps> = props => {
-  const { fields, value, width } = props;
+  const { fields, columns, value: markings, width } = props;
   const form = useFormInstance();
-  const columns = useMemo(() => fieldsToMarkingColumns(fields), []);
 
   const [marking, setMarking] = useState<string>();
   const [quantity, setQuantity] = useState('0');
@@ -58,27 +26,30 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
     if (marking === undefined || quantity.length === 0) {
       message.error("Marking dan Kuantitas harus diisi.");
     }
-    else if (value?.some((item: any) => item.marking === marking)) {
+    else if (markings?.some((item: any) => item.marking === marking)) {
       message.error(`Marking '${marking}' sudah ada.`);
     }
     else {
-      const newValue = { 
+      // 3 to 4 times faster than compared to using the spread operator.
+      const newEntry = fields.reduce((accumulator: Record<string, any>, field) => {
+        accumulator[field.key] = field.parser(otherState[field.key], otherState);
+        return accumulator;
+      }, { 
         marking, 
-        quantity: parseInt(quantity), 
-        ...otherState
-      };
+        quantity: parseInt(quantity) 
+      });
 
-      if (value) 
-        handleChange([...value, newValue]);
+      if (markings) 
+        handleChange([...markings, newEntry]);
       else 
-        handleChange([newValue]);
+        handleChange([newEntry]);
 
       clearInputs();
     }
   }
 
   const handleDelete = (index: number) => {
-    handleChange(value.filter((_: never, i: number) => i !== index));
+    handleChange(markings.filter((_: never, i: number) => i !== index));
   }
 
   const clearInputs = () => {
@@ -113,7 +84,7 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
         size="small"
         scroll={{ x: width }}
         pagination={false}
-        dataSource={value}
+        dataSource={markings}
         columns={[
           ...columns,
           {
@@ -126,6 +97,37 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
         ]} />
     </Container>
   );
+}
+
+function createInitialState(fields: Array<MarkingField>): Record<string, string> {
+  return Object.fromEntries(fields.map(field => [field.key, '']));
+}
+
+function reducer(state: Record<string, string>, action: DispatchArg): Record<string, string> {
+  if (action) {
+    // The new state is to have the designated key-value pair updated.
+    return {
+      ...state,
+      [action.key]: action.value
+    };
+  }
+  else {
+    // The new state is to have all the values set to an empty string.
+    const newEntries = Object.keys(state).map(key => [key, '']);
+    return Object.fromEntries(newEntries);
+  }
+}
+
+function fieldsToMarkingColumns(fields: Array<MarkingField>): ColumnsType<any> {
+  return [
+    { dataIndex: 'marking', title: 'Marking', fixed: 'left' },
+    { dataIndex: 'quantity', title: 'Kuantitas' },
+    ...fields.map(field => ({ dataIndex: field.key, title: field.label, width: field.width, render: field.render })),
+    { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
+    { dataIndex: 'remainder', title: 'Sisa', render: (value, record) => value ? value : record.quantity },
+    { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 90, render: value => value ?? 0 },
+    { dataIndex: 'invoices', title: 'Faktur', render: value => value ?? 0 }
+  ];
 }
 
 export { fieldsToMarkingColumns };
@@ -159,6 +161,7 @@ const Container = styled.div<IStyleProps>`
 
 interface IMarkingTableProps extends ICustomComponentProps {
   fields: Array<MarkingField>
+  columns: ColumnsType<any>
   width: number
 }
 

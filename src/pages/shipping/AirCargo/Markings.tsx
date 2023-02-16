@@ -1,6 +1,6 @@
-import { FC } from "react";
 import styled from "styled-components";
 import createDependentValue from "../../../components/basics/DependentValue";
+import { IMarkingsStuff } from "../../../components/compounds/ShippingTemplate";
 
 const [TotalQuantity, TotalList, TotalHB] = [
   { key: 'quantity', label: 'Total Muatan' },
@@ -43,8 +43,37 @@ const MasterDifference = createDependentValue({
   suffix: 'kg'
 });
 
-const MarkingTableDetails: FC = () => {
-  return (
+const markingsStuff: IMarkingsStuff = {
+  markingTableWidth: 950,
+  markingFields: [
+    { 
+      key: 'listkg', 
+      label: 'List (kg)', 
+      render: value => value && (value + ' kg'),
+      parser: value => value ? parseFloat(value) : undefined
+    },
+    { 
+      key: 'hbkg', 
+      label: 'HB (kg)', 
+      render: value => value && (value + ' kg'),
+      parser: value => value ? parseFloat(value) : undefined
+    },
+    { 
+      key: 'standardkg', 
+      label: 'Standard (kg)', 
+      render: value => value && (value + ' kg'), 
+      width: 105,
+      parser: value => value ? parseFloat(value) : undefined
+    },
+    { 
+      key: 'volume_charge', 
+      label: 'Volume Charge', 
+      render: value => value && (value + ' kg'), 
+      width: 115,
+      parser: (_, record) => (record.standardkg ? parseFloat(record.standardkg) : 0) - (record.hbkg ? parseFloat(record.hbkg) : 0)
+    }
+  ],
+  MarkingTableDetails: () => (
     <Container>
       <TotalQuantity />
       <RealDifference />
@@ -53,9 +82,9 @@ const MarkingTableDetails: FC = () => {
       <TotalHB />
     </Container>
   )
-}
+};
 
-export default MarkingTableDetails;
+export default markingsStuff;
 
 const Container = styled.div`
   display: grid;

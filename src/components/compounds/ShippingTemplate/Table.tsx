@@ -2,7 +2,7 @@ import { ComponentType, FC, useState } from "react";
 import { Space, Button } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
-import BaseTableTemplate, { FormPropType, ViewPropType } from "../../compounds/TableTemplate";
+import BaseTableTemplate, { FormPropType, ViewPropType } from "../TableTemplate";
 import { IData } from "../../abstractions/withTemplateHandling";
 import useDatabase from "../../../data/useDatabase";
 import { markingAggregation, aggregationLookup } from "./marking-aggregation";

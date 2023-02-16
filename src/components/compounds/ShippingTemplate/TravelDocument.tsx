@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Button, Space } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { LeftOutlined } from "@ant-design/icons";
-import TableTemplate from "../../compounds/ViewTableTemplate";
+import TableTemplate from "../ViewTableTemplate";
 import { IViewItem } from "../../basics/BasicView";
 import { IPageProps } from "./Table";
 import print, { Presets } from "../../../print";

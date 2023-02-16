@@ -20,6 +20,11 @@
             "name": "wmic",
             "cmd": "wmic",
             "args": true
+          },
+          {
+            "name": "tasklist",
+            "cmd": "tasklist",
+            "args": true
           }
         ]
       }

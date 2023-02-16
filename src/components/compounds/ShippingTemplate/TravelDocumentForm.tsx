@@ -1,7 +1,7 @@
 import { FC, Fragment, useRef } from "react";
 import { Button, message } from "antd";
 import useDatabase from "../../../data/useDatabase";
-import { useCloseModal } from "../../compounds/TableTemplate";
+import { useCloseModal } from "../TableTemplate";
 import BasicForm, { FormItem } from "../../basics/BasicForm";
 import getFormInjector from "../../abstractions/getFormInjector";
 import { IFormProps as BaseFormProps } from "./View";

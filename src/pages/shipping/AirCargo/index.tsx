@@ -1,19 +1,15 @@
 import { FC } from "react";
-import Shipping from "../../../components/specialized/ShippingTemplate/Table";
-import AirCargoView from "./View";
-import AirCargoForm from "./Form";
-import TravelDocument from "./TravelDocument";
-import Invoice from "./Invoice";
+import ShippingTemplate from "../../../components/compounds/ShippingTemplate";
+import viewAndFormStuff from "./ViewAndForm";
+import markingsStuff from "./Markings";
+import travelDocumentsStuff from "./TravelDocument";
+import invoicesStuff from "./Invoice";
 import { dateToString } from "../../../utils";
 
 const AirCargo: FC = () => (
-  <Shipping
+  <ShippingTemplate
     collectionName="AirCargo"
     searchBy="airwaybill_number"
-    View={AirCargoView}
-    Form={AirCargoForm}
-    TravelDocument={TravelDocument}
-    Invoice={Invoice}
     columns={[
       { dataIndex: "arrival_date", title: "Tanggal Tiba", width: 190, render: value => dateToString(value) },
       { dataIndex: "airwaybill_number", title: "No. Air Waybill" },
@@ -22,7 +18,11 @@ const AirCargo: FC = () => (
       { dataIndex: "plane", title: "Pesawat" },
       { title: "Total Muatan" }, // TODO
       { title: "Total Berat HB" } // TODO
-    ]} />
+    ]}
+    {...viewAndFormStuff}
+    {...markingsStuff}
+    {...travelDocumentsStuff}
+    {...invoicesStuff} />
 );
 
 export default AirCargo;

@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import { Button } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import TableTemplate from "../../compounds/ViewTableTemplate";
+import TableTemplate from "../ViewTableTemplate";
 import { IPageProps } from "./Table";
 import useDatabase from "../../../data/useDatabase";
 import print, { Presets } from "../../../print";
