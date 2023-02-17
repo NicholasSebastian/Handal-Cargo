@@ -16,12 +16,11 @@ const Payment: FC = () => {
       view={PaymentView}
       form={PaymentForm}
       query={(collectionName, search, searchBy) => {
-        if (!search) {
+        if (!search) 
           return database?.collection(collectionName).aggregate([
             { $project: { total: { $sum: "$items.amount" } } }
           ]);
-        }
-        else {
+        else 
           switch (searchBy) {
             case '_id':
               return database?.collection(collectionName).aggregate([
@@ -35,7 +34,6 @@ const Payment: FC = () => {
                 { $match: { total: { $regex: search } } }
               ]);
           }
-        }
       }}
       columns={[
         { 

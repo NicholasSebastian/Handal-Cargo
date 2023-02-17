@@ -15,6 +15,9 @@ import InvoiceForm from "./InvoiceForm";
 
 // Intended for use to build the AirCargo and SeaFreight pages.
 
+// NOTE: This component creates more components inside of it, which is an antipattern.
+//       But in this case its fine I guess.
+
 const ShippingTemplate: FC<IShippingProps> = props => {
   const { collectionName, searchBy, columns } = props;
   const { viewItems, markingFields, markingTableWidth } = props;

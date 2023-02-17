@@ -1,9 +1,42 @@
+import { FC, useEffect } from "react";
+import { Form, Input } from "antd";
 import moment from "moment";
+import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
+import { gap as viewGap } from "../../../components/basics/BasicView";
+import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 import InputMeasurement from "../../../components/specialized/InputMeasurement";
 import { IInvoicesStuff } from "../../../components/compounds/ShippingTemplate";
-import { gap as viewGap } from "../../../components/basics/BasicView";
-import { DisplayTotal, toDisplayRp } from "../SeaFreight/ViewAndForm";
-import { dateToString } from "../../../utils";
+import { toDisplayRp } from "../SeaFreight/ViewAndForm";
+import { dateToString, formatCurrency } from "../../../utils";
+
+const { useFormInstance, useWatch, Item } = Form;
+
+const DisplayTotal: FC<ICustomComponentProps> = props => {
+  const { value } = props;
+  const form = useFormInstance();
+
+  const price = useWatch('price', form);
+  const additionalFee = useWatch('additional_fee', form);
+  const shipmentFee = useWatch('shipment_fee', form);
+  const volumeCharge = useWatch('volume_charge', form);
+  const exchangeRate = useWatch('exchange_rate', form);
+
+  useEffect(() => {
+    form.setFieldsValue({ 
+      ...form.getFieldsValue(true), 
+      total: ((price + additionalFee + shipmentFee + volumeCharge) * exchangeRate)
+    });
+  }, 
+  [price, additionalFee, shipmentFee, volumeCharge, exchangeRate]);
+
+  return (
+    <Item 
+      label={`Total Biaya (${DEFAULT_SYMBOL})`} 
+      labelCol={{ span: 11 }}>
+      <Input disabled value={DEFAULT_SYMBOL + formatCurrency(value ?? 0)} />
+    </Item>
+  );
+};
 
 const invoicesStuff: IInvoicesStuff = {
   invoicePrintPreset: 'ac-faktur',
@@ -65,7 +98,7 @@ const invoicesStuff: IInvoicesStuff = {
     { key: 'additional_fee', label: 'Biaya Tambahan', type: 'currency', defaultValue: 0 },
     { type: 'custom', render: toDisplayRp({ key: 'additional_fee', label: 'Biaya Tambahan' }) },
     { key: 'shipment_fee', label: 'Ongkos Kirim', type: 'currency', defaultValue: 0 },
-    { key: 'volume_charge', label: 'Harga Volume Charge', type: 'currency', defaultValue: 0 },
+    { key: 'volume_charge', label: 'Harga Cas Volume', type: 'currency', defaultValue: 0 },
     { key: 'nb', label: 'NB', type: 'textarea' },
     { key: 'total', type: 'custom', render: DisplayTotal }
   ]

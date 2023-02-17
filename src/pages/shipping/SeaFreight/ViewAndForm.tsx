@@ -106,5 +106,5 @@ const viewAndFormStuff: IViewAndFormStuff = {
   ]
 };
 
-export { DisplayTotal, toDisplayRp };
+export { toDisplayRp };
 export default viewAndFormStuff;

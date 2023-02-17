@@ -9,10 +9,10 @@ import useDataFetching, { Query } from "../abstractions/useDataFetching";
 import useRoute from "../../data/useRoute";
 
 const BasicTableTemplate: FC<ITemplateProps> = props => {
-  const { title, collectionName, columns, width, modalWidth, viewItems, viewExtra, extra, query } = props;
+  const { title, collectionName, columns, width, modalWidth, viewItems, viewExtra, extra, columnExtra, query } = props;
   const { title: defaultTitle } = useRoute()!;
   const initSearchKey = (columns[0] as any).dataIndex;
-  const { data, loading, searchKey, setSearch, setSearchKey } = useDataFetching(collectionName, initSearchKey, query);
+  const { data, loading, searchKey, setSearch, setSearchKey, refreshData } = useDataFetching(collectionName, initSearchKey, query);
   const [modal, setModal] = useState<any>();
 
   return (
@@ -32,7 +32,7 @@ const BasicTableTemplate: FC<ITemplateProps> = props => {
         dataSource={data}
         loading={loading}
         onRow={entry => ({ onClick: () => setModal(entry) })}
-        columns={columns} />
+        columns={columnExtra ? [...columns, { fixed: 'right', width: 92, render: item => columnExtra(item, refreshData) }] : columns} />
       <Modal centered maskClosable
         title={title ?? defaultTitle}
         visible={modal}
@@ -68,13 +68,14 @@ const Container = styled.div`
 `;
 
 interface ITemplateProps {
-  title?: string
   collectionName: string
+  query?: Query
+  title?: string
+  extra?: ReactNode
   columns: ColumnsType<any>
-  width?: number
-  modalWidth?: number
+  columnExtra?: (values: Record<string, any>, refresh: () => void) => ReactNode
   viewItems: Array<IViewItem>
   viewExtra?: (values: Record<string, any>) => ReactNode
-  extra?: ReactNode
-  query?: Query
+  width?: number
+  modalWidth?: number
 }

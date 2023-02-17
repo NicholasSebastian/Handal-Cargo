@@ -1,5 +1,6 @@
+import { BSON } from "realm-web";
 import { FC, useState, useEffect } from "react";
-import { Button } from "antd";
+import { Button, Popconfirm, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { LeftOutlined } from "@ant-design/icons";
 import useDatabase from "../../../data/useDatabase";
@@ -31,6 +32,17 @@ const Invoice: FC<ITableProps> = props => {
       return value;
   }
 
+  const handleDelete = (e: React.MouseEvent | undefined, id: BSON.ObjectId, refreshData: () => void) => {
+    e?.stopPropagation(); 
+    database?.collection('Invoices')
+      .deleteOne({ _id: id })
+      .then(() => {
+        message.success("Data telah dihapus.");
+        refreshData();
+      })
+      .catch(() => message.error("Error terjadi. Data gagal dihapus."));
+  }
+
   return (
     <TableTemplate
       title={title}
@@ -45,6 +57,15 @@ const Invoice: FC<ITableProps> = props => {
           });
       }}
       columns={columns(currencyFormatter)}
+      columnExtra={(entry, refreshData) => (
+        <Popconfirm 
+          title="Yakin di hapus?" 
+          placement="left"
+          onCancel={e => e?.stopPropagation()}
+          onConfirm={e => handleDelete(e, entry._id, refreshData)}>
+          <Button onClick={e => e.stopPropagation()}>Hapus</Button>
+        </Popconfirm>
+      )}
       viewItems={viewItems(currencyFormatter)}
       viewExtra={values => (
         <Button 

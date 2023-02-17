@@ -22,7 +22,10 @@ const InvoiceForm: FC<IFormProps> = props => {
 
   const handleSubmit = (submittedValues: any) => {
     database?.collection('Invoices')
-      .insertOne(momentsToDates(submittedValues))
+      .insertOne({ 
+        marking_id: values.marking_id,
+        ...momentsToDates(submittedValues)
+      })
       .then(() => {
         message.success("Faktur telah disimpan.");
         closeModal();

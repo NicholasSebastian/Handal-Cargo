@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useMemo, useEffect } from "react";
 import { Form, Input } from "antd";
 import { ICustomComponentProps } from "./BasicForm";
 
@@ -11,19 +11,18 @@ function createDependentValue(config: IDependentValueConfig): FC<ICustomComponen
   const { label, dependencies, calculateValue, defaultValue, labelSpan, ...args } = config;
   return () => {
     const form = useFormInstance();
-    const [value, setValue] = useState(defaultValue);
 
     // Watch the fields defined by the given dependencies for any changes.
     const values = dependencies.map(dependency => useWatch(dependency, form));
 
     // Whenever the dependency values change, recalculate the value.
-    useEffect(() => {
+    const value = useMemo(() => {
       const valuesExist = values.every(value => value != null);
       if (valuesExist) {
-        setValue(calculateValue(values) || defaultValue);
+        return calculateValue(values) ?? defaultValue;
       }
       else {
-        setValue(defaultValue);
+        return defaultValue;
       }
     }, values);
 

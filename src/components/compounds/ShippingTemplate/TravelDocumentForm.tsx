@@ -23,7 +23,10 @@ const TravelDocumentForm: FC<IFormProps> = props => {
 
   const handleSubmit = (submittedValues: any) => {
     database?.collection('TravelPermits')
-      .insertOne(momentsToDates(submittedValues))
+      .insertOne({ 
+        marking_id: values.marking_id,
+        ...momentsToDates(submittedValues)
+      })
       .then(() => {
         message.success("Surat Jalan telah disimpan.");
         closeModal();

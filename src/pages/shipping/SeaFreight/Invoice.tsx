@@ -1,9 +1,41 @@
+import { FC, useEffect } from "react";
+import { Form, Input } from "antd";
 import moment from "moment";
+import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import { gap as viewGap } from "../../../components/basics/BasicView";
+import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 import InputMeasurement from "../../../components/specialized/InputMeasurement";
 import { IInvoicesStuff } from "../../../components/compounds/ShippingTemplate";
-import { DisplayTotal, toDisplayRp } from "./ViewAndForm";
-import { dateToString } from "../../../utils";
+import { toDisplayRp } from "./ViewAndForm";
+import { dateToString, formatCurrency } from "../../../utils";
+
+const { useFormInstance, useWatch, Item } = Form;
+
+const DisplayTotal: FC<ICustomComponentProps> = props => {
+  const { value } = props;
+  const form = useFormInstance();
+
+  const price = useWatch('price', form);
+  const additionalFee = useWatch('additional_fee', form);
+  const shipmentFee = useWatch('shipment_fee', form);
+  const exchangeRate = useWatch('exchange_rate', form);
+
+  useEffect(() => {
+    form.setFieldsValue({ 
+      ...form.getFieldsValue(true), 
+      total: ((price + additionalFee + shipmentFee) * exchangeRate)
+    });
+  }, 
+  [price, additionalFee, shipmentFee, exchangeRate]);
+
+  return (
+    <Item 
+      label={`Total Biaya (${DEFAULT_SYMBOL})`} 
+      labelCol={{ span: 11 }}>
+      <Input disabled value={DEFAULT_SYMBOL + formatCurrency(value ?? 0)} />
+    </Item>
+  );
+};
 
 const invoicesStuff: IInvoicesStuff = {
   invoicePrintPreset: 'sf-faktur',

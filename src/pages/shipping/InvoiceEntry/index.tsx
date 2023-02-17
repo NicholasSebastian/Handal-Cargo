@@ -1,22 +1,35 @@
 import { FC, Fragment } from "react";
 import TableTemplate from "../../../components/compounds/ViewTableTemplate";
+import useDatabase from "../../../data/useDatabase";
 import { dateToString } from "../../../utils";
 
-// TODO: 'marking-aggregation.ts', implement the lunas feature.
 // TODO: Entri Faktur page and features.
+// TODO: 'marking-aggregation.ts', implement the lunas feature.
 // TODO: Customer History.
 // TODO: Print formats.
 // TODO: Table Pagination.
 
+const pipeline = [
+  { $lookup: { from: '', localField: '', foreignField: '', as: '' } },
+  { $lookup: { from: '', localField: '', foreignField: '', as: '' } },
+  { $project: { /* TODO */ } }
+];
+
 const InvoiceEntry: FC = () => {
+  const database = useDatabase();
   return (
     <TableTemplate 
       collectionName="Invoices"
       width={1500}
       modalWidth={700}
       query={(collectionName, search, searchBy) => {
-        // TODO: Aggregate and use $lookup to retrive the corresponding 'SeaFreight' or 'AirCargo' data.
-        return undefined;
+        if (!search) 
+          return database?.collection(collectionName).aggregate(pipeline);
+        else 
+          return database?.collection(collectionName).aggregate([
+            ...pipeline,
+            { $match: { [searchBy]: { $regex: search }}}
+          ]);
       }}
       columns={[
         { dataIndex: "arrival_date", title: "Tanggal Tiba", render: value => dateToString(value) },

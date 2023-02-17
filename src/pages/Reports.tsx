@@ -1,23 +1,85 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Card, message } from "antd";
+import { List } from "antd";
 
-function notify() {
-  message.destroy();
-  message.warn("Fitur ini masih Work in Progress.");
-}
+const { Item } = List;
+const { Meta } = Item;
 
 const Reports: FC = () => {
   return (
     <Container>
-      <Card hoverable onClick={notify}>Surat Jalan Sea Freight</Card>
-      <Card hoverable onClick={notify}>Surat Jalan Daerah Sea Freight</Card>
-      <Card hoverable onClick={notify}>Faktur Sea Freight</Card>
-      <Card hoverable onClick={notify}>Surat Jalan Air Cargo</Card>
-      <Card hoverable onClick={notify}>Surat Jalan Daerah Air Cargo</Card>
-      <Card hoverable onClick={notify}>Faktur Daerah Air Cargo</Card>
-      <Card hoverable onClick={notify}>Laporan Rugi Laba Sea Freight</Card>
-      <Card hoverable onClick={notify}>Laporan Rugi Laba Air Cargo</Card>
+      <List
+        dataSource={[
+          { 
+            title: 'Laporan Rugi Laba Sea Freight',
+            description: 'Shipping ➔ Sea Freight ➔ View ➔ Laporan Rugi Laba' 
+          },
+          { 
+            title: 'Surat Jalan Sea Freight',
+            description: (
+              <div>
+                <div>Shipping ➔ Sea Freight ➔ View ➔ Buat Surat Jalan ➔ Print Surat Jalan</div>
+                <div>Shipping ➔ Sea Freight ➔ Surat Jalan ➔ View ➔ Print Ulang Surat Jalan</div>
+              </div>
+            )
+          },
+          { 
+            title: 'Surat Jalan Daerah Sea Freight',
+            description: (
+              <div>
+                <div>Shipping ➔ Sea Freight ➔ View ➔ Buat Surat Jalan ➔ Print Surat Jalan Daerah</div>
+                <div>Shipping ➔ Sea Freight ➔ Surat Jalan ➔ View ➔ Print Ulang Surat Jalan Daerah</div>
+              </div>
+            )
+          },
+          { 
+            title: 'Faktur Sea Freight',
+            description: (
+              <div>
+                <div>Shipping ➔ Sea Freight ➔ View ➔ Buat Faktur ➔ Print Faktur</div>
+                <div>Shipping ➔ Sea Freight ➔ Faktur ➔ View ➔ Print Ulang Faktur</div>
+              </div>
+            )
+          },
+          { 
+            title: 'Laporan Rugi Laba Air Cargo',
+            description: 'Shipping ➔ Air Cargo ➔ View ➔ Laporan Rugi Laba' 
+          },
+          { 
+            title: 'Surat Jalan Air Cargo',
+            description: (
+              <div>
+                <div>Shipping ➔ Air Cargo ➔ View ➔ Buat Surat Jalan ➔ Print Surat Jalan</div>
+                <div>Shipping ➔ Air Cargo ➔ Surat Jalan ➔ View ➔ Print Ulang Surat Jalan</div>
+              </div>
+            ) 
+          },
+          { 
+            title: 'Surat Jalan Daerah Air Cargo',
+            description: (
+              <div>
+                <div>Shipping ➔ Air Cargo ➔ View ➔ Buat Surat Jalan ➔ Print Surat Jalan Daerah</div>
+                <div>Shipping ➔ Air Cargo ➔ Surat Jalan ➔ View ➔ Print Ulang Surat Jalan Daerah</div>
+              </div>
+            )
+          },
+          { 
+            title: 'Faktur Daerah Air Cargo',
+            description: (
+              <div>
+                <div>Shipping ➔ Air Cargo ➔ View ➔ Buat Faktur ➔ Print Faktur</div>
+                <div>Shipping ➔ Air Cargo ➔ Faktur ➔ View ➔ Print Ulang Faktur</div>
+              </div>
+            ) 
+          }
+        ]}
+        renderItem={entry => (
+          <Item>
+            <Meta
+              title={entry.title}
+              description={entry.description} />
+          </Item>
+        )} />
     </Container>
   );
 }
@@ -25,15 +87,7 @@ const Reports: FC = () => {
 export default Reports;
 
 const Container = styled.div`
+  background-color: #fff;
   margin: 20px;
-  display: grid;
-  grid-template-columns: repeat(3, 240px);
-  grid-gap: 10px;
-
-  > * {
-    aspect-ratio: 1.8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  padding: 10px 20px;
 `;

@@ -9,7 +9,7 @@ const travelPermits = {
   $filter: {
     input: "$travel_permits",
     as: "travel_permit",
-    cond: { $eq: ["$$travel_permit.marking", "$$marking.marking"] }
+    cond: { $eq: ["$$travel_permit.marking_id", "$$marking.marking_id"] }
   }
 };
 
@@ -17,7 +17,7 @@ const invoices = {
   $filter: {
     input: "$invoices",
     as: "invoice",
-    cond: { $eq: ["$$invoice.marking", "$$marking.marking"] }
+    cond: { $eq: ["$$invoice.marking_id", "$$marking.marking_id"] }
   }
 };
 

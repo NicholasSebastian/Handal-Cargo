@@ -13,17 +13,15 @@ const Customers: FC = () => {
       searchBy="name"
       modalWidth={700}
       query={(collectionName, search, searchBy) => {
-        if (search) {
+        if (!search) 
+          return database?.collection(collectionName).aggregate([
+            { $unwind: { path: "$markings", preserveNullAndEmptyArrays: true }}
+          ]);
+        else 
           return database?.collection(collectionName).aggregate([
             { $unwind: { path: "$markings", preserveNullAndEmptyArrays: true }},
             { $match: { [searchBy]: { $regex: search }}}
           ]);
-        }
-        else {
-          return database?.collection(collectionName).aggregate([
-            { $unwind: { path: "$markings", preserveNullAndEmptyArrays: true }}
-          ]);
-        }
       }}
       columns={[
         { dataIndex: "name", title: "Customer" },

@@ -1,4 +1,5 @@
-import { FC, useState, useReducer, useMemo } from "react";
+import { BSON } from "realm-web";
+import { FC, useState, useReducer } from "react";
 import styled from "styled-components";
 import { Form, Table, InputNumber, Button, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
@@ -35,6 +36,7 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
         accumulator[field.key] = field.parser(otherState[field.key], otherState);
         return accumulator;
       }, { 
+        marking_id: new BSON.ObjectId(),
         marking, 
         quantity: parseInt(quantity) 
       });
@@ -124,7 +126,7 @@ function fieldsToMarkingColumns(fields: Array<MarkingField>): ColumnsType<any> {
     { dataIndex: 'quantity', title: 'Kuantitas' },
     ...fields.map(field => ({ dataIndex: field.key, title: field.label, width: field.width, render: field.render })),
     { dataIndex: 'paid', title: 'Lunas', render: value => value ? check : cross },
-    { dataIndex: 'remainder', title: 'Sisa', render: (value, record) => value ? value : record.quantity },
+    { dataIndex: 'remainder', title: 'Sisa', render: (value, record) => (value != null) ? value : record.quantity },
     { dataIndex: 'travel_documents', title: 'Surat Jalan', width: 90, render: value => value ?? 0 },
     { dataIndex: 'invoices', title: 'Faktur', render: value => value ?? 0 }
   ];
