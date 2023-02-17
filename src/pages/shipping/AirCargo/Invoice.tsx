@@ -10,6 +10,7 @@ import { toDisplayRp } from "../SeaFreight/ViewAndForm";
 import { dateToString, formatCurrency } from "../../../utils";
 
 const { useFormInstance, useWatch, Item } = Form;
+const formatDefaultCurrency = (value: number) => DEFAULT_SYMBOL + formatCurrency(value);
 
 const DisplayTotal: FC<ICustomComponentProps> = props => {
   const { value } = props;
@@ -70,9 +71,9 @@ const invoicesStuff: IInvoicesStuff = {
     { key: 'travel_number', label: 'No. Surat Jalan Expedisi' },
     { key: 'shipment_fee', label: 'Ongkos Kirim', render: (value, { currency }) => formatCurrency(value, currency) },
     { key: 'nb', label: 'NB' },
-    { key: 'volume_charge', label: 'Harga Volume Charge' },
+    { key: 'volume_charge', label: 'Harga Volume Charge', render: (value, { currency }) => formatCurrency(value, currency) },
     viewGap,
-    { key: 'total', label: 'Total', render: (value, { currency }) => formatCurrency(value, currency) }
+    { key: 'total', label: 'Total', render: formatDefaultCurrency }
   ],
   invoiceFormItems: [
     { key: 'user', label: 'User', disabled: true },

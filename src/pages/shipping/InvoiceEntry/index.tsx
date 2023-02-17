@@ -1,19 +1,9 @@
-import { FC, Fragment } from "react";
+import { FC } from "react";
 import TableTemplate from "../../../components/compounds/ViewTableTemplate";
 import useDatabase from "../../../data/useDatabase";
+import pipeline, { manuallyReplaceRoot } from "./aggregation";
+import InvoiceEntryForm from "./Form";
 import { dateToString } from "../../../utils";
-
-// TODO: Entri Faktur page and features.
-// TODO: 'marking-aggregation.ts', implement the lunas feature.
-// TODO: Customer History.
-// TODO: Print formats.
-// TODO: Table Pagination.
-
-const pipeline = [
-  { $lookup: { from: '', localField: '', foreignField: '', as: '' } },
-  { $lookup: { from: '', localField: '', foreignField: '', as: '' } },
-  { $project: { /* TODO */ } }
-];
 
 const InvoiceEntry: FC = () => {
   const database = useDatabase();
@@ -24,52 +14,58 @@ const InvoiceEntry: FC = () => {
       modalWidth={700}
       query={(collectionName, search, searchBy) => {
         if (!search) 
-          return database?.collection(collectionName).aggregate(pipeline);
+          return database?.collection(collectionName)
+            .aggregate(pipeline)
+            .then(manuallyReplaceRoot);
         else 
-          return database?.collection(collectionName).aggregate([
-            ...pipeline,
-            { $match: { [searchBy]: { $regex: search }}}
-          ]);
+          return database?.collection(collectionName)
+            .aggregate([
+              ...pipeline,
+              { $match: { [searchBy]: { $regex: search }}}
+            ])
+            .then(manuallyReplaceRoot);
       }}
       columns={[
         { dataIndex: "arrival_date", title: "Tanggal Tiba", render: value => dateToString(value) },
         { dataIndex: "muat_date", title: "Tanggal Muat", render: value => dateToString(value) },
         { dataIndex: "_id", title: "Kode Faktur", render: value => value?.toString() },
         { dataIndex: "payment_id", title: "Kode Pembayaran", render: value => value?.toString() },
-        { dataIndex: "container_number", title: "Nomor Container" },
         { dataIndex: "marking", title: "Marking" },
         { dataIndex: "quantity", title: "Kuantitas" },
         { dataIndex: "measurement", title: "Ukuran" },
         { dataIndex: "price", title: "Harga" },
         { dataIndex: "volume_charge", title: "Cas Volume" },
-        { dataIndex: "handling_fee", title: "Biaya Ngurus" },
+        { dataIndex: "additional_fee", title: "Biaya Tambahan" },
         { dataIndex: "shipment_fee", title: "Ongkos Kirim" },
         { dataIndex: "discount", title: "Diskon" },
         { dataIndex: "other_fee", title: "Biaya Lain-Lain" },
         { dataIndex: "total", title: "Total" }
       ]}
-      viewItems={[
+      viewItems={values => [
         { key: "arrival_date", label: "Tanggal Tiba", render: value => dateToString(value) },
         { key: "muat_date", label: "Tanggal Muat", render: value => dateToString(value) },
         { key: "_id", label: "Kode Faktur", render: value => value?.toString() },
-        { key: "payment_id", label: "Kode Pembayaran", render: value => value?.toString() },
-        { key: "container_number", label: "Nomor Container" },
+        ...((values == null) ? [] 
+          // If 'container_number' is in the given values, then we'll assume its from a 'SeaFreight' entry.
+          : ("container_number" in values) ? [
+            { key: "container_number", label: "Nomor Container" }
+          ] : [
+          // Else we'll assume that its from an 'AirCargo' entry.
+            { key: "airwaybill_number", label: "Nomor Air Waybill" },
+            { key: "item_code", label: "Kode Barang" }
+          ]),
         { key: "marking", label: "Marking" },
-        { key: "quantity", label: "Kuantitas" },
-        { key: "measurement", label: "Ukuran" },
-        { key: "price", label: "Harga" },
-        { key: "volume_charge", label: "Cas Volume" },
-        { key: "handling_fee", label: "Biaya Ngurus" },
-        { key: "shipment_fee", label: "Ongkos Kirim" },
-        { key: "discount", label: "Diskon" },
-        { key: "other_fee", label: "Biaya Lain-Lain" },
-        { key: "total", label: "Total" },
-        { key: "description", label: "Keterangan" }
+        { key: "quantity", label: "Kuantitas" }
       ]}
-      extra={
-        // TODO: Add an input and a button to set the 'payment_id' field.
-        <Fragment />
-      } />
+      viewExtra={(values, close, refreshData) => {
+        if (values) return (
+          <InvoiceEntryForm
+            key={Date.now()}
+            values={values}
+            refresh={refreshData}
+            close={close} />
+        );
+      }} />
   );
 }
 

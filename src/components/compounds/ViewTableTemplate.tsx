@@ -13,7 +13,9 @@ const BasicTableTemplate: FC<ITemplateProps> = props => {
   const { title: defaultTitle } = useRoute()!;
   const initSearchKey = (columns[0] as any).dataIndex;
   const { data, loading, searchKey, setSearch, setSearchKey, refreshData } = useDataFetching(collectionName, initSearchKey, query);
+
   const [modal, setModal] = useState<any>();
+  const closeModal = () => setModal(undefined);
 
   return (
     <Container>
@@ -36,14 +38,14 @@ const BasicTableTemplate: FC<ITemplateProps> = props => {
       <Modal centered maskClosable
         title={title ?? defaultTitle}
         visible={modal}
-        onCancel={() => setModal(undefined)}
+        onCancel={closeModal}
         footer={null}
         width={modalWidth ?? 650}
         bodyStyle={ModalStyles}>
         <BasicView
           values={modal}
-          items={viewItems} />
-        {viewExtra && viewExtra(modal)}
+          items={(typeof viewItems === 'function') ? viewItems(modal) : viewItems} />
+        {viewExtra && viewExtra(modal, closeModal, refreshData)}
       </Modal>
     </Container>
   );
@@ -73,9 +75,11 @@ interface ITemplateProps {
   title?: string
   extra?: ReactNode
   columns: ColumnsType<any>
-  columnExtra?: (values: Record<string, any>, refresh: () => void) => ReactNode
-  viewItems: Array<IViewItem>
-  viewExtra?: (values: Record<string, any>) => ReactNode
+  columnExtra?: (values: Record<string, any>, refresh: Fn) => ReactNode
+  viewItems: Array<IViewItem> | ((values: Record<string, any>) => Array<IViewItem>)
+  viewExtra?: (values: Record<string, any>, closeModal: Fn, refresh: Fn) => ReactNode
   width?: number
   modalWidth?: number
 }
+
+type Fn = () => void;

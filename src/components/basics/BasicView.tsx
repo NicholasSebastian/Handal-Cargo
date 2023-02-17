@@ -15,7 +15,7 @@ const BasicView: FC<IViewProps> = (props) => {
     <Container>
       <Descriptions 
         title={title} 
-        column={(items.length > 8) ? 2 : 1}
+        column={2}
         labelStyle={{ fontWeight: 500 }}>
         {items.map((item, i) => {
           const value = item.key ? values[item.key] : null;

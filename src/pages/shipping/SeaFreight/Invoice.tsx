@@ -10,6 +10,7 @@ import { toDisplayRp } from "./ViewAndForm";
 import { dateToString, formatCurrency } from "../../../utils";
 
 const { useFormInstance, useWatch, Item } = Form;
+const formatDefaultCurrency = (value: number) => DEFAULT_SYMBOL + formatCurrency(value);
 
 const DisplayTotal: FC<ICustomComponentProps> = props => {
   const { value } = props;
@@ -71,7 +72,7 @@ const invoicesStuff: IInvoicesStuff = {
     { key: 'nb', label: 'NB' },
     { key: 'shipment_fee', label: 'Ongkos Kirim', render: (value, { currency }) => formatCurrency(value, currency) },
     viewGap,
-    { key: 'total', label: 'Total', render: (value, { currency }) => formatCurrency(value, currency) }
+    { key: 'total', label: 'Total', render: formatDefaultCurrency }
   ],
   invoiceFormItems: [
     { key: 'user', label: 'User', disabled: true },
