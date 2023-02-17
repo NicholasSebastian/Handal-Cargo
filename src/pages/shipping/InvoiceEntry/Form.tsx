@@ -1,16 +1,16 @@
+import { BSON } from "realm-web";
 import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
-import { Button, Form, Input, InputNumber, Select } from "antd";
+import { Button, Form, Input, InputNumber, Select, message } from "antd";
 import useDatabase from "../../../data/useDatabase";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import InputCurrency from "../../../components/basics/InputCurrency";
 import { formatCurrency } from "../../../utils";
 
-const { Item, useForm } = Form;
+const { Item, useForm, useWatch } = Form;
 const { TextArea } = Input;
 const { Option } = Select;
 
-// TODO: 'marking-aggregation.ts', implement the lunas feature.
 // TODO: Customer History.
 // TODO: Print formats.
 // TODO: Table Pagination.
@@ -20,6 +20,14 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
   const database = useDatabase();
   const [form] = useForm();
   const [payments, setPayments] = useState<Array<any>>();
+
+  // To keep track of changes in any of the form values.
+  const price = useWatch('price', form);
+  const volumeCharge = useWatch('volume_charge', form);
+  const additionalFee = useWatch('additional_fee', form);
+  const shipmentFee = useWatch('shipment_fee', form);
+  const otherFee = useWatch('other_fee', form);
+  const discount = useWatch('discount', form);
 
   useEffect(() => {
     // Set the initial values for all the fields.
@@ -31,10 +39,12 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
       additional_fee: values.additional_fee ? (values.additional_fee * values.exchange_rate) : 0,
       shipment_fee: values.shipment_fee ? (values.shipment_fee * values.exchange_rate) : 0,
       other_fee: 0,
-      discount: 0
+      discount: 0,
+      payment: values.payment ? values.payment.toString() : undefined
     });
 
     // TODO: Fetch from the Invoices document to filter out the payments of the ones that have already been used before.
+    // https://www.mongodb.com/docs/manual/reference/operator/query/nin/
 
     // Fetch all the payments from the database for the Select component below.
     database?.collection('Payments')
@@ -42,9 +52,30 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
       .then(results => setPayments(results));
   }, []);
 
-  const handleSubmit = (values: any) => {
-    // TODO
-    console.log(values);
+  useEffect(() => {
+    // Update the total field whenever any of its dependency fields change.
+    form.setFieldsValue({
+      ...form.getFieldsValue(true),
+      total: ((price + (volumeCharge ?? 0) + additionalFee + shipmentFee + otherFee) - discount)
+    });
+  }, [price, volumeCharge, additionalFee, shipmentFee, otherFee, discount]);
+
+  const handleSubmit = (submittedValues: any) => {
+    const parsedValues = { 
+      ...submittedValues, 
+      payment: (submittedValues.payment !== 'null') ? new BSON.ObjectId(submittedValues.payment) : null,
+      currency: "IDR",
+      exchange_rate: 1
+    };
+    
+    database?.collection('Invoices')
+      .updateOne({ _id: values._id }, { $set: parsedValues })
+      .then(() => {
+        message.success("Data telah diubah");
+        close();
+        refresh();
+      })
+      .catch(() => message.error("Error terjadi. Data gagal diubah."));
   }
 
   return (
@@ -117,11 +148,13 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
           <Select 
             placeholder="Kode Pembayaran" 
             style={{ width: '350px' }}>
+            <Option key={null}>
+              Belum Dibayar
+            </Option>
             {payments?.map(payment => {
               const id = payment._id.toString();
               return (
-                <Option 
-                  key={id}>
+                <Option key={id}>
                   {id} - {DEFAULT_SYMBOL}{formatCurrency(payment.total)}
                 </Option>
               );

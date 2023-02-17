@@ -26,8 +26,7 @@ const DisplayTotal: FC<ICustomComponentProps> = props => {
       ...form.getFieldsValue(true), 
       total: ((price + additionalFee + shipmentFee) * exchangeRate)
     });
-  }, 
-  [price, additionalFee, shipmentFee, exchangeRate]);
+  }, [price, additionalFee, shipmentFee, exchangeRate]);
 
   return (
     <Item 

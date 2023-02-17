@@ -15,6 +15,14 @@ const pipeline = [
       as: 'aircargo' 
     } 
   },
+  {
+    $lookup: {
+      from: 'Payments',
+      localField: 'payment',
+      foreignField: '_id',
+      as: 'payment_amount'
+    }
+  },
   { 
     $project: { 
       payment: 1,
@@ -46,10 +54,15 @@ const pipeline = [
           then: {
             muat_date: { $first: '$aircargo.muat_date' },
             arrival_date: { $first: '$aircargo.arrival_date' },
-            airwaybill_number: { $first: '$seafreight.airwaybill_number' },
+            airwaybill_number: { $first: '$aircargo.airwaybill_number' },
             item_code: { $first: '$aircargo.item_code' }
           } 
         } 
+      },
+      payment_amount: {
+        $sum: {
+          $first: '$payment_amount.items.amount'
+        }
       }
     }
   }

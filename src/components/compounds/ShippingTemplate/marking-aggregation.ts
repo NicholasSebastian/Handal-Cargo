@@ -47,7 +47,7 @@ export const markingAggregation = {
         { 
           paid: {
             $gt: [
-              { $sum: "$payments.items.amount" }, // TODO: Whatever the fuck this is.
+              { $sum: { $first: "$payments.items.amount" } },
               { $sum: invoicePrices }
             ] 
           },
@@ -84,7 +84,7 @@ export const aggregationLookup: Array<ILookup> = [
   },
   {
     from: 'Payments',
-    localField: 'invoices.payment', // TODO: Maybe fix this one too.
+    localField: 'invoices.payment',
     foreignField: '_id',
     as: 'payments'
   }

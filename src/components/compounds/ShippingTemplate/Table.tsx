@@ -38,7 +38,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
             ])
             .then(results => results[0])
           }
-          showIndicator={values => values.paid}
+          showIndicator={values => values.markings.every((marking: any) => marking.paid)} // TODO: values does not get the aggregated values.
           view={View}
           form={Form}
           columns={columns}
