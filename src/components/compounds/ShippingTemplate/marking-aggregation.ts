@@ -5,70 +5,6 @@ interface ILookup {
   as: string
 }
 
-const travelPermits = {
-  $filter: {
-    input: "$travel_permits",
-    as: "travel_permit",
-    cond: { $eq: ["$$travel_permit.marking_id", "$$marking.marking_id"] }
-  }
-};
-
-const invoices = {
-  $filter: {
-    input: "$invoices",
-    as: "invoice",
-    cond: { $eq: ["$$invoice.marking_id", "$$marking.marking_id"] }
-  }
-};
-
-const travelPermitQuantities = {
-  $map: {
-    input: travelPermits,
-    as: "travel_permit",
-    in: "$$travel_permit.quantity"
-  }
-};
-
-const invoicePrices = {
-  $map: {
-    input: invoices,
-    as: "invoice",
-    in: "$$invoice.total"
-  }
-}
-
-export const markingAggregation = {
-  $map: {
-    input: "$markings",
-    as: "marking",
-    in: {
-      $mergeObjects: [
-        "$$marking",
-        { 
-          paid: {
-            $gt: [
-              { $sum: { $first: "$payments.items.amount" } },
-              { $sum: invoicePrices }
-            ] 
-          },
-          remainder: {
-            $subtract: [
-              "$$marking.quantity",
-              { $sum: travelPermitQuantities }
-            ] 
-          }, 
-          travel_documents: { 
-            $size: travelPermits 
-          }, 
-          invoices: { 
-            $size: invoices 
-          }
-        }
-      ]
-    }
-  }
-};
-
 export const aggregationLookup: Array<ILookup> = [
   {
     from: 'TravelPermits',
@@ -89,3 +25,51 @@ export const aggregationLookup: Array<ILookup> = [
     as: 'payments'
   }
 ];
+
+const travelPermits = {
+  $filter: {
+    input: "$travel_permits",
+    as: "travel_permit",
+    cond: { $eq: ["$$travel_permit.marking_id", "$$marking.marking_id"] }
+  }
+};
+
+const invoices = {
+  $filter: {
+    input: "$invoices",
+    as: "invoice",
+    cond: { $eq: ["$$invoice.marking_id", "$$marking.marking_id"] }
+  }
+};
+
+export const markingAggregation = {
+  $map: {
+    input: "$markings",
+    as: "marking",
+    in: {
+      $mergeObjects: [
+        "$$marking",
+        { 
+          paid: {
+            $gt: [
+              { $sum: { $first: "$payments.items.amount" } },
+              { $sum: { $map: { input: invoices, as: "invoice", in: "$$invoice.total" } } }
+            ] 
+          },
+          remainder: {
+            $subtract: [
+              "$$marking.quantity",
+              { $sum: { $map: { input: travelPermits, as: "travel_permit", in: "$$travel_permit.quantity" } } }
+            ] 
+          }, 
+          travel_documents: { 
+            $size: travelPermits 
+          }, 
+          invoices: { 
+            $size: invoices 
+          }
+        }
+      ]
+    }
+  }
+};

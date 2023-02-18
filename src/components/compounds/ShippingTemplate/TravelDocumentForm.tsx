@@ -8,18 +8,18 @@ import { IFormProps as BaseFormProps } from "./View";
 import print, { Presets } from "../../../print";
 import { momentsToDates } from "../../../utils"; 
 
+const injectAdditionalValues = getFormInjector({
+  collectionName: 'Customers',
+  localField: 'marking',
+  foreignField: 'markings',
+  projection: { customer: '$name', address: 1, city: 1, home_number: 1, phone_number: 1 }
+});
+
 const TravelDocumentForm: FC<IFormProps> = props => {
   const { items, values, printPreset, printDaerahPreset, setCurrentPage } = props;
   const database = useDatabase();
   const closeModal = useCloseModal();
   const isDaerahType = useRef<boolean>();
-
-  const injectAdditionalValues = getFormInjector({
-    collectionName: 'Customers',
-    localField: 'marking',
-    foreignField: 'markings',
-    projection: { customer: '$name', address: 1, city: 1, home_number: 1, phone_number: 1 }
-  })
 
   const handleSubmit = (submittedValues: any) => {
     database?.collection('TravelPermits')

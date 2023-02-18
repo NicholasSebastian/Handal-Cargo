@@ -2,7 +2,7 @@ import { FC } from "react";
 import useDatabase from "../../../data/useDatabase";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import TableTemplate from "../../../components/compounds/ViewTableTemplate";
-import pipeline, { manuallyReplaceRoot } from "./aggregation";
+import pipeline from "./aggregation";
 import InvoiceEntryForm from "./Form";
 import { dateToString, formatCurrency } from "../../../utils";
 
@@ -15,17 +15,14 @@ const InvoiceEntry: FC = () => {
       modalWidth={700}
       query={(collectionName, search, searchBy) => {
         if (!search) 
-          return database?.collection(collectionName)
-            .aggregate(pipeline)
-            .then(manuallyReplaceRoot);
+          return database?.collection(collectionName).aggregate(pipeline);
         else 
-          return database?.collection(collectionName)
-            .aggregate([
-              ...pipeline,
-              { $match: { [searchBy]: { $regex: search }}}
-            ])
-            .then(manuallyReplaceRoot);
+          return database?.collection(collectionName).aggregate([
+            ...pipeline,
+            { $match: { [searchBy]: { $regex: search }}}
+          ]);
       }}
+      showIndicator={values => values.total < values.payment_amount}
       columns={[
         { dataIndex: "arrival_date", title: "Tanggal Tiba", render: value => dateToString(value) },
         { dataIndex: "muat_date", title: "Tanggal Muat", render: value => dateToString(value) },

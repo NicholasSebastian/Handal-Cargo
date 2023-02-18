@@ -11,10 +11,6 @@ const { Item, useForm, useWatch } = Form;
 const { TextArea } = Input;
 const { Option } = Select;
 
-// TODO: Customer History.
-// TODO: Print formats.
-// TODO: Table Pagination.
-
 const InvoiceEntryForm: FC<IFormProps> = props => {
   const { values, refresh, close } = props;
   const database = useDatabase();
@@ -43,12 +39,23 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
       payment: values.payment ? values.payment.toString() : undefined
     });
 
-    // TODO: Fetch from the Invoices document to filter out the payments of the ones that have already been used before.
-    // https://www.mongodb.com/docs/manual/reference/operator/query/nin/
-
     // Fetch all the payments from the database for the Select component below.
     database?.collection('Payments')
-      .aggregate([{ $project: { total: { $sum: '$items.amount' }}}])
+      .aggregate([
+        {
+          $lookup: {
+            from: 'Invoices',
+            let: { id: '$_id' },
+            pipeline: [
+              { $project: { _id: 0, payment: 1 } },
+              { $match: { $expr: { $eq: ['$payment', '$$id'] } } }
+            ],
+            as: 'past_invoices'
+          }
+        },
+        { $match: { $expr: { $lt: [{ $size: '$past_invoices' }, 1] } } },
+        { $project: { total: { $sum: '$items.amount' } } }
+      ])
       .then(results => setPayments(results));
   }, []);
 

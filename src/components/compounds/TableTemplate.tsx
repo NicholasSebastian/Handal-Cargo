@@ -1,5 +1,5 @@
 import { CSSProperties, ReactNode, createContext, useContext, ComponentType } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
@@ -122,15 +122,31 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
   );
 });
 
-export { ModalStyles, useCloseModal };
+export { ModalStyles, useCloseModal, enableIndicator };
 export type { HandledViewProps, HandledFormProps, ViewPropType, FormPropType };
 export default TableTemplate;
+
+const enableIndicator = css`
+  tbody > tr.badge > td:first-child::after {
+    content: '';
+    background-color: #52c41a;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    clip-path: inset(50% 0 0 50%);
+  }
+`;
 
 const Container = styled.div`
   background-color: #fff;
   margin: 20px;
   padding: 20px;
   text-align: right;
+
+  ${enableIndicator}
   
   > div:nth-child(2) {
     display: flex;
@@ -145,18 +161,6 @@ const Container = styled.div`
 
   tbody > tr:hover {
     cursor: pointer;
-  }
-
-  // Indicator syles.
-  tbody > tr.badge > td:first-child::after {
-    content: '';
-    background-color: #52c41a;
-    width: 16px;
-    height: 16px;
-    border-radius: 8px;
-    position: absolute;
-    top: -8px;
-    left: -8px;
   }
 `;
 

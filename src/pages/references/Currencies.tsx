@@ -7,7 +7,7 @@ const Currencies: FC = () => {
     <Fragment>
       <Alert 
         type="warning" 
-        message="Tolong jangan hapus/ ganti 'IDR' - 'Rp.'"
+        message="Tolong jangan hapus/ganti 'IDR' - 'Rp.'"
         style={{ margin: '20px' }} />
       <ListTemplate 
         collectionName="Currencies"

@@ -1,7 +1,7 @@
 import { FC, ComponentType, useState } from "react";
 import { Spin } from "antd";
 import { BSON } from "realm-web";
-import { useBasicDataFetching, BasicQuery } from "./useDataFetching";
+import { useSingleDataFetching, BasicQuery } from "./useDataFetching";
 import { Subtract } from "../../utils";
 
 // Abstracts over the components to handle either 'Add' or 'Edit' cases.
@@ -12,7 +12,7 @@ function withFormHandling<P extends IInjectedProps>(FormComponent: ComponentType
     const { collectionName, id, handleAdd, handleEdit, ...otherProps } = props;
     const [values, setValues] = useState<any>();
 
-    useBasicDataFetching(collectionName, id, setValues, customQuery);
+    useSingleDataFetching(collectionName, id, setValues, customQuery);
 
     // If an id is given, it is therefore an 'edit' form.
     if (id) {

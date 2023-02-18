@@ -7,7 +7,7 @@ const Payroll: FC = () => {
     <Container>
       <Alert 
         type="warning" 
-        message="Fitur ini masih dalam perencanaan." />
+        message="Fitur ini telah dibatalkan." />
       {/* TODO */}
     </Container>
   );

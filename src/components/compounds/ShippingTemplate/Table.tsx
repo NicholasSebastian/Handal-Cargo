@@ -7,6 +7,10 @@ import { IData } from "../../abstractions/withTemplateHandling";
 import useDatabase from "../../../data/useDatabase";
 import { markingAggregation, aggregationLookup } from "./marking-aggregation";
 
+// TODO: Customer History.
+// TODO: Print formats.
+// TODO: Table Pagination.
+
 const TableTemplate: FC<ITemplateProps> = props => {
   const { collectionName, searchBy, columns, View, Form, TravelDocument, Invoice } = props;
   const database = useDatabase();

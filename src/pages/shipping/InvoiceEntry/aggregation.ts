@@ -1,3 +1,25 @@
+
+// This looks absolutely retarded.
+const commonFields = {
+  _id: '$_id',
+  payment: '$payment',
+  marking: '$marking',
+  quantity: '$quantity',
+  measurement_option: '$measurement_option',
+  measurement: '$measurement',
+  exchange_rate: '$exchange_rate',
+  price: '$price',
+  volume_charge: '$volume_charge',
+  additional_fee: '$additional_fee',
+  shipment_fee: '$shipment_fee',
+  total: '$total',
+  payment_amount: {
+    $sum: {
+      $first: '$payment_amount.items.amount'
+    }
+  }
+}
+
 const pipeline = [
   { 
     $lookup: { 
@@ -25,22 +47,12 @@ const pipeline = [
   },
   { 
     $project: { 
-      payment: 1,
-      marking: 1,
-      quantity: 1,
-      measurement_option: 1,
-      measurement: 1,
-      exchange_rate: 1,
-      price: 1,
-      volume_charge: 1,
-      additional_fee: 1,
-      shipment_fee: 1,
-      total: 1,
       seafreight: { 
         $cond: { 
           if: { $gt: [{ $size: '$seafreight' }, 0] }, 
           else: '$$REMOVE', 
           then: {
+            ...commonFields,
             muat_date: { $first: '$seafreight.muat_date' },
             arrival_date: { $first: '$seafreight.arrival_date' },
             container_number: { $first: '$seafreight.container_number' }
@@ -52,39 +64,23 @@ const pipeline = [
           if: { $gt: [{ $size: '$aircargo' }, 0] }, 
           else: '$$REMOVE', 
           then: {
+            ...commonFields,
             muat_date: { $first: '$aircargo.muat_date' },
             arrival_date: { $first: '$aircargo.arrival_date' },
             airwaybill_number: { $first: '$aircargo.airwaybill_number' },
             item_code: { $first: '$aircargo.item_code' }
           } 
         } 
-      },
-      payment_amount: {
-        $sum: {
-          $first: '$payment_amount.items.amount'
-        }
+      }
+    }
+  },
+  {
+    $replaceRoot: {
+      newRoot: {
+        $mergeObjects: ['$aircargo', '$seafreight']
       }
     }
   }
 ];
 
-// I tried using '$replaceRoot' but it wouldn't work in this version of realm-web :(
-// So we'll use this sad function to do it manually :)
-
-function manuallyReplaceRoot(results: Array<Record<string, any>>) {
-  return results.map(result => {
-    if ('seafreight' in result) {
-      const data = { ...result, ...result.seafreight };
-      delete data.seafreight;
-      return data;
-    }
-    else if ('aircargo' in result) {
-      const data = { ...result, ...result.aircargo };
-      delete result.aircargo;
-      return data;
-    }
-  })
-}
-
-export { manuallyReplaceRoot };
 export default pipeline;

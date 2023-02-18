@@ -37,7 +37,7 @@ function useDataFetching(collectionName: string, defaultSearchKey: string, custo
   return { data, loading, searchKey, setSearch, setSearchKey, refreshData };
 }
 
-function useBasicDataFetching(collectionName: string, id: ID, setValues: ResultDump, customQuery?: BasicQuery) {
+function useSingleDataFetching(collectionName: string, id: ID, setValues: ResultDump, customQuery?: BasicQuery) {
   const database = useDatabase();
 
   const fetchData = () => {
@@ -59,7 +59,7 @@ function useBasicDataFetching(collectionName: string, id: ID, setValues: ResultD
 }
 
 export type { Query, BasicQuery };
-export { useBasicDataFetching };
+export { useSingleDataFetching };
 export default useDataFetching;
 
 type Query = (collectionName: string, search: RegExp | undefined, searchBy: string) => Promise<any> | undefined;

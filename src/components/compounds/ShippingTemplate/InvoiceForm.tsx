@@ -8,17 +8,17 @@ import { IFormProps as BaseFormProps } from "./View";
 import print, { Presets } from "../../../print";
 import { momentsToDates } from "../../../utils";
 
+const injectAdditionalValues = getFormInjector({
+  collectionName: 'Customers',
+  localField: 'marking',
+  foreignField: 'markings',
+  projection: { measurement_details: 1 }
+});
+
 const InvoiceForm: FC<IFormProps> = props => {
   const { items, values, printPreset, setCurrentPage } = props;
   const database = useDatabase();
   const closeModal = useCloseModal();
-
-  const injectAdditionalValues = getFormInjector({
-    collectionName: 'Customers',
-    localField: 'marking',
-    foreignField: 'markings',
-    projection: { measurement_details: 1 }
-  });
 
   const handleSubmit = (submittedValues: any) => {
     database?.collection('Invoices')
