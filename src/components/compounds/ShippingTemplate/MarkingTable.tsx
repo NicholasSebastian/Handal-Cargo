@@ -1,5 +1,5 @@
 import { BSON } from "realm-web";
-import { FC, useState, useReducer } from "react";
+import { FC, useState, useReducer, useMemo } from "react";
 import styled from "styled-components";
 import { Form, Table, InputNumber, Button, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
@@ -14,6 +14,7 @@ const cross = <CloseOutlined style={{ color:'red' }} />
 const MarkingTable: FC<IMarkingTableProps> = props => {
   const { fields, columns, value: markings, width } = props;
   const form = useFormInstance();
+  const fieldCount = Math.min(fields.filter(field => !field.disabled).length, 4);
 
   const [marking, setMarking] = useState<string>();
   const [quantity, setQuantity] = useState('0');
@@ -60,7 +61,7 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
   }
 
   return (
-    <Container columns={Math.min(columns.length, 4)}>
+    <Container columns={fieldCount}>
       <div>
         <SearchMarking 
           onChange={setMarking} />
@@ -75,7 +76,7 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
         </Button>
       </div>
       <div>
-        {fields.map(field => (
+        {fields.map(field => !field.disabled && (
           <InputNumber
             placeholder={field.label}
             value={otherState[field.key]}
@@ -176,7 +177,8 @@ interface MarkingField {
   label: string
   render: (value: any) => any
   parser: (value: any, record: Record<string, string>) => any
-  width?: number
+  width?: number,
+  disabled?: boolean
 }
 
 type DispatchArg = { key: string, value: any } | null;

@@ -47,7 +47,7 @@ const description: ReactNode = (
     <dd>
       <Timeline>
         <Item color="green">
-          18/02/2023 -&nbsp;
+          19/02/2023 -&nbsp;
           <a onClick={() => open(REPOSITORY_URL_V8)}>
             Version 8.0.0
           </a>

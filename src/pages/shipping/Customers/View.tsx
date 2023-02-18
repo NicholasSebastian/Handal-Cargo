@@ -1,14 +1,17 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
-import { Descriptions, Table } from "antd";
+import { Button, Descriptions, Table, Modal } from "antd";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import { formatCurrency } from "../../../utils";
+import CustomerHistory from "./History";
 
 const { Item } = Descriptions;
 
 const CustomersView: FC<IInjectedProps> = props => {
   const { values } = props;
+  const [historyPageOpen, setHistoryPageOpen] = useState(false);
+
   return (
     <ViewContainer>
       <Descriptions 
@@ -34,8 +37,6 @@ const CustomersView: FC<IInjectedProps> = props => {
         pagination={false}
         dataSource={values.markings}
         columns={[{ title: 'Markings' }]} />
-      {/* TODO: Customer History table that can be viewed optionally, to display all the past markings.
-        Includes an advanced search feature by Customer or by Markings. */}
       <Table bordered
         size="small"
         pagination={false}
@@ -47,6 +48,19 @@ const CustomersView: FC<IInjectedProps> = props => {
           { dataIndex: 'price', title: 'Harga', render: value => DEFAULT_SYMBOL + formatCurrency(value) },
           { dataIndex: 'user', title: 'User' }
         ]} />
+      <Button onClick={() => setHistoryPageOpen(true)}>
+        Lihat Riwayat Marking
+      </Button>
+      <Modal centered maskClosable
+        title="Riwayat Marking Customer"
+        visible={historyPageOpen}
+        onCancel={() => setHistoryPageOpen(false)}
+        footer={null}
+        width={1200}>
+        <CustomerHistory 
+          id={values._id} 
+          closePage={() => setHistoryPageOpen(false)} />
+      </Modal>
     </ViewContainer>
   );
 }
@@ -56,12 +70,14 @@ export default CustomersView;
 const ViewContainer = styled.div`
   width: calc(100% - 100px);
 
-  > *:nth-last-child(2) {
+  > *:nth-last-child(3) {
     margin-top: 10px;
     margin-bottom: 30px;
   }
 
-  > *:last-child {
-    padding-bottom: 70px;
+  > button:last-child {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    float: right;
   }
 `;

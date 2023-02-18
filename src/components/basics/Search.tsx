@@ -50,16 +50,19 @@ const Search: FC<ISearchProps> = props => {
         placeholder="Cari" 
         style={{ width: 250 }} 
         onSearch={val => {
-          switch (currentMode) {
-            case 'partial':
-              onSearch(new RegExp(val, 'i'));
-              break;
-            case 'beginning':
-              onSearch(new RegExp('^' + val, 'i'));
-              break;
-            case 'full':
-              onSearch(new RegExp('^' + val + '$', 'i'));
-              break;
+          if (val.length === 0) onSearch(undefined);
+          else {
+            switch (currentMode) {
+              case 'partial':
+                onSearch(new RegExp(val, 'i'));
+                break;
+              case 'beginning':
+                onSearch(new RegExp('^' + val, 'i'));
+                break;
+              case 'full':
+                onSearch(new RegExp('^' + val + '$', 'i'));
+                break;
+            }
           }
         }} />
     </Space>
@@ -69,7 +72,7 @@ const Search: FC<ISearchProps> = props => {
 export default Search;
 
 interface ISearchProps {
-  onSearch: (query: RegExp) => void
+  onSearch: (query: RegExp | undefined) => void
   columns?: Array<any>
   searchBy?: string
   setSearchBy?: (searchBy: string) => void

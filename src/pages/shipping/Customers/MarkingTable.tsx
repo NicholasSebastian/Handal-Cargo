@@ -5,7 +5,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import useDatabase from "../../../data/useDatabase";
 import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 
-const { useFormInstance } = Form; // https://ant.design/components/form#formuseforminstance
+const { useFormInstance } = Form;
 const { Item } = List;
 
 const MarkingTable: FC<ICustomComponentProps> = props => {

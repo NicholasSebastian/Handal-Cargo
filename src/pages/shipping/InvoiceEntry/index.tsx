@@ -34,14 +34,11 @@ const InvoiceEntry: FC = () => {
           title: "Belum Dibayar",
           render: (_, values) => {
             const unpaid = values.total - (values.payment_amount ?? 0);
-            return DEFAULT_SYMBOL + formatCurrency(unpaid);
+            return DEFAULT_SYMBOL + formatCurrency(Math.max(unpaid, 0));
           }
         }
       ]}
       viewItems={values => [
-        { key: "arrival_date", label: "Tanggal Tiba", render: value => dateToString(value) },
-        { key: "muat_date", label: "Tanggal Muat", render: value => dateToString(value) },
-        { key: "_id", label: "Kode Faktur", render: value => value?.toString() },
         ...((values == null) ? [] 
           // If 'container_number' is in the given values, then we'll assume its from a 'SeaFreight' entry.
           : ("container_number" in values) ? [
@@ -51,7 +48,10 @@ const InvoiceEntry: FC = () => {
             { key: "airwaybill_number", label: "Nomor Air Waybill", render: (value: any) => value?.toString() },
             { key: "item_code", label: "Kode Barang" }
           ]),
+        { key: "_id", label: "Kode Faktur", render: value => value?.toString() },
+        { key: "arrival_date", label: "Tanggal Tiba", render: value => dateToString(value) },
         { key: "marking", label: "Marking" },
+        { key: "muat_date", label: "Tanggal Muat", render: value => dateToString(value) },
         { key: "quantity", label: "Kuantitas" }
       ]}
       viewExtra={(values, close, refreshData) => {

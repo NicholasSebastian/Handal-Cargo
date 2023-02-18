@@ -40,7 +40,7 @@ export default BasicView;
 
 const Container = styled.div`
   width: calc(100% - 100px);
-  padding-bottom: 50px;
+  padding-bottom: 30px;
 `;
 
 interface IViewProps extends IInjectedProps {

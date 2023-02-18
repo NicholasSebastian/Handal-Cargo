@@ -71,7 +71,8 @@ const markingsStuff: IMarkingsStuff = {
       label: 'Volume Charge', 
       render: value => value && (DEFAULT_SYMBOL + value), 
       width: 115,
-      parser: (_, record) => (record.standardkg ? parseFloat(record.standardkg) : 0) - (record.hbkg ? parseFloat(record.hbkg) : 0)
+      parser: (_, record) => (record.standardkg ? parseFloat(record.standardkg) : 0) - (record.hbkg ? parseFloat(record.hbkg) : 0),
+      disabled: true
     }
   ],
   MarkingTableDetails: () => (

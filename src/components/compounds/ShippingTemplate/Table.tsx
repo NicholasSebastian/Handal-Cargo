@@ -7,7 +7,10 @@ import { IData } from "../../abstractions/withTemplateHandling";
 import useDatabase from "../../../data/useDatabase";
 import { markingAggregation, aggregationLookup } from "./marking-aggregation";
 
-// TODO: Customer History.
+// TODO: Some columns aren't searchable, so might as well have the 'Search' component accept columnsForSearch props.
+//       That way we can manually exclude columns such as 'Tanggal Tiba', etc.
+
+// TODO: Fix the whole marking-aggregation bullshit.
 // TODO: Print formats.
 // TODO: Table Pagination.
 

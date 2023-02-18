@@ -188,6 +188,7 @@ const EntryForm = styled(Form)`
   > div:first-child {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    margin-top: 10px;
   }
 
   > div:last-child {
