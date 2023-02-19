@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, createContext, useContext, ComponentType, useMemo } from 'react';
+import { CSSProperties, ReactNode, ComponentType, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
@@ -13,8 +13,6 @@ import Search, { columnsToOptions } from '../basics/Search';
 import { Subtract } from '../../utils';
 
 const { Text } = Typography;
-const ModalContext = createContext<() => void>(() => {});
-const useCloseModal = () => useContext(ModalContext);
 
 const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
   const { 
@@ -97,30 +95,28 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
         footer={null}
         width={modalWidth ?? 650} 
         bodyStyle={ModalStyles}>
-        <ModalContext.Provider value={() => setModal(null)}>
-          {(modal != null) && (
-            (modal.mode === 'view') ? (
-              <HandledView
-                key={Date.now()}
-                id={modal.id}
-                collectionName={collectionName}
-                view={view ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
-            ) : (
-              <HandledForm
-                key={Date.now()}
-                id={('id' in modal) ? modal.id : undefined}
-                collectionName={collectionName}
-                handleAdd={handleAdd}
-                handleEdit={handleEdit} />
-            )
-          )}
-        </ModalContext.Provider>
+        {(modal != null) && (
+          (modal.mode === 'view') ? (
+            <HandledView
+              key={Date.now()}
+              id={modal.id}
+              collectionName={collectionName}
+              view={view ?? columns.map((item: any) => ({ key: item.dataIndex, label: item.title }))} />
+          ) : (
+            <HandledForm
+              key={Date.now()}
+              id={('id' in modal) ? modal.id : undefined}
+              collectionName={collectionName}
+              handleAdd={handleAdd}
+              handleEdit={handleEdit} />
+          )
+        )}
       </Modal>
     </Container>
   );
 });
 
-export { ModalStyles, useCloseModal, enableIndicator };
+export { ModalStyles, enableIndicator };
 export type { HandledViewProps, HandledFormProps, ViewPropType, FormPropType };
 export default TableTemplate;
 

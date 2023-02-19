@@ -1,5 +1,5 @@
 import { BSON } from "realm-web";
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { Button, Popconfirm, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import useDatabase from "../../../data/useDatabase";
@@ -12,6 +12,7 @@ const Invoice: FC<ITableProps> = props => {
   const { title, columns, viewItems, filter, printPreset } = props;
   const database = useDatabase();
   const [currencySymbols, setCurrencySymbols] = useState<Record<string, string>>();
+  const singletons = useRef(database?.collection('Singletons'));
 
   useEffect(() => {
     database?.collection('Currencies')
@@ -68,7 +69,7 @@ const Invoice: FC<ITableProps> = props => {
       viewItems={viewItems(currencyFormatter)}
       viewExtra={values => (
         <Button 
-          onClick={() => print(values, printPreset)} 
+          onClick={() => print(values, printPreset, singletons.current)} 
           style={{ marginTop: '-10px', marginBottom: '10px' }}>
           Print Ulang Faktur
         </Button>

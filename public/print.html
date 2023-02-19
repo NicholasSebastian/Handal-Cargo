@@ -4,9 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Print Preview</title>
+    <style>
+      #spinner {
+        width: 30px;
+        position: fixed;
+        top: calc(50vh - 15px);
+        left: calc(50vw - 15px);
+        animation: rotate 1.5s linear infinite;
+      }
+      @keyframes rotate { 
+        to { 
+          transform: rotate(360deg); 
+        } 
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <img id="spinner" src="loading.png" />
     <div id="root"></div>
   </body>
   <script>
@@ -14,38 +29,167 @@
     const { listen } = tauri.event;
     const { getCurrent } = tauri.window;
 
-    function appendElement(value, x, y) {
+    function writeText(value, x, y, style = undefined) {
       const el = document.createElement('div');
       document.getElementById('root').appendChild(el);
-      el.setAttribute('style', `position: fixed; top: ${y}px; left: ${x}px; font-size: 12px;`);
+      el.setAttribute('style', `
+        position: fixed; 
+        top: ${y}px; 
+        left: ${x}px; 
+        ${style ?? 'font-size: 11px;'}
+      `);
       el.innerText = value;
+    }
+
+    function drawRect(x, y, width, height, colour = "#004D52") {
+      const el = document.createElement('div');
+      document.getElementById('root').appendChild(el);
+      el.setAttribute('style', `
+        position: fixed; 
+        top: ${y}px; 
+        left: ${x}px; 
+        width: ${width}px; 
+        height: ${height}px; 
+        background-color: ${colour}; 
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact; 
+      `);
+    }
+
+    function setLandscape() {
+      const style = document.createElement('style');
+      style.type = 'text/css';
+      style.media = 'print';
+
+      const css = "@page { size: landscape; }";
+      if (style.styleSheet) 
+        style.styleSheet.cssText = css;
+      else 
+        style.appendChild(document.createTextNode(css));
+
+      const head = document.head || document.getElementsByTagName('head')[0];
+      head.appendChild(style);
+    }
+
+    function removeSpinner() {
+      const spinner = document.getElementById('spinner');
+      spinner.parentNode.removeChild(spinner);
+    }
+
+    function formatDate(date) {
+      return new Date(date).toLocaleDateString("id-ID", { day: '2-digit', month: 'short', year: "numeric" });
+    }
+
+    function commaSeparate(value) {
+      return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0;
     }
 
     listen('data', event => {
       const data = JSON.parse(event.payload);
+      removeSpinner();
       console.log(data);
 
       // Format and display the data properly for printing.
       switch (data.type) {
         case 'sf-surat-jalan':
-          appendElement(data.marking, 100, 100);
-          appendElement(data.date, 100, 120);
-          appendElement(data.container_number, 100, 140);
+          writeText(`${data.measurement} ${data.unit}`, 60, 160);
+          writeText("Telp: " + data.phone_number, 110, 60);
+          writeText("Hp: " + data.home_number, 110, 75);
+          writeText("Sea Freight: " + data.route, 160, 160);
+          writeText("Marking: " + data.marking, 160, 175);
+          writeText("Nomor Container: " + data.container_number, 160, 190);
+          writeText(data.customer, 440, 65);
+          writeText(data.address, 440, 80);
+          writeText(data.city, 440, 95);
           break;
         
         case 'sf-surat-jalan-daerah':
-          // TODO
+          writeText(`${data.measurement} ${data.unit}`, 60, 160);
+          writeText("Sip. " + data.company_data.name, 110, 45);
+          writeText(data.company_data.address, 110, 60);
+          writeText(data.company_data.phone_number, 110, 75);
+          writeText("Sea Freight: " + data.route, 160, 160);
+          writeText("Marking: " + data.marking, 160, 175);
+          writeText("Nomor Container: " + data.container_number, 160, 190);
+          writeText("Untuk dikirim ke: ", 160, 210);
+          writeText(data.customer, 160, 225);
+          writeText(data.address, 160, 240);
+          writeText(data.city, 160, 255);
+          writeText("Telp: " + data.phone_number, 160, 270);
+          writeText("HP: " + data.home_number, 160, 285);
+          writeText("Telp: " + data.phone_number, 440, 110);
           break;
         
         case 'sf-faktur':
-          // TODO
+          writeText("Invoice", 285, 40, "font-size: 18px; font-weight: 700; text-decoration: underline;");
+          writeText("No. Faktur: " + data._id, 20, 20);
+          writeText(data.company_data.via_transfer, 440, 20);
+          writeText(data.customer, 140, 100);
+          writeText("di", 140, 115);
+          writeText(data.city, 140, 130);
+          writeText(`${data.company_data.city}, ${formatDate(data.date)}`, 430, 100);
+          writeText(`Shipper: ${data.carrier ?? '-'}`, 430, 115);
+          writeText(`${data.measurement} ${data.measurement_option.substr(-3, 2)}`, 65, 200);
+          writeText(`Sea Freight ${data.route} (${data.quantity} φ) ${data.product_detail}`, 145, 200);
+          writeText(`Rp. ${commaSeparate(data.price * data.exchange_rate)}`, 430, 200);
+          writeText(`Rp. ${commaSeparate(data.total)}`, 530, 200);
+          writeText("Nomor Container: " + data.container_number, 145, 225);
+          writeText("Marking: " + data.marking, 145, 280);
+          writeText("TOTAL", 450, 280, "font-size: 11px; font-weight: 600;");
+          writeText(`Rp. ${commaSeparate(data.total)}`, 530, 280);
           break;
         
         case 'sf-rugi-laba':
-          // TODO
+          setLandscape();
+          writeText("Laporan Rugi Laba", 380, 20, "font-size: 18px; font-weight: 700; font-style: italic; color: #004D52;");
+          writeText("Handal Cargo", 400, 40, "font-size: 18px; font-weight: 700; color: #004D52;");
+          drawRect(20, 80, 850, 25);
+          drawRect(20, 82, 850, 1, "#fff");
+          drawRect(20, 102, 850, 1, "#fff");
+          writeText("Marking", 20, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Qty", 120, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("m³/kg", 160, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Harga", 220, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Biaya Tambahan", 300, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Ongkos Kirim", 400, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Diskon", 500, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Biaya Lain-Lain", 580, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Total", 680, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Keterangan", 780, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Tgl Tiba: " + formatDate(data.arrival_date), 20, 108, "color: #f00; font-size: 11px; font-weight: 600;");
+          writeText("Nomor Container: " + data.container_number, 30, 122, "color: #f00; font-size: 11px; font-weight: 600;");
+          writeText("Total Biaya: <some number here>", 550, 122, "color: #f00; font-size: 11px; font-weight: 600;");
+          for (let i = 0; i < data.invoices.length; i++) {
+            const cur = data.invoices[i];
+            writeText(cur.marking, 20, 140 + (20 * i));
+            writeText(cur.quantity, 120, 140 + (20 * i));
+            writeText(cur.measurement, 160, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.price * cur.exchange_rate), 220, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.additional_fee * cur.exchange_rate), 300, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.shipment_fee * cur.exchange_rate), 400, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.discount), 500, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.other_fee), 580, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.total), 680, 140 + (20 * i));
+            cur.description && writeText(cur.description, 780, 140 + (20 * i));
+          }
+          const offsetY = 140 + data.invoices.length * 20;
+          const totalMeasurement = data.invoices.reduce((acc, val) => acc + val.measurement, 0);
+          const total = data.invoices.reduce((acc, val) => acc + val.total, 0);
+          drawRect(245, offsetY, 625, 1);
+          writeText(commaSeparate(totalMeasurement), 160, offsetY + 6);
+          writeText("Margin", 245, offsetY + 6, "font-size: 11px; font-style: italic; color: #f00;");
+          writeText("<some number here>", 300, offsetY + 6);
+          writeText("Sub Total", 605, offsetY + 6, "font-size: 11px; font-style: italic; color: #f00;");
+          writeText("Rp." + commaSeparate(total), 680, offsetY + 6);
+          drawRect(20, offsetY + 22, 850, 1);
+          writeText("Margin", 245, offsetY + 28, "font-size: 11px; font-style: italic; font-weight: 700; color: #f00;");
+          writeText("<some number here>", 300, offsetY + 28, "font-size: 11px; font-weight: 700;");
+          writeText("Grand Total", 605, offsetY + 28, "font-size: 11px; font-style: italic; font-weight: 700; color: #f00;");
+          writeText("Rp." + commaSeparate(total), 680, offsetY + 28, "font-size: 11px; font-weight: 700;");
           break;
 
         case 'ac-surat-jalan':
+          // TODO
           break;
         
         case 'ac-surat-jalan-daerah':

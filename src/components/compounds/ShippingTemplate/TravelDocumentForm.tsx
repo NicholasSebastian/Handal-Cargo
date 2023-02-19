@@ -3,7 +3,6 @@ import { Button, message } from "antd";
 import useDatabase from "../../../data/useDatabase";
 import getFormInjector from "../../abstractions/getFormInjector";
 import { IInjectedProps } from "../../abstractions/withInitialData";
-import { useCloseModal } from "../TableTemplate";
 import BasicForm, { FormItem } from "../../basics/BasicForm";
 import print, { Presets } from "../../../print";
 import { momentsToDates } from "../../../utils"; 
@@ -16,10 +15,10 @@ const injectAdditionalValues = getFormInjector({
 });
 
 const TravelDocumentForm: FC<IFormProps> = props => {
-  const { items, values, printPreset, printDaerahPreset } = props;
+  const { items, values, printPreset, printDaerahPreset, closeModal } = props;
   const database = useDatabase();
-  const closeModal = useCloseModal();
   const isDaerahType = useRef<boolean>();
+  const singletons = useRef(database?.collection('Singletons'));
 
   const handleSubmit = (submittedValues: any) => {
     database?.collection('TravelPermits')
@@ -33,7 +32,7 @@ const TravelDocumentForm: FC<IFormProps> = props => {
 
         // Proceed to the printing process.
         const preset = isDaerahType.current ? printDaerahPreset : printPreset;
-        print(submittedValues, preset);
+        print(submittedValues, preset, singletons.current);
       })
       .catch(() => message.error("Error terjadi. Data gagal disimpan."));
   }
@@ -67,6 +66,7 @@ export default TravelDocumentForm;
 
 interface IFormProps extends IInjectedProps {
   items: Array<FormItem>
+  closeModal: () => void
   printPreset: Presets
   printDaerahPreset: Presets
 }

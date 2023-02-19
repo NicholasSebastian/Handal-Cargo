@@ -84,6 +84,7 @@ const CompanySetup: FC = () => {
   );
 }
 
+export { query };
 export default CompanySetup;
 
 const Container = styled.div`

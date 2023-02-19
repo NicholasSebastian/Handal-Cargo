@@ -1,5 +1,5 @@
 import { BSON } from "realm-web";
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { Button, Popconfirm, Space, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import useDatabase from "../../../data/useDatabase";
@@ -10,6 +10,7 @@ import print, { Presets } from "../../../print";
 const TravelDocument: FC<ITableProps> = props => {
   const { title, columns, viewItems, filter, printPreset, printDaerahPreset } = props;
   const database = useDatabase();
+  const singletons = useRef(database?.collection('Singletons'));
 
   const handleDelete = (e: React.MouseEvent | undefined, id: BSON.ObjectId, refreshData: () => void) => {
     e?.stopPropagation(); 
@@ -49,10 +50,10 @@ const TravelDocument: FC<ITableProps> = props => {
       viewItems={viewItems}
       viewExtra={values => (
         <Space style={{ marginTop: '-10px', marginBottom: '10px' }}>
-          <Button onClick={() => print(values, printPreset)}>
+          <Button onClick={() => print(values, printPreset, singletons.current)}>
             Print Ulang Surat Jalan
           </Button>
-          <Button onClick={() => print(values, printDaerahPreset)}>
+          <Button onClick={() => print(values, printDaerahPreset, singletons.current)}>
             Print Ulang Surat Jalan Daerah
           </Button>
         </Space>

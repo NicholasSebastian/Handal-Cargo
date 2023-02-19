@@ -8,8 +8,8 @@ import { IData } from "../../abstractions/withTemplateHandling";
 import BaseTableTemplate, { FormPropType, ViewPropType } from "../TableTemplate";
 import { markingAggregation, aggregationLookup } from "./marking-aggregation";
 
-// TODO: Fix the whole marking-aggregation bullshit.
 // TODO: Print formats.
+// TODO: Fix the whole marking-aggregation bullshit.
 // TODO: Table Pagination and Fixed Table Headers.
 
 const TableTemplate: FC<ITemplateProps> = props => {

@@ -65,7 +65,7 @@ const CustomerHistory: FC<IPageProps> = props => {
           { dataIndex: 'measurement', title: 'Ukuran', render: (value, { measurement_option }) => `${value} ${measurement_option}`, width: 120 },
           { dataIndex: 'price', title: 'Harga', render: formatForeignCurrency, width: 130 },
           { dataIndex: 'volume_charge', title: 'Harga Cas Volume', render: formatForeignCurrency, width: 135 },
-          { dataIndex: 'shipment_fee', title: 'Ongkir Kirim', render: formatForeignCurrency, width: 130 },
+          { dataIndex: 'shipment_fee', title: 'Ongkos Kirim', render: formatForeignCurrency, width: 130 },
           { dataIndex: 'additional_fee', title: 'Biaya Tambahan', render: formatForeignCurrency, width: 130 },
           { dataIndex: 'other_fee', title: 'Biaya Lain-Lain', render: formatLocalCurrency, width: 130 },
           { dataIndex: 'discount', title: 'Diskon', render: formatLocalCurrency, width: 130 },
