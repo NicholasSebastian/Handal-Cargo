@@ -1,10 +1,10 @@
 import { FC, Fragment, useRef } from "react";
 import { Button, message } from "antd";
 import useDatabase from "../../../data/useDatabase";
+import getFormInjector from "../../abstractions/getFormInjector";
+import { IInjectedProps } from "../../abstractions/withInitialData";
 import { useCloseModal } from "../TableTemplate";
 import BasicForm, { FormItem } from "../../basics/BasicForm";
-import getFormInjector from "../../abstractions/getFormInjector";
-import { IFormProps as BaseFormProps } from "./View";
 import print, { Presets } from "../../../print";
 import { momentsToDates } from "../../../utils"; 
 
@@ -16,7 +16,7 @@ const injectAdditionalValues = getFormInjector({
 });
 
 const TravelDocumentForm: FC<IFormProps> = props => {
-  const { items, values, printPreset, printDaerahPreset, setCurrentPage } = props;
+  const { items, values, printPreset, printDaerahPreset } = props;
   const database = useDatabase();
   const closeModal = useCloseModal();
   const isDaerahType = useRef<boolean>();
@@ -47,11 +47,6 @@ const TravelDocumentForm: FC<IFormProps> = props => {
       customButton={
         <Fragment>
           <Button 
-            htmlType="button"
-            onClick={() => setCurrentPage('default')}>
-            Kembali
-          </Button>
-          <Button 
             type='primary'
             htmlType="submit"
             onClick={() => { isDaerahType.current = false }}>
@@ -70,7 +65,7 @@ const TravelDocumentForm: FC<IFormProps> = props => {
 
 export default TravelDocumentForm;
 
-interface IFormProps extends BaseFormProps {
+interface IFormProps extends IInjectedProps {
   items: Array<FormItem>
   printPreset: Presets
   printDaerahPreset: Presets

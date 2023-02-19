@@ -2,16 +2,14 @@ import { BSON } from "realm-web";
 import { FC, useState, useEffect } from "react";
 import { Button, Popconfirm, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
-import { LeftOutlined } from "@ant-design/icons";
 import useDatabase from "../../../data/useDatabase";
 import { IViewItem } from "../../basics/BasicView";
 import TableTemplate from "../ViewTableTemplate";
-import { IPageProps } from "./Table";
 import print, { Presets } from "../../../print";
 import { formatCurrency } from "../../../utils";
 
 const Invoice: FC<ITableProps> = props => {
-  const { title, columns, viewItems, filter, printPreset, goBack } = props;
+  const { title, columns, viewItems, filter, printPreset } = props;
   const database = useDatabase();
   const [currencySymbols, setCurrencySymbols] = useState<Record<string, string>>();
 
@@ -70,24 +68,17 @@ const Invoice: FC<ITableProps> = props => {
       viewExtra={values => (
         <Button 
           onClick={() => print(values, printPreset)} 
-          style={{ marginTop: '-40px', marginBottom: '10px' }}>
+          style={{ marginTop: '-10px', marginBottom: '10px' }}>
           Print Ulang Faktur
         </Button>
-      )}
-      extra={
-        <Button 
-          icon={<LeftOutlined />} 
-          onClick={goBack}>
-          Kembali
-        </Button>
-      } />
+      )} />
   );
 }
 
 export type { CurrencyFormatter };
 export default Invoice;
 
-interface ITableProps extends IPageProps {
+interface ITableProps {
   title: string
   columns: (currencyFmt: CurrencyFormatter) => ColumnsType<any>
   viewItems: (currencyFmt: CurrencyFormatter) => Array<IViewItem>

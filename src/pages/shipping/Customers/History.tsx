@@ -1,7 +1,7 @@
 import { BSON } from "realm-web";
 import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
-import { Button, Table } from "antd";
+import { Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import useDatabase from "../../../data/useDatabase";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
@@ -38,7 +38,7 @@ const columns: ColumnsType<any> = [
 ];
 
 const CustomerHistory: FC<IPageProps> = props => {
-  const { id, closePage } = props;
+  const { id } = props;
   const database = useDatabase();
 
   const [data, setData] = useState();
@@ -56,14 +56,11 @@ const CustomerHistory: FC<IPageProps> = props => {
 
   return (
     <HistoryContainer>
-      <div>
-        <Button onClick={closePage}>Kembali</Button>
-        <Search
-          onSearch={setSearch}
-          columns={columns}
-          searchBy={searchKey}
-          setSearchBy={setSearchKey} />
-      </div>
+      <Search
+        onSearch={setSearch}
+        columns={columns}
+        searchBy={searchKey}
+        setSearchBy={setSearchKey} />
       <Table bordered
         size="small"
         pagination={false}
@@ -82,12 +79,10 @@ const HistoryContainer = styled.div`
   
   > div:first-child {
     margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
+    float: right;
   }
 `;
 
 interface IPageProps {
   id: BSON.ObjectId
-  closePage: () => void
 }

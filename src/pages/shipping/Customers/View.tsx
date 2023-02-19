@@ -57,9 +57,7 @@ const CustomersView: FC<IInjectedProps> = props => {
         onCancel={() => setHistoryPageOpen(false)}
         footer={null}
         width={1200}>
-        <CustomerHistory 
-          id={values._id} 
-          closePage={() => setHistoryPageOpen(false)} />
+        <CustomerHistory id={values._id} />
       </Modal>
     </ViewContainer>
   );

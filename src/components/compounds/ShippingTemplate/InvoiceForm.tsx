@@ -1,10 +1,10 @@
 import { FC, Fragment } from "react";
 import { Button, message } from "antd";
 import useDatabase from "../../../data/useDatabase";
+import getFormInjector, { injectUser } from "../../abstractions/getFormInjector";
+import { IInjectedProps } from "../../abstractions/withInitialData";
 import { useCloseModal } from "../TableTemplate";
 import BasicForm, { FormItem } from "../../basics/BasicForm";
-import getFormInjector, { injectUser } from "../../abstractions/getFormInjector";
-import { IFormProps as BaseFormProps } from "./View";
 import print, { Presets } from "../../../print";
 import { momentsToDates } from "../../../utils";
 
@@ -16,7 +16,7 @@ const injectAdditionalValues = getFormInjector({
 });
 
 const InvoiceForm: FC<IFormProps> = props => {
-  const { items, values, printPreset, setCurrentPage } = props;
+  const { items, values, printPreset } = props;
   const database = useDatabase();
   const closeModal = useCloseModal();
 
@@ -41,25 +41,18 @@ const InvoiceForm: FC<IFormProps> = props => {
       labelSpan={11}
       items={[injectUser, injectAdditionalValues, ...items]}
       customButton={
-        <Fragment>
-          <Button
-            htmlType="button"
-            onClick={() => setCurrentPage('default')}>
-            Kembali
-          </Button>
-          <Button 
-            type='primary'
-            htmlType="submit">
-            Print Faktur
-          </Button>
-        </Fragment>
+        <Button 
+          type='primary'
+          htmlType="submit">
+          Print Faktur
+        </Button>
       } />
   );
 }
 
 export default InvoiceForm;
 
-interface IFormProps extends BaseFormProps {
+interface IFormProps extends IInjectedProps {
   items: Array<FormItem>
   printPreset: Presets
 }

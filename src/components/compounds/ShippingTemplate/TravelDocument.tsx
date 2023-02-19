@@ -2,15 +2,13 @@ import { BSON } from "realm-web";
 import { FC } from "react";
 import { Button, Popconfirm, Space, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
-import { LeftOutlined } from "@ant-design/icons";
 import useDatabase from "../../../data/useDatabase";
 import { IViewItem } from "../../basics/BasicView";
 import TableTemplate from "../ViewTableTemplate";
-import { IPageProps } from "./Table";
 import print, { Presets } from "../../../print";
 
 const TravelDocument: FC<ITableProps> = props => {
-  const { title, columns, viewItems, filter, printPreset, printDaerahPreset, goBack } = props;
+  const { title, columns, viewItems, filter, printPreset, printDaerahPreset } = props;
   const database = useDatabase();
 
   const handleDelete = (e: React.MouseEvent | undefined, id: BSON.ObjectId, refreshData: () => void) => {
@@ -49,7 +47,7 @@ const TravelDocument: FC<ITableProps> = props => {
       )}
       viewItems={viewItems}
       viewExtra={values => (
-        <Space style={{ marginTop: '-30px', marginBottom: '10px' }}>
+        <Space style={{ marginTop: '-10px', marginBottom: '10px' }}>
           <Button onClick={() => print(values, printPreset)}>
             Print Ulang Surat Jalan
           </Button>
@@ -57,20 +55,13 @@ const TravelDocument: FC<ITableProps> = props => {
             Print Ulang Surat Jalan Daerah
           </Button>
         </Space>
-      )}
-      extra={
-        <Button 
-          icon={<LeftOutlined />} 
-          onClick={goBack}>
-          Kembali
-        </Button>
-      } />
+      )} />
   );
 }
 
 export default TravelDocument;
 
-interface ITableProps extends IPageProps {
+interface ITableProps {
   title: string
   columns: ColumnsType<any>
   viewItems: Array<IViewItem>
