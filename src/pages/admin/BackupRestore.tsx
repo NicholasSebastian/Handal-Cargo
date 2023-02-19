@@ -56,7 +56,7 @@ const BackupRestore: FC = () => {
     .then(results => save(options)
       .then(filepath => ({ filepath, data: JSON.stringify(results) }))
     )
-    .then(response => writeFile({ path: response.filepath, contents: response.data }))
+    .then(response => writeFile({ path: response.filepath!, contents: response.data }))
 
     // User feedback.
     .then(() => message.success("Backup data berhasil disimpan."))

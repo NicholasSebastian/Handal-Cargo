@@ -8,8 +8,8 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "handalcargo",
-    "version": "0.1.0"
+    "productName": "Handal Cargo Management",
+    "version": "8.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -31,8 +31,8 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
+      "category": "Business",
+      "copyright": "Handal Cargo",
       "deb": {
         "depends": []
       },
@@ -44,8 +44,8 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
-      "longDescription": "",
+      "identifier": "com.nicholas.handalcargo",
+      "longDescription": "Handal Cargo Integrated Cargo Management System",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
