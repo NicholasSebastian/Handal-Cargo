@@ -11,6 +11,7 @@ const InvoiceEntry: FC = () => {
   return (
     <TableTemplate 
       collectionName="Invoices"
+      excludeFromSearch={['muat_date', 'arrival_date', 'total', 'payment_amount']}
       width={950}
       modalWidth={700}
       query={(collectionName, search, searchBy) => {

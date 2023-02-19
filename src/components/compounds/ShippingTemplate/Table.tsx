@@ -8,12 +8,9 @@ import { IData } from "../../abstractions/withTemplateHandling";
 import BaseTableTemplate, { FormPropType, ViewPropType } from "../TableTemplate";
 import { markingAggregation, aggregationLookup } from "./marking-aggregation";
 
-// TODO: Some columns aren't searchable, so might as well have the 'Search' component accept columnsForSearch props.
-//       That way we can manually exclude columns such as 'Tanggal Tiba', etc.
-
 // TODO: Fix the whole marking-aggregation bullshit.
 // TODO: Print formats.
-// TODO: Table Pagination.
+// TODO: Table Pagination and Fixed Table Headers.
 
 const TableTemplate: FC<ITemplateProps> = props => {
   const { collectionName, searchBy, columns, View, Form, TravelDocument, Invoice } = props;
@@ -36,6 +33,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
       <BaseTableTemplate
         collectionName={collectionName}
         searchBy={searchBy}
+        excludeFromSearch={['arrival_date']}
         width={1050}
         modalWidth={850}
         itemQuery={(collectionName, id) => database?.collection(collectionName)

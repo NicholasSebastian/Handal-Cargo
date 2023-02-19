@@ -17,26 +17,6 @@ function formatForeignCurrency(value: any, record: Record<string, any>) {
   return DEFAULT_SYMBOL + formatCurrency((value * record.exchange_rate) || 0);
 }
 
-const columns: ColumnsType<any> = [
-  { dataIndex: 'muat_date', title: 'Tanggal Muat', render: dateToString, width: 190 },
-  { dataIndex: 'arrival_date', title: 'Tanggal Tiba', render: dateToString, width: 190 },
-  { dataIndex: 'payment_id', title: 'Kode Pembayaran', render: value => value?.toString() ?? 'Belum Dibayar', width: 210 },
-  { dataIndex: 'container_number', title: 'Nomor Container', render: value => value ?? 'N/A', width: 140 },
-  { dataIndex: 'airwaybill_number', title: 'Nomor Air Waybill', render: value => value ?? 'N/A', width: 140 },
-  { dataIndex: 'item_code', title: 'Kode Barang', render: value => value ?? 'N/A', width: 140 },
-  { dataIndex: 'marking', title: 'Marking', width: 80 },
-  { dataIndex: 'quantity', title: 'Kuantitas', width: 80 },
-  { dataIndex: 'measurement', title: 'Ukuran', render: (value, { measurement_option }) => `${value} ${measurement_option}`, width: 120 },
-  { dataIndex: 'price', title: 'Harga', render: formatForeignCurrency, width: 130 },
-  { dataIndex: 'volume_charge', title: 'Harga Cas Volume', render: formatForeignCurrency, width: 135 },
-  { dataIndex: 'shipment_fee', title: 'Ongkir Kirim', render: formatForeignCurrency, width: 130 },
-  { dataIndex: 'additional_fee', title: 'Biaya Tambahan', render: formatForeignCurrency, width: 130 },
-  { dataIndex: 'other_fee', title: 'Biaya Lain-Lain', render: formatLocalCurrency, width: 130 },
-  { dataIndex: 'discount', title: 'Diskon', render: formatLocalCurrency, width: 130 },
-  { dataIndex: 'total', title: 'Total', render: formatLocalCurrency, width: 130 },
-  { dataIndex: 'description', title: 'Keterangan' }
-];
-
 const CustomerHistory: FC<IPageProps> = props => {
   const { id } = props;
   const database = useDatabase();
@@ -58,7 +38,13 @@ const CustomerHistory: FC<IPageProps> = props => {
     <HistoryContainer>
       <Search
         onSearch={setSearch}
-        columns={columns}
+        searchOptions={[
+          { key: 'marking', label: 'Marking' },
+          { key: 'container_number', label: 'Nomor Container' },
+          { key: 'airwaybill_number', label: 'Nomor Air Waybill' },
+          { key: 'item_code', label: 'Kode Barang' },
+          { key: 'description', label: 'Keterangan' }
+        ]}
         searchBy={searchKey}
         setSearchBy={setSearchKey} />
       <Table bordered
@@ -67,7 +53,25 @@ const CustomerHistory: FC<IPageProps> = props => {
         scroll={{ x: 2400 }}
         dataSource={data}
         loading={loading}
-        columns={columns} />
+        columns={[
+          { dataIndex: 'muat_date', title: 'Tanggal Muat', render: dateToString, width: 190 },
+          { dataIndex: 'arrival_date', title: 'Tanggal Tiba', render: dateToString, width: 190 },
+          { dataIndex: 'payment_id', title: 'Kode Pembayaran', render: value => value?.toString() ?? 'Belum Dibayar', width: 210 },
+          { dataIndex: 'container_number', title: 'Nomor Container', render: value => value ?? 'N/A', width: 140 },
+          { dataIndex: 'airwaybill_number', title: 'Nomor Air Waybill', render: value => value ?? 'N/A', width: 140 },
+          { dataIndex: 'item_code', title: 'Kode Barang', render: value => value ?? 'N/A', width: 140 },
+          { dataIndex: 'marking', title: 'Marking', width: 80 },
+          { dataIndex: 'quantity', title: 'Kuantitas', width: 80 },
+          { dataIndex: 'measurement', title: 'Ukuran', render: (value, { measurement_option }) => `${value} ${measurement_option}`, width: 120 },
+          { dataIndex: 'price', title: 'Harga', render: formatForeignCurrency, width: 130 },
+          { dataIndex: 'volume_charge', title: 'Harga Cas Volume', render: formatForeignCurrency, width: 135 },
+          { dataIndex: 'shipment_fee', title: 'Ongkir Kirim', render: formatForeignCurrency, width: 130 },
+          { dataIndex: 'additional_fee', title: 'Biaya Tambahan', render: formatForeignCurrency, width: 130 },
+          { dataIndex: 'other_fee', title: 'Biaya Lain-Lain', render: formatLocalCurrency, width: 130 },
+          { dataIndex: 'discount', title: 'Diskon', render: formatLocalCurrency, width: 130 },
+          { dataIndex: 'total', title: 'Total', render: formatLocalCurrency, width: 130 },
+          { dataIndex: 'description', title: 'Keterangan' }
+        ]} />
     </HistoryContainer>
   );
 }

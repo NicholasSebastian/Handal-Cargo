@@ -7,6 +7,7 @@ const Staff: FC = () => {
     <TableTemplate 
       collectionName="Staff"
       searchBy="name"
+      excludeFromSearch={['status']}
       modalWidth={700}
       columns={[
         { dataIndex: 'name', title: 'Nama' },

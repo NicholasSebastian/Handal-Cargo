@@ -11,6 +11,7 @@ const Customers: FC = () => {
     <TableTemplate 
       collectionName="Customers"
       searchBy="name"
+      excludeFromSearch={['status']}
       modalWidth={700}
       query={(collectionName, search, searchBy) => {
         if (!search) 

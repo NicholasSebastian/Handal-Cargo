@@ -45,6 +45,7 @@ const Invoice: FC<ITableProps> = props => {
     <TableTemplate
       title={title}
       collectionName='Invoices'
+      excludeFromSearch={['quantity', 'price']}
       query={(collectionName, search, searchBy) => {
         if (!search) 
           return database?.collection(collectionName).find(filter);

@@ -7,6 +7,10 @@ const { Search: AntSearch } = Input;
 
 // Creates a component pertaining a search bar with advanced features.
 
+function columnsToOptions(columns: any): SearchOptions {
+  return columns.map((column: any) => ({ key: column.dataIndex, label: column.title }));
+}
+
 const modes: Array<SegmentedLabeledOption> = [
   { value: 'partial', icon: (   // Partial Match
     <Tooltip overlay="Match Sebagian">
@@ -26,20 +30,20 @@ const modes: Array<SegmentedLabeledOption> = [
 ];
 
 const Search: FC<ISearchProps> = props => {
-  const { onSearch, searchBy, setSearchBy, columns } = props;
+  const { onSearch, searchBy, setSearchBy, searchOptions } = props;
   const [currentMode, setCurrentMode] = useState(modes[0].value);
   
   return (
     <Space>
-      {(columns && searchBy && setSearchBy) && (
+      {(searchOptions && searchBy && setSearchBy) && (
         <Select 
           defaultValue={searchBy}
-          options={columns
-            .filter(column => column.dataIndex)
-            .map(column => ({ 
-              key: column.dataIndex, 
-              value: column.dataIndex, 
-              label: `Search by ${column.title}` 
+          options={searchOptions
+            .filter(searchOption => searchOption.key)
+            .map(searchOption => ({ 
+              key: searchOption.key, 
+              value: searchOption.key, 
+              label: `Search by ${searchOption.label}` 
             }))
           }
           onChange={value => setSearchBy(value)}
@@ -69,11 +73,18 @@ const Search: FC<ISearchProps> = props => {
   );
 }
 
+export type SearchOptions = Array<SearchOption>;
+export { columnsToOptions };
 export default Search;
 
 interface ISearchProps {
   onSearch: (query: RegExp | undefined) => void
-  columns?: Array<any>
+  searchOptions?: Array<SearchOption>
   searchBy?: string
   setSearchBy?: (searchBy: string) => void
+}
+
+interface SearchOption {
+  key: string
+  label: string
 }

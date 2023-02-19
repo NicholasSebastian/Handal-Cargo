@@ -26,6 +26,7 @@ const TravelDocument: FC<ITableProps> = props => {
     <TableTemplate 
       title={title}
       collectionName='TravelPermits'
+      excludeFromSearch={['quantity']}
       query={(collectionName, search, searchBy) => {
         if (!search) 
           return database?.collection(collectionName).find(filter);

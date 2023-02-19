@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useState, useMemo } from "react";
 import styled from "styled-components";
 import { Table, Modal } from "antd";
 import { ColumnsType } from "antd/lib/table";
@@ -6,13 +6,14 @@ import useRoute from "../../data/useRoute";
 import useDataFetching, { Query } from "../abstractions/useDataFetching";
 import { ModalStyles, enableIndicator } from "./TableTemplate";
 import BasicView, { IViewItem } from "../basics/BasicView";
-import Search from "../basics/Search";
+import Search, { columnsToOptions } from "../basics/Search";
 
 const BasicTableTemplate: FC<ITemplateProps> = props => {
-  const { title, collectionName, columns, width, modalWidth, viewItems, viewExtra, extra, columnExtra, query, showIndicator } = props;
+  const { title, collectionName, columns, width, modalWidth } = props;
+  const { viewItems, viewExtra, extra, columnExtra, query, showIndicator, excludeFromSearch } = props;
   const { title: defaultTitle } = useRoute()!;
-  const initSearchKey = (columns[0] as any).dataIndex;
-  const { data, loading, searchKey, setSearch, setSearchKey, refreshData } = useDataFetching(collectionName, initSearchKey, query);
+  const searchOptions = useMemo(() => columnsToOptions(columns).filter(column => !excludeFromSearch?.includes(column.key)), []);
+  const { data, loading, searchKey, setSearch, setSearchKey, refreshData } = useDataFetching(collectionName, searchOptions[0].key, query);
 
   const [modal, setModal] = useState<any>();
   const closeModal = () => setModal(undefined);
@@ -25,7 +26,7 @@ const BasicTableTemplate: FC<ITemplateProps> = props => {
           onSearch={setSearch}
           searchBy={searchKey}
           setSearchBy={setSearchKey} 
-          columns={columns} />
+          searchOptions={searchOptions} />
       </div>
       <Table
         size="small"
@@ -86,6 +87,7 @@ interface ITemplateProps {
   width?: number
   modalWidth?: number
   showIndicator?: (entry: any) => boolean
+  excludeFromSearch?: Array<string>
 }
 
 type Fn = () => void;

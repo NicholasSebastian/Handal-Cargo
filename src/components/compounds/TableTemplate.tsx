@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, createContext, useContext, ComponentType } from 'react';
+import { CSSProperties, ReactNode, createContext, useContext, ComponentType, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
@@ -9,25 +9,23 @@ import withFormHandling, { IInjectedProps as InjectedFormProps } from '../abstra
 import withFallback from '../abstractions/withFallback';
 import BasicView, { IViewProps, IViewItem } from '../basics/BasicView';
 import BasicForm, { IFormProps, FormItem } from '../basics/BasicForm';
-import Search from '../basics/Search';
+import Search, { columnsToOptions } from '../basics/Search';
 import { Subtract } from '../../utils';
 
 const { Text } = Typography;
 const ModalContext = createContext<() => void>(() => {});
 const useCloseModal = () => useContext(ModalContext);
 
-// TODO: Sorter.
-// TODO: Fixed header.
-// TODO: Pagination.
-
 const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
   const { 
     collectionName, columns, view, form, extra, itemQuery,
     width, modalWidth, data, loading, modalTitle, searchKey, modal, 
-    showIndicator, setSearch, setSearchKey, setModal, handlers 
+    showIndicator, setSearch, setSearchKey, setModal, excludeFromSearch, handlers 
   } = props;
 
   const { handleAdd, handleEdit, handleDelete } = handlers;
+  const searchOptions = useMemo(() => columnsToOptions(columns)
+    .filter(column => !excludeFromSearch?.includes(column.key)), []);
   
   const FallbackView = withFallback(view, BasicView);
   const FallbackForm = withFallback(form, BasicForm);
@@ -41,7 +39,7 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
         onSearch={setSearch} 
         searchBy={searchKey}
         setSearchBy={setSearchKey} 
-        columns={columns} />
+        searchOptions={searchOptions} />
       <div>
         {extra ?? <Text>Menampilkan {data?.length ?? '?'} hasil.</Text>}
         <Button 
@@ -181,6 +179,7 @@ interface ITemplateProps extends ISharedProps {
   width?: number
   modalWidth?: number
   showIndicator?: (entry: any) => boolean
+  excludeFromSearch?: Array<string>
 }
 
 type ViewPropType = ComponentType<InjectedViewProps> | Array<IViewItem> | HandledViewProps;
