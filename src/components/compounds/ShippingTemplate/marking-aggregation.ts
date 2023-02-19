@@ -26,19 +26,61 @@ export const aggregationLookup: Array<ILookup> = [
   }
 ];
 
-const travelPermits = {
+const markingTravelPermits = {
   $filter: {
     input: "$travel_permits",
-    as: "travel_permit",
-    cond: { $eq: ["$$travel_permit.marking_id", "$$marking.marking_id"] }
+    cond: { $eq: ["$$this.marking_id", "$$marking.marking_id"] }
   }
 };
 
-const invoices = {
+const markingInvoices = {
   $filter: {
     input: "$invoices",
-    as: "invoice",
-    cond: { $eq: ["$$invoice.marking_id", "$$marking.marking_id"] }
+    cond: { $eq: ['$$this.marking_id', '$$marking.marking_id'] }
+  }
+};
+
+const markingPayments = {
+  $filter: {
+    input: "$payments",
+    cond: {
+      $in: [
+        "$$this._id",
+        {
+          $map: {
+            input: markingInvoices,
+            in: "$$this.payment"
+          }
+        }
+      ]
+    }
+  }
+};
+
+const markingTravelPermitsQuantityTotal = { 
+  $sum: { 
+    $map: { 
+      input: markingTravelPermits, 
+      in: "$$this.quantity" 
+    } 
+  } 
+};
+
+const markingInvoicesTotal = {
+  $sum: {
+    $map: {
+      input: markingInvoices,
+      in: "$$this.total"
+    }
+  }
+};
+
+const markingPaymentsTotal = {
+  $sum: {
+    $map: {
+      input: markingPayments,
+      in: { $sum: "$$this.items.amount" }
+    }
   }
 };
 
@@ -51,22 +93,16 @@ export const markingAggregation = {
         "$$marking",
         { 
           paid: {
-            $gt: [
-              { $sum: { $first: "$payments.items.amount" } },
-              { $sum: { $map: { input: invoices, as: "invoice", in: "$$invoice.total" } } }
-            ] 
+            $gt: [markingPaymentsTotal, markingInvoicesTotal]
           },
           remainder: {
-            $subtract: [
-              "$$marking.quantity",
-              { $sum: { $map: { input: travelPermits, as: "travel_permit", in: "$$travel_permit.quantity" } } }
-            ] 
+            $subtract: ["$$marking.quantity", markingTravelPermitsQuantityTotal] 
           }, 
           travel_documents: { 
-            $size: travelPermits 
+            $size: markingTravelPermits 
           }, 
           invoices: { 
-            $size: invoices 
+            $size: markingInvoices 
           }
         }
       ]

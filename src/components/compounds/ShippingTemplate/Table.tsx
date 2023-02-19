@@ -4,17 +4,18 @@ import { ColumnsType } from "antd/lib/table";
 import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import useDatabase from "../../../data/useDatabase";
 import useRoute from "../../../data/useRoute";
-import { Query } from "../../abstractions/useDataFetching";
 import { IData } from "../../abstractions/withTemplateHandling";
 import BaseTableTemplate, { FormPropType, ViewPropType } from "../TableTemplate";
 import { markingAggregation, aggregationLookup } from "./marking-aggregation";
 
-// TODO: Fix the whole marking-aggregation bullshit.
-// TODO: Table Pagination and Fixed Table Headers.
-// TODO: Use React Strict Mode to get rid of any of the stupid console warnings.
+const pipeline = [
+  ...aggregationLookup.map(args => ({ $lookup: args })),
+  { $set: { 'markings': markingAggregation } },
+  { $project: Object.fromEntries(aggregationLookup.map(args => ([args.as, false]))) }
+];
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, searchBy, columns, query, View, Form, TravelDocument, Invoice } = props;
+  const { collectionName, searchBy, columns, queryPipeline, View, Form, TravelDocument, Invoice } = props;
   const { title } = useRoute()!;
   const database = useDatabase();
 
@@ -37,17 +38,18 @@ const TableTemplate: FC<ITemplateProps> = props => {
         excludeFromSearch={['arrival_date']}
         width={1050}
         modalWidth={850}
-        query={query}
+        query={(collectionName, search, searchKey) => {
+          const extra = queryPipeline ?? [];
+          if (search)
+            return database?.collection(collectionName).aggregate([{ [searchKey]: search }, ...pipeline, ...extra]);
+          else
+            return database?.collection(collectionName).aggregate([...pipeline, ...extra]);
+        }}
         itemQuery={(collectionName, id) => database?.collection(collectionName)
-          .aggregate([
-            { $match: { _id: id } },
-            ...aggregationLookup.map(args => ({ $lookup: args })),
-            { $set: { 'markings': markingAggregation } },
-            { $project: Object.fromEntries(aggregationLookup.map(args => ([args.as, false]))) }
-          ])
+          .aggregate([{ $match: { _id: id } }, ...pipeline])
           .then(results => results[0])
         }
-        showIndicator={values => values.markings.every((marking: any) => marking.paid)} // TODO: values does not get the aggregated values.
+        showIndicator={values => values.markings.every((marking: any) => marking.paid)}
         view={View}
         form={Form}
         columns={columns}
@@ -87,7 +89,7 @@ interface ITemplateProps {
   collectionName: string
   searchBy: string
   columns: ColumnsType<IData>
-  query?: Query
+  queryPipeline?: Array<any>
   View: ViewPropType
   Form: FormPropType
   TravelDocument: ComponentType

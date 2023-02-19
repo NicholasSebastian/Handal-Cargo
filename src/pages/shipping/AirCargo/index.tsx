@@ -1,5 +1,4 @@
 import { FC } from "react";
-import useDatabase from "../../../data/useDatabase";
 import ShippingTemplate from "../../../components/compounds/ShippingTemplate";
 import viewAndFormStuff from "./ViewAndForm";
 import markingsStuff from "./Markings";
@@ -8,19 +7,11 @@ import invoicesStuff from "./Invoice";
 import { dateToString } from "../../../utils";
 
 const AirCargo: FC = () => {
-  const database = useDatabase();
   return (
     <ShippingTemplate
       collectionName="AirCargo"
       searchBy="airwaybill_number"
-      query={(collectionName, search, searchKey) => {
-        if (search)
-          return database?.collection(collectionName)
-            .aggregate([addTotalFields, { $match: { [searchKey]: search } }]);
-        else
-          return database?.collection(collectionName)
-            .aggregate([addTotalFields]);
-      }}
+      queryPipeline={[addTotalFields]}
       columns={[
         { dataIndex: "arrival_date", title: "Tanggal Tiba", width: 190, render: value => dateToString(value) },
         { dataIndex: "airwaybill_number", title: "No. Air Waybill" },

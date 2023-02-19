@@ -16,4 +16,5 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 
 ## POSSIBLE FUTURE FEATURES
 
+- Table pagination and fixed header.
 - Sort tables by specified column.

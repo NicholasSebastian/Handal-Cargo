@@ -20,7 +20,7 @@ import InvoiceForm from "./InvoiceForm";
 //       But in this case its fine I guess.
 
 const ShippingTemplate: FC<IShippingProps> = props => {
-  const { collectionName, searchBy, columns, query } = props;
+  const { collectionName, searchBy, columns, queryPipeline } = props;
   const { viewItems, markingFields, markingTableWidth } = props;
   const { formItems, MarkingTableDetails } = props;
   const { travelDocumentColumns, travelDocumentViewItems, travelDocumentFormItems } = props;
@@ -36,7 +36,7 @@ const ShippingTemplate: FC<IShippingProps> = props => {
       collectionName={collectionName}
       searchBy={searchBy}
       columns={columns}
-      query={query}
+      queryPipeline={queryPipeline}
       View={props => (
         <View
           {...props}
@@ -110,7 +110,7 @@ interface IShippingProps extends IViewAndFormStuff, IMarkingsStuff, ITravelDocum
   collectionName: string
   searchBy: string
   columns: ColumnsType<IData>
-  query?: Query
+  queryPipeline?: Array<any>
 }
 
 interface IViewAndFormStuff {

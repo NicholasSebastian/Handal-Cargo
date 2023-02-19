@@ -2,7 +2,6 @@ import { BSON } from "realm-web";
 import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Table } from "antd";
-import { ColumnsType } from "antd/lib/table";
 import useDatabase from "../../../data/useDatabase";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import Search from "../../../components/basics/Search";
@@ -15,6 +14,10 @@ function formatLocalCurrency(value: any) {
 
 function formatForeignCurrency(value: any, record: Record<string, any>) {
   return DEFAULT_SYMBOL + formatCurrency((value * record.exchange_rate) || 0);
+}
+
+function formatMeasurement(value: any, record: Record<string, any>) {
+  return `${value} ${record.measurement_option?.substr(-3, 2)}`;
 }
 
 const CustomerHistory: FC<IPageProps> = props => {
@@ -62,7 +65,7 @@ const CustomerHistory: FC<IPageProps> = props => {
           { dataIndex: 'item_code', title: 'Kode Barang', render: value => value ?? 'N/A', width: 140 },
           { dataIndex: 'marking', title: 'Marking', width: 80 },
           { dataIndex: 'quantity', title: 'Kuantitas', width: 80 },
-          { dataIndex: 'measurement', title: 'Ukuran', render: (value, { measurement_option }) => `${value} ${measurement_option}`, width: 120 },
+          { dataIndex: 'measurement', title: 'Ukuran', render: formatMeasurement, width: 120 },
           { dataIndex: 'price', title: 'Harga', render: formatForeignCurrency, width: 130 },
           { dataIndex: 'volume_charge', title: 'Harga Cas Volume', render: formatForeignCurrency, width: 135 },
           { dataIndex: 'shipment_fee', title: 'Ongkos Kirim', render: formatForeignCurrency, width: 130 },

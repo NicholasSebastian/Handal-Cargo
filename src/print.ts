@@ -5,8 +5,8 @@ type Collection = Realm.Services.MongoDB.MongoDBCollection<any> | undefined;
 type Presets = 'sf-surat-jalan-daerah' | 'sf-surat-jalan' | 'sf-faktur' | 'sf-rugi-laba'
   | 'ac-surat-jalan-daerah' | 'ac-surat-jalan' | 'ac-faktur' | 'ac-rugi-laba';
 
-const A4_WIDTH = 210 * 3;
-const A4_HEIGHT = 297 * 3;
+const A4_WIDTH = 210 * 3; // * 1.08
+const A4_HEIGHT = 297 * 3; // * 1.08
 
 const previewWindowConfig = (landscape: boolean): WindowOptions => ({ 
   alwaysOnTop: true, 
