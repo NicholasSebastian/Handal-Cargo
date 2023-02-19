@@ -30,7 +30,7 @@ async function print(submittedValues: any, presetName: Presets, collection: Coll
   printview.once("tauri://created", () => {
     setTimeout(() => {
       printview.emit('data', { ...submittedValues, company_data, type: presetName });
-    }, 600);
+    }, 700);
   });
 }
 

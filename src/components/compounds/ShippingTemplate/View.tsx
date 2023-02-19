@@ -36,7 +36,9 @@ const View: FC<IViewProps> = props => {
       .then(invoices => {
         const printData = { 
           invoices, 
-          container_number: values.container_number 
+          arrival_date: values.arrival_date,
+          container_number: values.container_number,
+          item_code: values.item_code 
         };
         print(printData, printPreset, singletons.current);
       });

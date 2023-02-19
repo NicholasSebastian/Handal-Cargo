@@ -29,9 +29,12 @@
     const { listen } = tauri.event;
     const { getCurrent } = tauri.window;
 
+    const root = document.getElementById('root');
+    const head = document.getElementsByTagName('head')[0];
+
     function writeText(value, x, y, style = undefined) {
       const el = document.createElement('div');
-      document.getElementById('root').appendChild(el);
+      root.appendChild(el);
       el.setAttribute('style', `
         position: fixed; 
         top: ${y}px; 
@@ -43,7 +46,7 @@
 
     function drawRect(x, y, width, height, colour = "#004D52") {
       const el = document.createElement('div');
-      document.getElementById('root').appendChild(el);
+      root.appendChild(el);
       el.setAttribute('style', `
         position: fixed; 
         top: ${y}px; 
@@ -67,7 +70,7 @@
       else 
         style.appendChild(document.createTextNode(css));
 
-      const head = document.head || document.getElementsByTagName('head')[0];
+      const head = document.head || head;
       head.appendChild(style);
     }
 
@@ -123,7 +126,7 @@
         case 'sf-faktur':
           writeText("Invoice", 285, 40, "font-size: 18px; font-weight: 700; text-decoration: underline;");
           writeText("No. Faktur: " + data._id, 20, 20);
-          writeText(data.company_data.via_transfer, 440, 20);
+          data.via_transfer && writeText(data.company_data.via_transfer, 440, 20);
           writeText(data.customer, 140, 100);
           writeText("di", 140, 115);
           writeText(data.city, 140, 130);
@@ -139,7 +142,7 @@
           writeText(`Rp. ${commaSeparate(data.total)}`, 530, 280);
           break;
         
-        case 'sf-rugi-laba':
+        case 'sf-rugi-laba': {
           setLandscape();
           writeText("Laporan Rugi Laba", 380, 20, "font-size: 18px; font-weight: 700; font-style: italic; color: #004D52;");
           writeText("Handal Cargo", 400, 40, "font-size: 18px; font-weight: 700; color: #004D52;");
@@ -157,13 +160,13 @@
           writeText("Total", 680, 87, "color: #fff; font-size: 12px; font-weight: 500;");
           writeText("Keterangan", 780, 87, "color: #fff; font-size: 12px; font-weight: 500;");
           writeText("Tgl Tiba: " + formatDate(data.arrival_date), 20, 108, "color: #f00; font-size: 11px; font-weight: 600;");
-          writeText("Nomor Container: " + data.container_number, 30, 122, "color: #f00; font-size: 11px; font-weight: 600;");
+          writeText("Nomor Container: " + data.container_number, 40, 122, "color: #f00; font-size: 11px; font-weight: 600;");
           writeText("Total Biaya: <some number here>", 550, 122, "color: #f00; font-size: 11px; font-weight: 600;");
           for (let i = 0; i < data.invoices.length; i++) {
             const cur = data.invoices[i];
             writeText(cur.marking, 20, 140 + (20 * i));
             writeText(cur.quantity, 120, 140 + (20 * i));
-            writeText(cur.measurement, 160, 140 + (20 * i));
+            writeText(commaSeparate(cur.measurement), 160, 140 + (20 * i));
             writeText("Rp." + commaSeparate(cur.price * cur.exchange_rate), 220, 140 + (20 * i));
             writeText("Rp." + commaSeparate(cur.additional_fee * cur.exchange_rate), 300, 140 + (20 * i));
             writeText("Rp." + commaSeparate(cur.shipment_fee * cur.exchange_rate), 400, 140 + (20 * i));
@@ -187,29 +190,120 @@
           writeText("Grand Total", 605, offsetY + 28, "font-size: 11px; font-style: italic; font-weight: 700; color: #f00;");
           writeText("Rp." + commaSeparate(total), 680, offsetY + 28, "font-size: 11px; font-weight: 700;");
           break;
+        }
 
         case 'ac-surat-jalan':
-          // TODO
+          writeText(`${data.measurement} ${data.unit}`, 60, 160);
+          writeText(data.item_code, 60, 175);
+          writeText("Telp: " + data.phone_number, 110, 60);
+          writeText("Hp: " + data.home_number, 110, 75);
+          writeText("Air Cargo: " + data.route, 160, 160);
+          writeText("Marking: " + data.marking, 160, 175);
+          writeText("Total " + data.unit, 170, 200);
+          writeText(`${data.quantity} ${data.unit}`, 280, 200);
+          writeText(`${data.measurement} ${data.measurement_option.substr(-3, 2)}`, 380, 200);
+          writeText(formatDate(data.date), 430, 50);
+          writeText(data.customer, 440, 65);
+          writeText(data.address, 440, 80);
+          writeText(data.city, 440, 95);
           break;
         
         case 'ac-surat-jalan-daerah':
-          // TODO
+          writeText(`${data.measurement} ${data.unit}`, 50, 160);
+          writeText(data.item_code, 50, 175);
+          writeText("Air Cargo: " + data.route, 50, 190);
+          writeText("Marking: " + data.marking, 50, 205);
+          writeText("Sip. " + data.company_data.name, 110, 45);
+          writeText(data.company_data.address, 110, 60);
+          writeText(data.company_data.phone_number, 110, 75);
+          writeText(`Paket (${data.measurement} ${data.measurement_option.substr(-3, 2)})`, 210, 165);
+          writeText("Untuk dikirim ke: ", 210, 180);
+          writeText(data.customer, 210, 195);
+          writeText(data.address, 210, 210);
+          writeText(data.city, 210, 225);
+          writeText("Telp: " + data.phone_number, 210, 240);
+          writeText("HP: " + data.home_number, 210, 255);
+          writeText(formatDate(data.date), 400, 60);
+          writeText("Telp: " + data.phone_number, 440, 110);
           break;
         
         case 'ac-faktur':
-          // TODO
+          writeText("Invoice", 285, 40, "font-size: 18px; font-weight: 700; text-decoration: underline;");
+          writeText("No. Faktur: " + data._id, 20, 20);
+          data.via_transfer && writeText(data.company_data.via_transfer, 440, 20);
+          writeText(data.customer, 140, 100);
+          writeText("di", 140, 115);
+          writeText(data.city, 140, 130);
+          writeText(`${data.company_data.city}, ${formatDate(data.date)}`, 430, 100);
+          writeText(`${data.measurement} ${data.measurement_option.substr(-3, 2)}`, 65, 200);
+          writeText(`Air Cargo ${data.route} (${data.quantity} φ) ${data.product_detail}`, 145, 200);
+          writeText(`Rp. ${commaSeparate(data.price * data.exchange_rate)}`, 430, 200);
+          writeText(`Rp. ${commaSeparate(data.total)}`, 530, 200);
+          writeText("Kode Barang: " + data.item_code, 145, 225);
+          writeText("Marking: " + data.marking, 145, 280);
+          writeText("TOTAL", 450, 280, "font-size: 11px; font-weight: 600;");
+          writeText(`Rp. ${commaSeparate(data.total)}`, 530, 280);
           break;
         
-        case 'ac-rugi-laba':
-          // TODO
+        case 'ac-rugi-laba': {
+          setLandscape();
+          writeText("Laporan Rugi Laba", 380, 20, "font-size: 18px; font-weight: 700; font-style: italic; color: #004D52;");
+          writeText("Handal Cargo", 400, 40, "font-size: 18px; font-weight: 700; color: #004D52;");
+          drawRect(20, 80, 850, 25);
+          drawRect(20, 82, 850, 1, "#fff");
+          drawRect(20, 102, 850, 1, "#fff");
+          writeText("Marking", 20, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Qty", 80, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("m³/kg", 120, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Harga", 180, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Vol. Charge", 260, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Biaya Tambahan", 340, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Ongkos Kirim", 440, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Diskon", 540, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Biaya Lain-Lain", 620, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Total", 720, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Keterangan", 800, 87, "color: #fff; font-size: 12px; font-weight: 500;");
+          writeText("Tgl Tiba: " + formatDate(data.arrival_date), 20, 108, "color: #f00; font-size: 11px; font-weight: 600;");
+          writeText("Kode Barang: " + data.item_code, 40, 122, "color: #f00; font-size: 11px; font-weight: 600;");
+          writeText("Total Biaya: <some number here>", 580, 122, "color: #f00; font-size: 11px; font-weight: 600;");
+          for (let i = 0; i < data.invoices.length; i++) {
+            const cur = data.invoices[i];
+            writeText(cur.marking, 20, 140 + (20 * i));
+            writeText(cur.quantity, 80, 140 + (20 * i));
+            writeText(commaSeparate(cur.measurement), 120, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.price * cur.exchange_rate), 180, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.volume_charge * cur.exchange_rate), 260, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.additional_fee * cur.exchange_rate), 340, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.shipment_fee * cur.exchange_rate), 440, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.discount), 540, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.other_fee), 620, 140 + (20 * i));
+            writeText("Rp." + commaSeparate(cur.total), 720, 140 + (20 * i));
+            cur.description && writeText(cur.description, 800, 140 + (20 * i));
+          }
+          const offsetY = 140 + data.invoices.length * 20;
+          const totalMeasurement = data.invoices.reduce((acc, val) => acc + val.measurement, 0);
+          const total = data.invoices.reduce((acc, val) => acc + val.total, 0);
+          drawRect(245, offsetY, 625, 1);
+          writeText(commaSeparate(totalMeasurement), 160, offsetY + 6);
+          writeText("Margin", 245, offsetY + 6, "font-size: 11px; font-style: italic; color: #f00;");
+          writeText("<some number here>", 300, offsetY + 6);
+          writeText("Sub Total", 645, offsetY + 6, "font-size: 11px; font-style: italic; color: #f00;");
+          writeText("Rp." + commaSeparate(total), 720, offsetY + 6);
+          drawRect(20, offsetY + 22, 850, 1);
+          writeText("Margin", 245, offsetY + 28, "font-size: 11px; font-style: italic; font-weight: 700; color: #f00;");
+          writeText("<some number here>", 300, offsetY + 28, "font-size: 11px; font-weight: 700;");
+          writeText("Grand Total", 645, offsetY + 28, "font-size: 11px; font-style: italic; font-weight: 700; color: #f00;");
+          writeText("Rp." + commaSeparate(total), 720, offsetY + 28, "font-size: 11px; font-weight: 700;");
           break;
+        }
       }
 
-      // Wait half a second before then print the webview.
-      setTimeout(() => {
-        addEventListener('afterprint', () => getCurrent().close());
-        window.print();
-      }, 500);
+      // Unfuck the scaling of the print result manually.
+      root.style = "transform-origin: top left; transform: scale(1.08);";
+
+      // Print the webview before closing the window.
+      addEventListener('afterprint', () => getCurrent().close());
+      window.print();
     });
   </script>
 </html>
