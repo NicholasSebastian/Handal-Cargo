@@ -78,7 +78,7 @@ const DisplayAdditionalFeeRp = createDependentValue({
 
 const DisplayTotal = createDependentValue({
   label: `Total Biaya (${DEFAULT_SYMBOL})`,
-  labelSpan: 11,
+  labelSpan: 12,
   dependencies: ['freight_fee', 'freight_weight', 'commission_fee', 'commission_weight', 'clearance_fee', 'clearance_weight', 'additional_fee', 'other_fee', 'exchange_rate'],
   calculateValue: ([freight_fee, freight_weight, commission_fee, commission_weight, clearance_fee, clearance_weight, additional_fee, other_fee, exchange_rate]) => {
     const value1 = freight_fee * freight_weight;

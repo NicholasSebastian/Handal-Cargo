@@ -1,6 +1,7 @@
 import { FC, ComponentType, useMemo, lazy } from "react";
 import { ColumnsType } from "antd/lib/table";
 import useRoute from "../../../data/useRoute";
+import { Query } from "../../abstractions/useDataFetching";
 import { IData } from "../../abstractions/withTemplateHandling";
 import { IViewItem } from "../../basics/BasicView";
 import { FormItem, gap } from "../../basics/BasicForm";
@@ -19,7 +20,7 @@ import InvoiceForm from "./InvoiceForm";
 //       But in this case its fine I guess.
 
 const ShippingTemplate: FC<IShippingProps> = props => {
-  const { collectionName, searchBy, columns } = props;
+  const { collectionName, searchBy, columns, query } = props;
   const { viewItems, markingFields, markingTableWidth } = props;
   const { formItems, MarkingTableDetails } = props;
   const { travelDocumentColumns, travelDocumentViewItems, travelDocumentFormItems } = props;
@@ -35,6 +36,7 @@ const ShippingTemplate: FC<IShippingProps> = props => {
       collectionName={collectionName}
       searchBy={searchBy}
       columns={columns}
+      query={query}
       View={props => (
         <View
           {...props}
@@ -108,6 +110,7 @@ interface IShippingProps extends IViewAndFormStuff, IMarkingsStuff, ITravelDocum
   collectionName: string
   searchBy: string
   columns: ColumnsType<IData>
+  query?: Query
 }
 
 interface IViewAndFormStuff {

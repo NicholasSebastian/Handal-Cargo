@@ -4,15 +4,17 @@ import { ColumnsType } from "antd/lib/table";
 import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import useDatabase from "../../../data/useDatabase";
 import useRoute from "../../../data/useRoute";
+import { Query } from "../../abstractions/useDataFetching";
 import { IData } from "../../abstractions/withTemplateHandling";
 import BaseTableTemplate, { FormPropType, ViewPropType } from "../TableTemplate";
 import { markingAggregation, aggregationLookup } from "./marking-aggregation";
 
 // TODO: Fix the whole marking-aggregation bullshit.
 // TODO: Table Pagination and Fixed Table Headers.
+// TODO: Use React Strict Mode to get rid of any of the stupid console warnings.
 
 const TableTemplate: FC<ITemplateProps> = props => {
-  const { collectionName, searchBy, columns, View, Form, TravelDocument, Invoice } = props;
+  const { collectionName, searchBy, columns, query, View, Form, TravelDocument, Invoice } = props;
   const { title } = useRoute()!;
   const database = useDatabase();
 
@@ -35,6 +37,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
         excludeFromSearch={['arrival_date']}
         width={1050}
         modalWidth={850}
+        query={query}
         itemQuery={(collectionName, id) => database?.collection(collectionName)
           .aggregate([
             { $match: { _id: id } },
@@ -84,6 +87,7 @@ interface ITemplateProps {
   collectionName: string
   searchBy: string
   columns: ColumnsType<IData>
+  query?: Query
   View: ViewPropType
   Form: FormPropType
   TravelDocument: ComponentType

@@ -8,7 +8,7 @@ const [TotalQuantity, TotalList, TotalHB] = [
   { key: 'listkg', label: 'Total Berat (List)' },
   { key: 'hbkg', label: 'Total Berat (HB)' }
 ]
-.map(field => createDependentValue({
+.map((field, i) => createDependentValue({
   label: field.label,
   labelSpan: 12,
   dependencies: ['markings'],
@@ -16,7 +16,7 @@ const [TotalQuantity, TotalList, TotalHB] = [
     return markings.reduce((acc: number, marking: any) => acc + (marking[field.key] ?? 0), 0);
   },
   defaultValue: 0,
-  suffix: 'kg'
+  suffix: (i > 0) && 'kg'
 }));
 
 const RealDifference = createDependentValue({
