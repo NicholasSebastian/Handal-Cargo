@@ -1,5 +1,7 @@
 # Handal Cargo
 
+With 6884 lines of code!
+
 ## NOTES
 
 If you're getting errors saying that the module 'crypto' cannot be found, add the following snippet:

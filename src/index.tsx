@@ -14,6 +14,7 @@ import './normalize.css';
 
 // This file marks the base of the entire app.
 
+const Home = lazy(() => import('./pages/Home'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Shortcuts = lazy(() => import('./pages/Shortcuts'));
 
@@ -22,13 +23,6 @@ const Center = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
-`;
-
-const Logo = styled.img`
-  width: 70%;
-  max-width: 700px;
-  user-select: none;
-  pointer-events: none;
 `;
 
 // Pages are separated into different routes, which are all wrapped
@@ -44,7 +38,7 @@ const elements = (
           <Suspense fallback={<Center><Spin /></Center>}>
             <Routes>
               <Route path='/' element={<Navigate to={'/home'} />} />
-              <Route path='/home' element={<Center><Logo src="word-art.png" /></Center>} />
+              <Route path='/home' element={<Home />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/shortcuts' element={<Shortcuts />} />
               {routes}
