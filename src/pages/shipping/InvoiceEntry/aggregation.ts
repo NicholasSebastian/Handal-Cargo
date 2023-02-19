@@ -13,6 +13,7 @@ const commonFields = {
   additional_fee: '$additional_fee',
   shipment_fee: '$shipment_fee',
   total: '$total',
+  description: '$description',
   payment_amount: {
     $sum: {
       $first: '$payment_amount.items.amount'

@@ -42,17 +42,7 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
     // Fetch all the payments from the database for the Select component below.
     database?.collection('Payments')
       .aggregate([
-        {
-          $lookup: {
-            from: 'Invoices',
-            let: { id: '$_id' },
-            pipeline: [
-              { $project: { _id: 0, payment: 1 } },
-              { $match: { $expr: { $eq: ['$payment', '$$id'] } } }
-            ],
-            as: 'past_invoices'
-          }
-        },
+        { $lookup: pastInvoices },
         { $match: { $expr: { $lt: [{ $size: '$past_invoices' }, 1] } } },
         { $project: { total: { $sum: '$items.amount' } } }
       ])
@@ -181,6 +171,16 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
 }
 
 export default InvoiceEntryForm;
+
+const pastInvoices = {
+  from: 'Invoices',
+  let: { id: '$_id' },
+  pipeline: [
+    { $project: { _id: 0, payment: 1 } },
+    { $match: { $expr: { $eq: ['$payment', '$$id'] } } }
+  ],
+  as: 'past_invoices'
+};
 
 const EntryForm = styled(Form)`
   margin-top: -30px;
