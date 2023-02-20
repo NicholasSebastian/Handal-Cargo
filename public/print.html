@@ -5,17 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Print Preview</title>
     <style>
+      @page {
+        size: A4;
+        margin: 0mm;
+      }
+      @keyframes rotate { 
+        to { 
+          transform: rotate(360deg); 
+        } 
+      }
       #spinner {
         width: 30px;
         position: fixed;
         top: calc(50vh - 15px);
         left: calc(50vw - 15px);
         animation: rotate 1.5s linear infinite;
-      }
-      @keyframes rotate { 
-        to { 
-          transform: rotate(360deg); 
-        } 
       }
     </style>
   </head>
@@ -64,7 +68,7 @@
       style.type = 'text/css';
       style.media = 'print';
 
-      const css = "@page { size: landscape; }";
+      const css = "@page { size: A4 landscape; }";
       if (style.styleSheet) 
         style.styleSheet.cssText = css;
       else 
@@ -88,9 +92,8 @@
     }
 
     listen('data', event => {
-      const data = JSON.parse(event.payload);
+      const data = event.payload;
       removeSpinner();
-      console.log(data);
 
       // Format and display the data properly for printing.
       switch (data.type) {
@@ -299,7 +302,7 @@
       }
 
       // Unfuck the scaling of the print result. This is dank af.
-      root.style = "transform-origin: top left; transform: scale(1.08);";
+      root.style = "transform-origin: top left; transform: scale(1.24);";
 
       // Print the webview before closing the window.
       addEventListener('afterprint', () => getCurrent().close());
