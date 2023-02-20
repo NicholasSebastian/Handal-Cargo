@@ -24,7 +24,7 @@ function usePageHandling(formItems: Array<FormItem>, customButton: ReactNode) {
       size="small"
       current={currentPage}
       onChange={i => setCurrentPage(i)}>
-      {pages.map((_, i) => <Step key={i} />)}
+      {pages?.map((_, i) => <Step key={i} />)}
     </StepsContainer>
   ) : undefined;
 

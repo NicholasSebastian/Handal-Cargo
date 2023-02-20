@@ -18,7 +18,7 @@ const PaymentView: FC<IInjectedProps> = props => {
         {values['_id'].toString()}
       </Item>
       <Item label="Total Pembayaran">
-        {DEFAULT_SYMBOL}{total ? formatCurrency(total) : 0}
+        {DEFAULT_SYMBOL}{formatCurrency(total)}
       </Item>
       <Item>
         <Table bordered

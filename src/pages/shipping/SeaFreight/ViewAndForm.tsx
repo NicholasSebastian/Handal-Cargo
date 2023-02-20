@@ -17,7 +17,7 @@ function formatForeignCurrency(value: any, record: Record<string, any>) {
 function calculateTotal(record: Record<string, any>) {
   const { muat_fee, additional_fee, clearance_fee, other_fee, exchange_rate } = record;
   const value = ((muat_fee + additional_fee + clearance_fee) * exchange_rate) + other_fee;
-  return DEFAULT_SYMBOL + formatCurrency(value.toString());
+  return DEFAULT_SYMBOL + formatCurrency(value);
 }
 
 function toDisplayRp(field: any) {
@@ -25,8 +25,8 @@ function toDisplayRp(field: any) {
     label: `${field.label} (${DEFAULT_SYMBOL})`,
     dependencies: [field.key, 'exchange_rate'],
     calculateValue: ([fieldKey, exchange_rate]) => {
-      const value = fieldKey * exchange_rate;
-      return formatCurrency(value.toString());
+      const value: number = fieldKey * exchange_rate;
+      return formatCurrency(value);
     },
     defaultValue: 0,
     prefix: DEFAULT_SYMBOL
@@ -46,8 +46,8 @@ const DisplayTotal = createDependentValue({
   labelSpan: 12,
   dependencies: ['muat_fee', 'additional_fee', 'clearance_fee', 'other_fee', 'exchange_rate'],
   calculateValue: ([muat_fee, additional_fee, clearance_fee, other_fee, exchange_rate]) => {
-    const value = ((muat_fee + additional_fee + clearance_fee) * exchange_rate) + other_fee;
-    return formatCurrency(value.toString());
+    const value: number = ((muat_fee + additional_fee + clearance_fee) * exchange_rate) + other_fee;
+    return formatCurrency(value);
   },
   defaultValue: 0,
   prefix: DEFAULT_SYMBOL

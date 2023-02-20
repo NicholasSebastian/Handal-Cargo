@@ -18,7 +18,7 @@ const Invoice: FC<ITableProps> = props => {
     database?.collection('Currencies')
       .find({}, { projection: { _id: 0 }})
       .then(currencies => {
-        const reference = Object.fromEntries(currencies.map(currency => [currency.name, currency.symbol]));
+        const reference = Object.fromEntries(currencies?.map(currency => [currency.name, currency.symbol]));
         setCurrencySymbols(reference);
       });
   }, []);

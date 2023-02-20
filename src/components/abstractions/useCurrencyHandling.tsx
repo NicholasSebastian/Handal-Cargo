@@ -24,7 +24,7 @@ function useCurrencyHandling(form: FormInstance, formItems: Array<FormItem>) {
       database?.collection('Currencies')
         .find({}, { projection: { _id: 0 }})
         .then(currencies => {
-          const reference = Object.fromEntries(currencies.map(currency => [currency.name, currency.symbol]));
+          const reference = Object.fromEntries(currencies?.map(currency => [currency.name, currency.symbol]));
           setReference(reference);
 
           // Then update the 'symbol' state.

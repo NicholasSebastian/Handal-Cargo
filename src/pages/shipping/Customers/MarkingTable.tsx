@@ -62,22 +62,23 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
   }
 
   const handleDelete = (item: string) => {
-    // Check if the marking is already being used in a SeaFreight or AirCargo entry.
     setLoading(true);
-    Promise.all([
-      database?.collection('SeaFreight').count({ 'markings.marking': item }),
-      database?.collection('AirCargo').count({ 'markings.marking': item })
-    ])
-    .then(results => {
-      if (results.every(result => result === 0)) {
-        // If the marking has not been used, then proceed to delete it.
-        handleChange(value.filter((i: string) => i !== item));
-      }
-      else {
-        message.error("Marking ini tidak boleh dihapus.");
-      }
-    })
-    .finally(() => setLoading(false));
+    deleteCheck(item)
+      .then(allowed => {
+        if (allowed) 
+          handleChange(value.filter((i: string) => i !== item));
+        else 
+          message.error("Marking ini tidak boleh dihapus.");
+      })
+      .finally(() => setLoading(false));
+  }
+
+  const deleteCheck = async (marking: string) => {
+    // Check if the marking is already being used in a SeaFreight or AirCargo entry.
+    const inSeafreightMarkings = database?.collection('SeaFreight').findOne({ 'markings.marking': marking });
+    const inAirCargoMarkings =  database?.collection('AirCargo').findOne({ 'markings.marking': marking });
+    const markings = await Promise.all([inSeafreightMarkings, inAirCargoMarkings]);
+    return markings.every(marking => marking == null);
   }
 
   return (

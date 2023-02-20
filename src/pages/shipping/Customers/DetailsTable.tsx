@@ -27,10 +27,10 @@ const DetailsTable: FC<ICustomComponentProps> = props => {
   useEffect(() => {
     database?.collection("ProductDetails")
       .find({}, { projection: { name: 1 } })
-      .then(values => setProductDetails(values.map(value => value.name)));
+      .then(values => setProductDetails(values?.map(value => value.name)));
     database?.collection("Routes")
       .find({}, { projection: { name: 1 } })
-      .then(values => setRoutes(values.map(value => value.name)));
+      .then(values => setRoutes(values?.map(value => value.name)));
   }, []);
 
   const handleChange = (details: Array<any>) => {

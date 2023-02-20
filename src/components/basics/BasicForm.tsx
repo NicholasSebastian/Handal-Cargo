@@ -118,12 +118,12 @@ const BasicForm: FC<IFormProps> = (props) => {
       onFinish={onSubmit} 
       labelCol={{ span: labelSpan ?? 7 }}>
       {steps}
-      {pages.map((page, index) => {
+      {pages?.map((page, index) => {
         const show = (index === currentPage);
         const display = show ? (twoColumns ? 'grid' : 'block') : 'none';
         return (
           <div key={index} style={{ display, gridTemplateColumns: '1fr 1fr' }}>
-            {page.map((item, i) => renderItem(item, i))}
+            {page?.map((item, i) => renderItem(item, i))}
           </div>
         );
       })}

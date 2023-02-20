@@ -49,6 +49,12 @@ const TableTemplate: FC<ITemplateProps> = props => {
           .aggregate([{ $match: { _id: id } }, ...pipeline])
           .then(results => results[0])
         }
+        deleteCheck={async (_, entry) => {
+          const markings = entry.markings?.map((marking: any) => marking.marking_id);
+          const invoices = database?.collection('Invoices');
+          const marking = await invoices?.findOne({ marking_id: { $in: markings } });
+          return marking == null;
+        }}
         showIndicator={values => values.markings.every((marking: any) => marking.paid)}
         view={View}
         form={Form}

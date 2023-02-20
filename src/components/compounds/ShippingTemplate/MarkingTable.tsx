@@ -1,9 +1,10 @@
 import { BSON } from "realm-web";
-import { FC, useState, useReducer, useMemo } from "react";
+import { FC, useState, useReducer } from "react";
 import styled from "styled-components";
 import { Form, Table, InputNumber, Button, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import useDatabase from "../../../data/useDatabase";
 import { ICustomComponentProps } from "../../basics/BasicForm";
 import SearchMarking from "../../specialized/SearchMarking";
 
@@ -13,6 +14,7 @@ const cross = <CloseOutlined style={{ color:'red' }} />
 
 const MarkingTable: FC<IMarkingTableProps> = props => {
   const { fields, columns, value: markings, width } = props;
+  const database = useDatabase();
   const form = useFormInstance();
   const fieldCount = Math.min(fields.filter(field => !field.disabled).length, 4);
 
@@ -51,8 +53,20 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
     }
   }
 
-  const handleDelete = (index: number) => {
-    handleChange(markings.filter((_: never, i: number) => i !== index));
+  const handleDelete = (id: BSON.ObjectId, index: number) => {
+    deleteCheck(id).then(allowed => {
+      if (allowed) 
+        handleChange(markings.filter((_: never, i: number) => i !== index));
+      else
+        message.error("Marking ini tidak boleh dihapus.");
+    });
+  }
+
+  const deleteCheck = async (id: BSON.ObjectId) => {
+    const inTravelDocuments = database?.collection('TravelDocuments').findOne({ marking_id: id });
+    const inInvoices = database?.collection('Invoices').findOne({ marking_id: id });
+    const markings = await Promise.all([inTravelDocuments, inInvoices]);
+    return markings.every(marking => marking == null);
   }
 
   const clearInputs = () => {
@@ -93,8 +107,8 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
           {
             fixed: 'right',
             width: 92,
-            render: (_, __, i) => (
-              <Button onClick={() => handleDelete(i)}>Hapus</Button>
+            render: (_, record, i) => (
+              <Button onClick={() => handleDelete(record.marking_id, i)}>Hapus</Button>
             )
           }
         ]} />

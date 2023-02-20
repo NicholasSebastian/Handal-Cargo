@@ -42,6 +42,8 @@ export function datesToMoments(values: any): any {
 }
 
 export function dateDiffInDays(a: Date, b: Date): number {
+  if (a == null || b == null) return 0;
+
   // Discard the time and time-zone information.
   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
   const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
@@ -64,8 +66,8 @@ export function dateToString(date: Date) {
   });
 }
 
-export function formatCurrency(value: string | number) {
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+export function formatCurrency(value: string | number | undefined) {
+  return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') ?? '0';
 }
 
 export function clearLocalStorage(startsWith: string) {

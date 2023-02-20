@@ -9,11 +9,11 @@ import pipeline from "./history-aggregation";
 import { dateToString, formatCurrency } from "../../../utils";
 
 function formatLocalCurrency(value: any) {
-  return DEFAULT_SYMBOL + formatCurrency(value ?? 0);
+  return DEFAULT_SYMBOL + formatCurrency(value);
 }
 
 function formatForeignCurrency(value: any, record: Record<string, any>) {
-  return DEFAULT_SYMBOL + formatCurrency((value * record.exchange_rate) || 0);
+  return DEFAULT_SYMBOL + formatCurrency(value * record.exchange_rate);
 }
 
 function formatMeasurement(value: any, record: Record<string, any>) {

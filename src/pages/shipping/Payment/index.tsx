@@ -35,6 +35,11 @@ const Payment: FC = () => {
               ]);
           }
       }}
+      deleteCheck={async (id) => {
+        const invoices = database?.collection('Invoices');
+        const payment = await invoices?.findOne({ payment: id });
+        return payment == null;
+      }}
       columns={[
         { 
           dataIndex: "_id", 

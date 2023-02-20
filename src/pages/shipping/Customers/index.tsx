@@ -1,6 +1,6 @@
 import { FC } from "react";
-import TableTemplate from "../../../components/compounds/TableTemplate";
 import useDatabase from "../../../data/useDatabase";
+import TableTemplate from "../../../components/compounds/TableTemplate";
 import CustomersView from "./View";
 import MarkingTable from "./MarkingTable";
 import DetailsTable from "./DetailsTable";
@@ -23,6 +23,14 @@ const Customers: FC = () => {
             { $unwind: { path: "$markings", preserveNullAndEmptyArrays: true }},
             { $match: { [searchBy]: { $regex: search }}}
           ]);
+      }}
+      deleteCheck={async (_, entry) => {
+        // Check if the marking is already being used in a SeaFreight or AirCargo entry.
+        const marking = entry.markings;
+        const inSeafreightMarkings = database?.collection('SeaFreight').findOne({ 'markings.marking': marking });
+        const inAirCargoMarkings =  database?.collection('AirCargo').findOne({ 'markings.marking': marking });
+        const markings = await Promise.all([inSeafreightMarkings, inAirCargoMarkings]);
+        return markings.every(marking => marking == null);
       }}
       columns={[
         { dataIndex: "name", title: "Customer" },

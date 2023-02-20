@@ -48,9 +48,9 @@ function toDisplayPrice(label: string, field1: any, field2: any) {
   return createDependentValue({
     label: `${label} (${DEFAULT_SYMBOL})`,
     dependencies: [field1.key, field2.key, 'exchange_rate'],
-    calculateValue: ([field1Key, field2Key, exchange_rate]) => {
-      const value = field1Key * field2Key * exchange_rate;
-      return formatCurrency(value.toString());
+    calculateValue: ([field1_value, field2_value, exchange_rate]) => {
+      const value = field1_value * field2_value * exchange_rate;
+      return formatCurrency(value);
     },
     defaultValue: 0,
     prefix: DEFAULT_SYMBOL
@@ -68,9 +68,9 @@ const DisplayDateDiff = createDependentValue({
 const DisplayAdditionalFeeRp = createDependentValue({
   label: `Biaya Tambahan (${DEFAULT_SYMBOL})`,
   dependencies: ['additional_fee', 'exchange_rate'],
-  calculateValue: ([fieldKey, exchange_rate]) => {
-    const value = fieldKey * exchange_rate;
-    return formatCurrency(value.toString());
+  calculateValue: ([field_value, exchange_rate]) => {
+    const value = field_value * exchange_rate;
+    return formatCurrency(value);
   },
   defaultValue: 0,
   prefix: DEFAULT_SYMBOL
@@ -81,11 +81,11 @@ const DisplayTotal = createDependentValue({
   labelSpan: 12,
   dependencies: ['freight_fee', 'freight_weight', 'commission_fee', 'commission_weight', 'clearance_fee', 'clearance_weight', 'additional_fee', 'other_fee', 'exchange_rate'],
   calculateValue: ([freight_fee, freight_weight, commission_fee, commission_weight, clearance_fee, clearance_weight, additional_fee, other_fee, exchange_rate]) => {
-    const value1 = freight_fee * freight_weight;
+    const value1: number = freight_fee * freight_weight;
     const value2 = commission_fee * commission_weight;
     const value3 = clearance_fee * clearance_weight;
     const value = ((value1 + value2 + value3 + additional_fee) * exchange_rate) + other_fee;
-    return formatCurrency(value.toString());
+    return formatCurrency(value);
   },
   defaultValue: 0,
   prefix: DEFAULT_SYMBOL

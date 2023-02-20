@@ -1,6 +1,7 @@
+import { BSON } from 'realm-web';
 import { CSSProperties, ReactNode, ComponentType, useMemo } from 'react';
 import styled, { css } from 'styled-components';
-import { Typography, Table, Button, Modal, Space, Popconfirm } from 'antd';
+import { Typography, Table, Button, Modal, Space, Popconfirm, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { PlusOutlined } from '@ant-design/icons';
 import withTemplateHandling, { ISharedProps, IData } from '../abstractions/withTemplateHandling';
@@ -16,7 +17,7 @@ const { Text } = Typography;
 
 const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
   const { 
-    collectionName, columns, view, form, extra, itemQuery,
+    collectionName, columns, view, form, extra, itemQuery, deleteCheck,
     width, modalWidth, data, loading, modalTitle, searchKey, modal, 
     showIndicator, setSearch, setSearchKey, setModal, excludeFromSearch, handlers 
   } = props;
@@ -71,7 +72,15 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
               };
               const onDelete: ClickHandler2 = e => {
                 e?.stopPropagation(); 
-                handleDelete(entry._id);
+                if (deleteCheck) 
+                  deleteCheck(entry._id, entry).then(allowed => {
+                    if (allowed) 
+                      handleDelete(entry._id);
+                    else 
+                      message.error("Data ini tidak boleh dihapus.");
+                  });
+                else 
+                  handleDelete(entry._id);
               }
               return (
                 <Space>
@@ -176,6 +185,7 @@ interface ITemplateProps extends ISharedProps {
   modalWidth?: number
   showIndicator?: (entry: any) => boolean
   excludeFromSearch?: Array<string>
+  deleteCheck?: (id: BSON.ObjectId, record: any) => Promise<boolean>
 }
 
 type ViewPropType = ComponentType<InjectedViewProps> | Array<IViewItem> | HandledViewProps;

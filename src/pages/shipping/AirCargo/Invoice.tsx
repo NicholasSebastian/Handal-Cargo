@@ -33,7 +33,7 @@ const DisplayTotal: FC<ICustomComponentProps> = props => {
     <Item 
       label={`Total Biaya (${DEFAULT_SYMBOL})`} 
       labelCol={{ span: 11 }}>
-      <Input disabled value={DEFAULT_SYMBOL + formatCurrency(value ?? 0)} />
+      <Input disabled value={DEFAULT_SYMBOL + formatCurrency(value)} />
     </Item>
   );
 };

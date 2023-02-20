@@ -12,7 +12,7 @@ const InputCurrency: FC<IInputProps> = props => {
       prefix={prefix ?? DEFAULT_SYMBOL}
       disabled={disabled}
       style={{ width: '100%' }} 
-      formatter={value => formatCurrency(value!.toString())}
+      formatter={value => formatCurrency(value)}
       parser={value => value!.replace(/,*/g, '')}
       placeholder={placeholder}
       value={value}

@@ -21,12 +21,12 @@ function useReferenceHandling(formItems: Array<FormItem>) {
   useEffect(() => {
     const referenceItems = getReferenceItems(formItems);
     Promise.all(
-      referenceItems.map(item => {
+      referenceItems?.map(item => {
         const collectionName = item.items as string;
         return database?.collection(collectionName).find({}, { projection: { name: 1 } });
       }))
     .then(references => {
-      const values = Object.fromEntries(references.map((values, i) => {
+      const values = Object.fromEntries(references?.map((values, i) => {
         const collectionName = referenceItems[i].items;
         return [collectionName, values?.map(value => value.name)];
       }));

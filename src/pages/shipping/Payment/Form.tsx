@@ -55,7 +55,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
           </span>
           <span>
             <Text strong>Total Pembayaran: </Text> 
-            {DEFAULT_SYMBOL}{total ? formatCurrency(total) : 0}
+            {DEFAULT_SYMBOL}{formatCurrency(total)}
           </span>
         </div>
         <Divider style={{ margin: '10px' }} />
