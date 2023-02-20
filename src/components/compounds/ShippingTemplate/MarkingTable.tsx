@@ -147,8 +147,8 @@ function fieldsToMarkingColumns(fields: Array<MarkingField>): ColumnsType<any> {
   ];
 }
 
-export { fieldsToMarkingColumns };
-export type { MarkingField };
+export { fieldsToMarkingColumns };  // Dont export this. This component prolly shouldn't share columns with index.tsx.
+export type { MarkingField };       // This component's fields should have clickable cells that open a modal that allow editing.
 export default MarkingTable;
 
 const Container = styled.div<IStyleProps>`
