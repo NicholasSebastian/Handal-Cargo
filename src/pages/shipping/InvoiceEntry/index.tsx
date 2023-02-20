@@ -25,12 +25,12 @@ const InvoiceEntry: FC = () => {
       }}
       showIndicator={values => values.total < values.payment_amount}
       columns={[
-        { dataIndex: "arrival_date", title: "Tanggal Tiba", render: value => dateToString(value) },
-        { dataIndex: "muat_date", title: "Tanggal Muat", render: value => dateToString(value) },
+        { dataIndex: "arrival_date", title: "Tanggal Tiba", render: value => value && dateToString(value) },
+        { dataIndex: "muat_date", title: "Tanggal Muat", render: value => value && dateToString(value) },
         { dataIndex: "payment", title: "Kode Pembayaran", render: value => value?.toString() },
         { dataIndex: "marking", title: "Marking" },
         { dataIndex: "total", title: "Total", render: value => DEFAULT_SYMBOL + formatCurrency(value) },
-        { dataIndex: "payment_amount", title: "Sudah Terbayar", render: value => DEFAULT_SYMBOL + formatCurrency(value) },
+        { dataIndex: "payment_amount", title: "Sudah Terbayar", render: value => value && (DEFAULT_SYMBOL + formatCurrency(value)) },
         { 
           title: "Belum Dibayar",
           render: (_, values) => {
@@ -50,9 +50,9 @@ const InvoiceEntry: FC = () => {
             { key: "item_code", label: "Kode Barang" }
           ]),
         { key: "_id", label: "Kode Faktur", render: value => value?.toString() },
-        { key: "arrival_date", label: "Tanggal Tiba", render: value => dateToString(value) },
+        { key: "arrival_date", label: "Tanggal Tiba", render: value => value && dateToString(value) },
         { key: "marking", label: "Marking" },
-        { key: "muat_date", label: "Tanggal Muat", render: value => dateToString(value) },
+        { key: "muat_date", label: "Tanggal Muat", render: value => value && dateToString(value) },
         { key: "quantity", label: "Kuantitas" }
       ]}
       viewExtra={(values, close, refreshData) => {
