@@ -30,7 +30,6 @@ async function print(submittedValues: any, presetName: Presets, collection: Coll
   // Wait half a second just to make sure the window is ready before sending the values for print.
   printview.once("tauri://created", () => {
     setTimeout(() => {
-      console.log('Emitting data');
       printview.emit('data', { ...submittedValues, company_data, type: presetName });
     }, 700);
   });
