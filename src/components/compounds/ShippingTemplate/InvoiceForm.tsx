@@ -12,7 +12,11 @@ const injectAdditionalValues = getFormInjector({
   collectionName: 'Customers',
   localField: 'marking',
   foreignField: 'markings',
-  projection: { customer: '$name', city: 1, measurement_details: 1 }
+  projection: { 
+    customer: '$name', 
+    city: 1, 
+    measurement_details: 1 
+  }
 });
 
 const InvoiceForm: FC<IFormProps> = props => {

@@ -72,7 +72,7 @@ const BasicForm: FC<IFormProps> = (props) => {
           <Item 
             key={item.key}
             name={item.key}>
-            <item.render />
+            <item.render itemKey={item.key} />
           </Item>
         );
         else return (
@@ -199,6 +199,7 @@ interface ICustomItem {
 }
 
 interface ICustomComponentProps {
+  itemKey?: string
   value?: any
 }
 

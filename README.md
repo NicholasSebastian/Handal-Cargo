@@ -2,7 +2,7 @@
 
 With 6953 lines of code!
 
-## NOTES
+## NOTES FOR MYSELF
 
 If you're getting errors saying that the module 'crypto' cannot be found, add the following snippet:
 
@@ -18,11 +18,8 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 
 ## TO DO LIST
 
-- Customers should have 2 phone numbers, 2 home numbers and a fax number.
 - Printing adjustments:
   - The printing positions.
-  - The font.
-  - Leave out the blank values from getting printed.
   - Text that is too long needs to get truncated.
 - Might need to allow for the Sea Freight and Air Cargo marking fields to be editable.
 

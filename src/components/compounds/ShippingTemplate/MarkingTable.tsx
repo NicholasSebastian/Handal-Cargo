@@ -63,10 +63,10 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
   }
 
   const deleteCheck = async (id: BSON.ObjectId) => {
-    const inTravelDocuments = database?.collection('TravelDocuments').findOne({ marking_id: id });
+    const inTravelDocuments = database?.collection('TravelPermits').findOne({ marking_id: id });
     const inInvoices = database?.collection('Invoices').findOne({ marking_id: id });
-    const markings = await Promise.all([inTravelDocuments, inInvoices]);
-    return markings.every(marking => marking == null);
+    const inMarkings = await Promise.all([inTravelDocuments, inInvoices]);
+    return inMarkings.every(marking => marking == null);
   }
 
   const clearInputs = () => {

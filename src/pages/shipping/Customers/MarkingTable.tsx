@@ -77,8 +77,8 @@ const MarkingTable: FC<ICustomComponentProps> = props => {
     // Check if the marking is already being used in a SeaFreight or AirCargo entry.
     const inSeafreightMarkings = database?.collection('SeaFreight').findOne({ 'markings.marking': marking });
     const inAirCargoMarkings =  database?.collection('AirCargo').findOne({ 'markings.marking': marking });
-    const markings = await Promise.all([inSeafreightMarkings, inAirCargoMarkings]);
-    return markings.every(marking => marking == null);
+    const inMarkings = await Promise.all([inSeafreightMarkings, inAirCargoMarkings]);
+    return inMarkings.every(marking => marking == null);
   }
 
   return (

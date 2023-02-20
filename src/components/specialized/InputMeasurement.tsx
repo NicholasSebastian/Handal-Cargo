@@ -7,7 +7,7 @@ const { useFormInstance, useWatch, Item } = Form;
 // Intended for use in SeaFreight and AirCargo's travel documents and invoices pages.
 
 const InputMeasurement: FC<ICustomComponentProps> = props => {
-  const { value } = props;
+  const { itemKey, value } = props;
   const form = useFormInstance();
   const measurementOption = useWatch('measurement_option', form);
 
@@ -18,7 +18,7 @@ const InputMeasurement: FC<ICustomComponentProps> = props => {
       style={{ marginBottom: 0 }}>
       <InputNumber 
         value={value} // Very memory inefficient way to handle the onChange but oh well.
-        onChange={measurement => form.setFieldsValue({ ...form.getFieldsValue(true), measurement })}
+        onChange={value => form.setFieldsValue({ ...form.getFieldsValue(true), [itemKey!]: value })}
         style={{ width: '100%' }} />
     </Item>
   );

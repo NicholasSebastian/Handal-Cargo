@@ -30,8 +30,8 @@
   </body>
   <script>
     const tauri = window.__TAURI__;
-    const { listen } = tauri.event;
-    const { getCurrent } = tauri.window;
+    const { once, emit } = tauri.event;
+    const { getCurrent, getAll } = tauri.window;
 
     const root = document.getElementById('root');
     const head = document.getElementsByTagName('head')[0];
@@ -43,9 +43,10 @@
         position: fixed; 
         top: ${y}px; 
         left: ${x}px; 
+        font-family: sans-serif;
         ${style ?? 'font-size: 11px;'}
       `);
-      el.innerText = value;
+      el.innerText = value.replace(/undefined|null/g, '');
     }
 
     function drawRect(x, y, width, height, colour = "#004D52") {
@@ -91,8 +92,9 @@
       return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0;
     }
 
-    listen('data', event => {
+    once('data', event => {
       const data = event.payload;
+      emit('data-received');
       removeSpinner();
 
       // Format and display the data properly for printing.

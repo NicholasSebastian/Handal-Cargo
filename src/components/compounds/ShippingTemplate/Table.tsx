@@ -51,9 +51,10 @@ const TableTemplate: FC<ITemplateProps> = props => {
         }
         deleteCheck={async (_, entry) => {
           const markings = entry.markings?.map((marking: any) => marking.marking_id);
-          const invoices = database?.collection('Invoices');
-          const marking = await invoices?.findOne({ marking_id: { $in: markings } });
-          return marking == null;
+          const inTravelDocuments = database?.collection('TravelPermits').findOne({ marking_id: { $in: markings } });
+          const inInvoices = database?.collection('Invoices').findOne({ marking_id: { $in: markings } });
+          const inMarkings = await Promise.all([inTravelDocuments, inInvoices]);
+          return inMarkings.every(marking => marking == null);
         }}
         showIndicator={values => values.markings.every((marking: any) => marking.paid)}
         view={View}

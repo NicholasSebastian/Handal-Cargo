@@ -1,12 +1,13 @@
-import { WebviewWindow, WindowOptions } from "@tauri-apps/api/window";
+import { WebviewWindow, WindowOptions, getAll } from "@tauri-apps/api/window";
+import { once } from "@tauri-apps/api/event";
 import { query as companyQuery } from "./pages/admin/CompanySetup";
 
 type Collection = Realm.Services.MongoDB.MongoDBCollection<any> | undefined;
 type Presets = 'sf-surat-jalan-daerah' | 'sf-surat-jalan' | 'sf-faktur' | 'sf-rugi-laba'
   | 'ac-surat-jalan-daerah' | 'ac-surat-jalan' | 'ac-faktur' | 'ac-rugi-laba';
 
-const A4_WIDTH = 210 * 3;
-const A4_HEIGHT = 297 * 3;
+const A4_WIDTH = 210 * 3; // 508
+const A4_HEIGHT = 297 * 3;  // 718.5
 
 const previewWindowConfig = (landscape: boolean): WindowOptions => ({ 
   alwaysOnTop: true, 
@@ -26,13 +27,12 @@ async function print(submittedValues: any, presetName: Presets, collection: Coll
   const config = previewWindowConfig(isLandscape);
   const printview = new WebviewWindow("print-preview", config);
   const company_data = await collection?.findOne(companyQuery, { projection: { _id: 0 } });
+  const data = { ...submittedValues, company_data, type: presetName };
 
-  // Wait half a second just to make sure the window is ready before sending the values for print.
-  printview.once("tauri://created", () => {
-    setTimeout(() => {
-      printview.emit('data', { ...submittedValues, company_data, type: presetName });
-    }, 700);
-  });
+  // Send the data to the window.
+  let pinger: NodeJS.Timer;
+  once('data-received', () => clearInterval(pinger));
+  pinger = setInterval(() => printview.emit('data', data), 100);
 }
 
 export type { Presets };

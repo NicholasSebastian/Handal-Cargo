@@ -11,7 +11,13 @@ const injectAdditionalValues = getFormInjector({
   collectionName: 'Customers',
   localField: 'marking',
   foreignField: 'markings',
-  projection: { customer: '$name', address: 1, city: 1, home_number: 1, phone_number: 1 }
+  projection: { 
+    customer: '$name', 
+    address: 1, 
+    city: 1, 
+    home_number: 1, 
+    phone_number: 1
+  }
 });
 
 const TravelDocumentForm: FC<IFormProps> = props => {

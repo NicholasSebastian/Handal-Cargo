@@ -29,8 +29,8 @@ const Customers: FC = () => {
         const marking = entry.markings;
         const inSeafreightMarkings = database?.collection('SeaFreight').findOne({ 'markings.marking': marking });
         const inAirCargoMarkings =  database?.collection('AirCargo').findOne({ 'markings.marking': marking });
-        const markings = await Promise.all([inSeafreightMarkings, inAirCargoMarkings]);
-        return markings.every(marking => marking == null);
+        const inMarkings = await Promise.all([inSeafreightMarkings, inAirCargoMarkings]);
+        return inMarkings.every(marking => marking == null);
       }}
       columns={[
         { dataIndex: "name", title: "Customer" },
@@ -49,8 +49,12 @@ const Customers: FC = () => {
         { key: 'city', label: 'Kota' },
         { key: 'zip_code', label: 'Kode Pos' },
         { key: 'office_number', label: 'Nomor Kantor' },
+        { key: 'office_number_2', label: 'Nomor Kantor 2' },
         { key: 'phone_number', label: 'Nomor HP' },
+        { key: 'phone_number_2', label: 'Nomor HP 2' },
         { key: 'home_number', label: 'Nomor Telepon' },
+        { key: 'home_number_2', label: 'Nomor Telepon 2' },
+        { key: 'fax_number', label: 'Nomor Fax' },
         { key: 'contact_person', label: 'Orang Kontak' },
         { key: 'email', label: 'Email' },
         { key: 'status', label: 'Status', type: 'boolean' },
