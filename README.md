@@ -16,6 +16,20 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 
 <https://www.mongodb.com/community/forums/t/cant-resolve-crypto-in-node-modules-bson-dist-react/143227>
 
+## TO DO LIST
+
+- Customers should have 2 phone numbers, 2 home numbers and a fax number.
+- Printing adjustments:
+  - The printing positions.
+  - The font.
+  - Leave out the blank values from getting printed.
+  - Text that is too long needs to get truncated.
+- Might need to allow for the Sea Freight and Air Cargo marking fields to be editable.
+
+## QUESTIONABLE THINGS THAT NEED TO BE ASKED
+
+- How to calculate the 'Margins' and 'Biaya' in the 'Laporan Rugi Laba'?
+
 ## POSSIBLE FUTURE FEATURES
 
 - Table pagination and fixed header.
