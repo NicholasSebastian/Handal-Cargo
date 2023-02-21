@@ -50,6 +50,12 @@ const Invoice: FC<ITableProps> = props => {
       query={(collectionName, search, searchBy) => {
         if (!search) 
           return database?.collection(collectionName).find(filter);
+        else if (searchBy === '_id')
+          return database?.collection(collectionName).aggregate([
+            { $match: filter },
+            { $addFields: { id: { $toString: '$_id' } } },
+            { $match: { id: { $regex: search } } }
+          ]);
         else
           return database?.collection(collectionName).find({
             ...filter,

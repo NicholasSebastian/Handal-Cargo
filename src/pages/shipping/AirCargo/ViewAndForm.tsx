@@ -30,7 +30,7 @@ function calculateTotalClearance(record: Record<string, any>) {
   return DEFAULT_SYMBOL + formatCurrency(clearance_fee * clearance_weight * exchange_rate);
 }
 
-function calculateTotal(record: Record<string, any>) {
+function calculateTotal(record: Record<string, any>): number {
   const {
     freight_fee, freight_weight, commission_fee, commission_weight, clearance_fee, 
     clearance_weight, additional_fee, other_fee, exchange_rate
@@ -41,7 +41,7 @@ function calculateTotal(record: Record<string, any>) {
   const value3 = clearance_fee * clearance_weight;
   const value = ((value1 + value2 + value3 + additional_fee) * exchange_rate) + other_fee;
 
-  return DEFAULT_SYMBOL + formatCurrency(value);
+  return value;
 }
 
 function toDisplayPrice(label: string, field1: any, field2: any) {
@@ -118,6 +118,7 @@ const feeWeightTotal = [
 
 const viewAndFormStuff: IViewAndFormStuff = {
   profitLossPrintPreset: 'ac-rugi-laba',
+  calculateTotalFee: calculateTotal,
   viewItems: [
     { key: 'airwaybill_number', label: 'Nomor Air Waybill' },
     { key: 'muat_date', label: 'Tanggal Muat', render: dateToString },
@@ -138,7 +139,7 @@ const viewAndFormStuff: IViewAndFormStuff = {
     { key: 'clearance_fee', label: 'Biaya Custom Clearance', render: formatForeignCurrency },
     { key: 'other_fee', label: 'Biaya Lain-Lain', render: value => DEFAULT_SYMBOL + formatCurrency(value) },
     { key: 'clearance_weight', label: 'Berat Clearance (kg)', render: value => value + ' kg' },
-    { label: 'Total Biaya', render: (_, record) => calculateTotal(record) },
+    { label: 'Total Biaya', render: (_, record) => DEFAULT_SYMBOL + formatCurrency(calculateTotal(record)) },
     viewGap,
     { key: 'description', label: 'Keterangan' }
   ],

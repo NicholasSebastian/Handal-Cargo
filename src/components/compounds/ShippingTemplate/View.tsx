@@ -9,7 +9,7 @@ import BasicView, { IViewItem } from "../../basics/BasicView";
 import print, { Presets } from "../../../print";
 
 const View: FC<IViewProps> = props => {
-  const { items, columns, TravelDocumentForm, InvoiceForm, printPreset } = props;
+  const { items, columns, TravelDocumentForm, InvoiceForm, printPreset, calculateTotalFee } = props;
   const { markings, ...values } = props.values;
   const { title } = useRoute()!;
   const database = useDatabase();
@@ -38,7 +38,8 @@ const View: FC<IViewProps> = props => {
           invoices, 
           arrival_date: values.arrival_date,
           container_number: values.container_number,
-          item_code: values.item_code 
+          item_code: values.item_code,
+          total_fee: calculateTotalFee(values)
         };
         print(printData, printPreset, singletons.current);
       });
@@ -119,6 +120,7 @@ interface IViewProps extends IInjectedProps {
   TravelDocumentForm: ComponentType<IFormProps>
   InvoiceForm: ComponentType<IFormProps>
   printPreset: Presets
+  calculateTotalFee: (record: Record<string, any>) => number
 }
 
 interface IFormProps extends IInjectedProps {

@@ -45,7 +45,7 @@ const MasterDifference = createDependentValue({
 });
 
 const markingsStuff: IMarkingsStuff = {
-  markingTableWidth: 950,
+  markingTableWidth: 1000,
   markingFields: [
     { 
       key: 'listkg', 

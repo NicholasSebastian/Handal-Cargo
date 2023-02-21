@@ -1,6 +1,6 @@
 # Handal Cargo
 
-With 7136 lines of code!
+With 7191 lines of code!
 
 ## NOTES FOR MYSELF
 
@@ -21,11 +21,6 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 - Printing adjustments:
   - The printing positions.
   - Text that is too long needs to get truncated.
-- Might need to allow for the Sea Freight and Air Cargo marking fields to be editable.
-
-## QUESTIONABLE THINGS THAT NEED TO BE ASKED
-
-- How to calculate the 'Margins' and 'Biaya' in the 'Laporan Rugi Laba'?
 
 ## POSSIBLE FUTURE FEATURES
 

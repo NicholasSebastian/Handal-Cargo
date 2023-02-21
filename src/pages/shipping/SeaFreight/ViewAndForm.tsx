@@ -14,10 +14,10 @@ function formatForeignCurrency(value: any, record: Record<string, any>) {
   return DEFAULT_SYMBOL + formatCurrency(value * exchange_rate);
 }
 
-function calculateTotal(record: Record<string, any>) {
+function calculateTotal(record: Record<string, any>): number {
   const { muat_fee, additional_fee, clearance_fee, other_fee, exchange_rate } = record;
   const value = ((muat_fee + additional_fee + clearance_fee) * exchange_rate) + other_fee;
-  return DEFAULT_SYMBOL + formatCurrency(value);
+  return value;
 }
 
 function toDisplayRp(field: any) {
@@ -66,6 +66,7 @@ const fees = [
 
 const viewAndFormStuff: IViewAndFormStuff = {
   profitLossPrintPreset: 'sf-rugi-laba',
+  calculateTotalFee: calculateTotal,
   viewItems: [
     { key: 'container_number', label: 'Nomor Container' },
     { key: 'muat_date', label: 'Tanggal Muat', render: dateToString },
@@ -82,7 +83,7 @@ const viewAndFormStuff: IViewAndFormStuff = {
     { key: 'clearance_fee', label: 'Biaya Custom Clearance', render: formatForeignCurrency },
     { key: 'other_fee', label: 'Biaya Lain-Lain', render: value => DEFAULT_SYMBOL + formatCurrency(value) },
     gap,
-    { label: 'Total Biaya', render: (_, record) => calculateTotal(record) },
+    { label: 'Total Biaya', render: (_, record) => DEFAULT_SYMBOL + formatCurrency(calculateTotal(record)) },
     gap,
     { key: 'description', label: 'Keterangan' }
   ],

@@ -1,14 +1,14 @@
 import { BSON } from "realm-web";
-import { FC, useState, useReducer } from "react";
+import { FC, useState, useReducer, CSSProperties } from "react";
 import styled from "styled-components";
-import { Form, Table, InputNumber, Button, message } from "antd";
+import { Form, Table, InputNumber, Button, Space, Modal, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { PlusOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import useDatabase from "../../../data/useDatabase";
 import { ICustomComponentProps } from "../../basics/BasicForm";
 import SearchMarking from "../../specialized/SearchMarking";
 
-const { useFormInstance } = Form;
+const { useFormInstance, Item } = Form;
 const check = <CheckOutlined style={{ color: 'green' }} />
 const cross = <CloseOutlined style={{ color:'red' }} />
 
@@ -21,6 +21,7 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
   const [marking, setMarking] = useState<string>();
   const [quantity, setQuantity] = useState('0');
   const [otherState, setOtherState] = useReducer(reducer, fields, createInitialState);
+  const [editModal, setEditModal] = useState<Record<string, any> | null>(null);
 
   const handleChange = (markings: Array<any>) => {
     form.setFieldsValue({ ...form.getFieldsValue(true), markings });
@@ -51,6 +52,14 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
 
       clearInputs();
     }
+  }
+
+  const handleEdit = () => {
+    const { index, ...editedMarking } = editModal!;
+    const left = markings.slice(0, index);
+    const right = markings.slice(index + 1);
+    handleChange([...left, editedMarking, ...right]);
+    setEditModal(null);
   }
 
   const handleDelete = (id: BSON.ObjectId, index: number) => {
@@ -106,12 +115,38 @@ const MarkingTable: FC<IMarkingTableProps> = props => {
           ...columns,
           {
             fixed: 'right',
-            width: 92,
+            width: 152,
             render: (_, record, i) => (
-              <Button onClick={() => handleDelete(record.marking_id, i)}>Hapus</Button>
+              <Space>
+                <Button onClick={() => setEditModal({ ...record, index: i })}>Edit</Button>
+                <Button onClick={() => handleDelete(record.marking_id, i)}>Hapus</Button>
+              </Space>
             )
           }
         ]} />
+      <Modal centered maskClosable
+        title="Edit Marking"
+        visible={editModal != null}
+        onCancel={() => setEditModal(null)}
+        footer={null}
+        width={500}
+        bodyStyle={ModalStyles}>
+        {fields.map(field => !field.disabled && (
+          <Item label={field.label} labelCol={{ span: 13 }}>
+            <InputNumber 
+              value={editModal ? editModal[field.key] : ''}
+              onChange={newValue => setEditModal(values => ({ ...values, [field.key]: newValue }))} />
+          </Item>
+        ))}
+        <div style={{ marginTop: '10px', gridColumnStart: 1, gridColumnEnd: 3 }}>
+          <Button 
+            type="primary"
+            onClick={handleEdit}
+            style={{ float: 'right' }}>
+            Simpan
+          </Button>
+        </div>
+      </Modal>
     </Container>
   );
 }
@@ -147,8 +182,8 @@ function fieldsToMarkingColumns(fields: Array<MarkingField>): ColumnsType<any> {
   ];
 }
 
-export { fieldsToMarkingColumns };  // Dont export this. This component prolly shouldn't share columns with index.tsx.
-export type { MarkingField };       // This component's fields should have clickable cells that open a modal that allow editing.
+export { fieldsToMarkingColumns };
+export type { MarkingField };
 export default MarkingTable;
 
 const Container = styled.div<IStyleProps>`
@@ -175,6 +210,11 @@ const Container = styled.div<IStyleProps>`
     }
   }
 `;
+
+const ModalStyles: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr'
+};
 
 interface IMarkingTableProps extends ICustomComponentProps {
   fields: Array<MarkingField>

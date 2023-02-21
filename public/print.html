@@ -46,7 +46,7 @@
         font-family: sans-serif;
         ${style ?? 'font-size: 11px;'}
       `);
-      el.innerText = value.replace(/undefined|null/g, '');
+      el.innerText = value.toString().replace(/undefined|null/g, '');
     }
 
     function drawRect(x, y, width, height, colour = "#004D52") {
@@ -85,17 +85,20 @@
     }
 
     function formatDate(date) {
+      if (date == null) return '';
       return new Date(date).toLocaleDateString("id-ID", { day: '2-digit', month: 'short', year: "numeric" });
     }
 
     function commaSeparate(value) {
-      return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0;
+      return (value != null) ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0;
     }
 
     once('data', event => {
       const data = event.payload;
       emit('data-received');
       removeSpinner();
+
+      console.log(data);
 
       // Format and display the data properly for printing.
       switch (data.type) {
@@ -166,7 +169,7 @@
           writeText("Keterangan", 780, 87, "color: #fff; font-size: 12px; font-weight: 500;");
           writeText("Tgl Tiba: " + formatDate(data.arrival_date), 20, 108, "color: #f00; font-size: 11px; font-weight: 600;");
           writeText("Nomor Container: " + data.container_number, 40, 122, "color: #f00; font-size: 11px; font-weight: 600;");
-          writeText("Total Biaya: <some number here>", 550, 122, "color: #f00; font-size: 11px; font-weight: 600;");
+          writeText("Total Biaya: Rp. " + commaSeparate(data.total_fee), 550, 122, "color: #f00; font-size: 11px; font-weight: 600;");
           for (let i = 0; i < data.invoices.length; i++) {
             const cur = data.invoices[i];
             writeText(cur.marking, 20, 140 + (20 * i));
@@ -186,12 +189,12 @@
           drawRect(245, offsetY, 625, 1);
           writeText(commaSeparate(totalMeasurement), 160, offsetY + 6);
           writeText("Margin", 245, offsetY + 6, "font-size: 11px; font-style: italic; color: #f00;");
-          writeText("<some number here>", 300, offsetY + 6);
+          writeText("Rp. " + commaSeparate(total - data.total_fee), 300, offsetY + 6);
           writeText("Sub Total", 605, offsetY + 6, "font-size: 11px; font-style: italic; color: #f00;");
           writeText("Rp." + commaSeparate(total), 680, offsetY + 6);
           drawRect(20, offsetY + 22, 850, 1);
           writeText("Margin", 245, offsetY + 28, "font-size: 11px; font-style: italic; font-weight: 700; color: #f00;");
-          writeText("<some number here>", 300, offsetY + 28, "font-size: 11px; font-weight: 700;");
+          writeText("Rp. " + commaSeparate(total - data.total_fee), 300, offsetY + 28, "font-size: 11px; font-weight: 700;");
           writeText("Grand Total", 605, offsetY + 28, "font-size: 11px; font-style: italic; font-weight: 700; color: #f00;");
           writeText("Rp." + commaSeparate(total), 680, offsetY + 28, "font-size: 11px; font-weight: 700;");
           break;
@@ -270,7 +273,7 @@
           writeText("Keterangan", 800, 87, "color: #fff; font-size: 12px; font-weight: 500;");
           writeText("Tgl Tiba: " + formatDate(data.arrival_date), 20, 108, "color: #f00; font-size: 11px; font-weight: 600;");
           writeText("Kode Barang: " + data.item_code, 40, 122, "color: #f00; font-size: 11px; font-weight: 600;");
-          writeText("Total Biaya: <some number here>", 580, 122, "color: #f00; font-size: 11px; font-weight: 600;");
+          writeText("Total Biaya: Rp. " + commaSeparate(data.total_fee), 580, 122, "color: #f00; font-size: 11px; font-weight: 600;");
           for (let i = 0; i < data.invoices.length; i++) {
             const cur = data.invoices[i];
             writeText(cur.marking, 20, 140 + (20 * i));
@@ -291,12 +294,12 @@
           drawRect(245, offsetY, 625, 1);
           writeText(commaSeparate(totalMeasurement), 160, offsetY + 6);
           writeText("Margin", 245, offsetY + 6, "font-size: 11px; font-style: italic; color: #f00;");
-          writeText("<some number here>", 300, offsetY + 6);
+          writeText("Rp. " + commaSeparate(total - data.total_fee), 300, offsetY + 6);
           writeText("Sub Total", 645, offsetY + 6, "font-size: 11px; font-style: italic; color: #f00;");
           writeText("Rp." + commaSeparate(total), 720, offsetY + 6);
           drawRect(20, offsetY + 22, 850, 1);
           writeText("Margin", 245, offsetY + 28, "font-size: 11px; font-style: italic; font-weight: 700; color: #f00;");
-          writeText("<some number here>", 300, offsetY + 28, "font-size: 11px; font-weight: 700;");
+          writeText("Rp. " + commaSeparate(total - data.total_fee), 300, offsetY + 28, "font-size: 11px; font-weight: 700;");
           writeText("Grand Total", 645, offsetY + 28, "font-size: 11px; font-style: italic; font-weight: 700; color: #f00;");
           writeText("Rp." + commaSeparate(total), 720, offsetY + 28, "font-size: 11px; font-weight: 700;");
           break;

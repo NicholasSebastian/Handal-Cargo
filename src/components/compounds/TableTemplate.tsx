@@ -64,7 +64,7 @@ const TableTemplate = withTemplateHandling<ITemplateProps>(props => {
           }), 
           {
             fixed: 'right',
-            width: 155,
+            width: 152,
             render: entry => {
               const onEdit: ClickHandler1 = e => {
                 e.stopPropagation(); 

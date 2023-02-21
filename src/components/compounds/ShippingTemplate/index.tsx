@@ -20,7 +20,7 @@ import InvoiceForm from "./InvoiceForm";
 
 const ShippingTemplate: FC<IShippingProps> = props => {
   const { collectionName, searchBy, columns, queryPipeline } = props;
-  const { viewItems, markingFields, markingTableWidth } = props;
+  const { viewItems, calculateTotalFee, markingFields, markingTableWidth } = props;
   const { formItems, MarkingTableDetails } = props;
   const { travelDocumentColumns, travelDocumentViewItems, travelDocumentFormItems } = props;
   const { invoiceColumns, invoiceViewItems, invoiceFormItems } = props;
@@ -42,6 +42,7 @@ const ShippingTemplate: FC<IShippingProps> = props => {
           printPreset={profitLossPrintPreset}
           columns={markingColumns}
           items={viewItems}
+          calculateTotalFee={calculateTotalFee}
           TravelDocumentForm={props => (
             <TravelDocumentForm
               {...props}
@@ -116,6 +117,7 @@ interface IViewAndFormStuff {
   viewItems: Array<IViewItem>
   formItems: Array<FormItem>
   profitLossPrintPreset: Presets
+  calculateTotalFee: (record: Record<string, any>) => number
 }
 
 interface IMarkingsStuff {
