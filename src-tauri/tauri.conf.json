@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Handal Cargo Management",
-    "version": "8.0.0"
+    "version": "8.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -59,7 +59,11 @@
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
-        "timestampUrl": ""
+        "timestampUrl": "",
+        "webviewInstallMode": {
+          "type": "offlineInstaller",
+          "silent": false
+        }
       }
     },
     "security": {
