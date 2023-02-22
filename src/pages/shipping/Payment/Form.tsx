@@ -3,15 +3,18 @@ import styled from "styled-components";
 import { Typography, Table, Input, DatePicker, Button, Popconfirm, Divider, message } from "antd";
 import { PlusOutlined } from '@ant-design/icons';
 import moment from "moment";
+import useDatabase from "../../../data/useDatabase";
 import { IInjectedProps } from "../../../components/abstractions/withFormHandling";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import InputCurrency from "../../../components/basics/InputCurrency";
 import { formatCurrency, dateToString } from "../../../utils";
 
 const { Text } = Typography;
+const year = (new Date().getFullYear() - 2000) * 10000;
 
 const PaymentForm: FC<IInjectedProps> = props => {
   const { initialValues, onSubmit } = props;
+  const database = useDatabase();
   const [items, setItems] = useState(initialValues?.items ?? []);
 
   const [date, setDate] = useState(new Date());
@@ -37,8 +40,21 @@ const PaymentForm: FC<IInjectedProps> = props => {
     setItems((items: Array<never>) => items.filter((_, i) => i !== index));
   }
 
-  const handleSubmit = () => {
-    onSubmit({ ...initialValues, items });
+  const handleSubmit = async () => {
+    if (initialValues && ('id' in initialValues)) {
+      // Simply update the items if this is an edit form.
+      onSubmit({ ...initialValues, items });
+    }
+    else {
+      // Otherwise its an add form, in which we figure out the id to use:
+      const payments = database?.collection('Payments');
+      const results = await payments?.aggregate([{ $group: { _id: null, max: { $max: '$id' } } }]);
+      const lastId = (results.length > 0) ? (results[0].max - year) : -1;
+      const id = (lastId < 0) ? year : (lastId + year + 1);
+
+      // Then submit the items with the new id.
+      onSubmit({ id, items });
+    }
   }
 
   return (
@@ -49,7 +65,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
             {initialValues && (
               <Fragment>
                 <Text strong>Kode Pembayaran: </Text>
-                {initialValues['_id'].toString()}
+                {initialValues.id}
               </Fragment>
             )}
           </span>

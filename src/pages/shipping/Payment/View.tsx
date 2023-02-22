@@ -12,10 +12,10 @@ const PaymentView: FC<IInjectedProps> = props => {
   const total = values.items.reduce((acc: number, item: any) => acc + item.amount, 0);
   return (
     <ViewContainer
-      column={1}
+      column={2}
       labelStyle={{ fontWeight: 500 }}>
       <Item label="Kode Pembayaran">
-        {values['_id'].toString()}
+        {values.id}
       </Item>
       <Item label="Total Pembayaran">
         {DEFAULT_SYMBOL}{formatCurrency(total)}

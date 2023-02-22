@@ -11,26 +11,25 @@ const Payment: FC = () => {
   return (
     <TableTemplate
       collectionName="Payments"
-      searchBy="_id"
+      searchBy="id"
       modalWidth={720}
       view={PaymentView}
       form={PaymentForm}
       query={(collectionName, search, searchBy) => {
         if (!search) 
           return database?.collection(collectionName).aggregate([
-            { $project: { total: { $sum: "$items.amount" } } }
+            { $project: { id: 1, total: { $sum: "$items.amount" } } }
           ]);
         else 
           switch (searchBy) {
-            case '_id':
+            case 'id':
               return database?.collection(collectionName).aggregate([
-                { $addFields: { id: { $toString: '$_id' } } },
                 { $match: { id: { $regex: search } } },
-                { $project: { total: { $sum: "$items.amount" } } }
+                { $project: { id: 1, total: { $sum: "$items.amount" } } }
               ]);
             case 'total':
               return database?.collection(collectionName).aggregate([
-                { $project: { total: { $toString: { $sum: "$items.amount" } } } },
+                { $project: { id: 1, total: { $toString: { $sum: "$items.amount" } } } },
                 { $match: { total: { $regex: search } } }
               ]);
           }
@@ -42,9 +41,8 @@ const Payment: FC = () => {
       }}
       columns={[
         { 
-          dataIndex: "_id", 
-          title: "Kode Pembayaran", 
-          render: id => id.toString() 
+          dataIndex: "id", 
+          title: "Kode Pembayaran"
         },
         { 
           dataIndex: "total",

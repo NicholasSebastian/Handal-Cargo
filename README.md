@@ -18,7 +18,6 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 
 ## TO DO LIST
 
-- Change the 'Kode Pembayaran' of the Payments pages to use (year)(number) instead of '_id'.
 - Printing:
   - Instead of automatically opening the print dialog directly, have options at the bottom of the page:
     - A 'print' button.
@@ -27,8 +26,4 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
   - Adjustments:
     - The printing positions.
     - Text that is too long needs to get truncated.
-
-## POSSIBLE FUTURE FEATURES
-
-- Table pagination and fixed header.
-- Sort tables by specified column.
+- Limit table lengths to 20 and sort by most recently added or edited.
