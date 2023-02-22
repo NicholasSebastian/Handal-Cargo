@@ -22,6 +22,7 @@
       @media screen {
         #root {
           background-color: #fff;
+          border: 1px solid #d9d9d9;
           width: 100vw;
           height: 100vh;
           transform: scale(0.8);
@@ -30,10 +31,12 @@
       body {
         background-color: #f0f2f5;
         margin: 0;
+        overflow-y: hidden;
       }
       #menu {
         display: none;
         background-color: #fff;
+        border-bottom: 1px solid #d9d9d9;
         padding: 10px 20px;
         position: fixed;
         top: 0;
@@ -76,24 +79,49 @@
       <button onclick="sendByWhatsApp()">Kirim lewat WhatsApp</button>
     </div>
   </body>
-  <script>
-    function sendByEmail() {
-      // TODO: Save the page to a pdf.
-      // TODO: Send by email.
-    }
-
-    function sendByWhatsApp() {
-      // TODO: Save the page to a pdf.
-      // TODO: Send by whatsapp. Access another window depending on whether 'whatsapp-window' exists or not.
-    }
-  </script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+  <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
   <script>
     const tauri = window.__TAURI__;
     const { once, emit } = tauri.event;
-    const { getCurrent, getAll } = tauri.window;
+    const { WebviewWindow, getCurrent, getAll } = tauri.window;
 
     const root = document.getElementById('root');
     const head = document.getElementsByTagName('head')[0];
+
+    function uploadPdf() {
+      const width = root.clientWidth;
+      const height = root.clientHeight;
+
+      html2canvas(root).then(canvas => {
+        const imgData = canvas.toDataURL("image/jpeg", 1.0);
+        const pdf = new jsPDF({
+          orientation: (width > height) ? "landscape" : "portrait",
+          unit: "pt",
+          format: [width, height]
+        });
+        pdf.addImage(imgData, 'JPG', 0, 0, width, height);
+        const pdfBlob = pdf.output('blob', 'document.pdf');
+        // TODO: Upload to a file hoster API and get its URL.
+      });
+    }
+
+    // TODO: Instead of binding the menu buttons directly to these functions.
+    //       Set ids on the buttons, then addEventListener on them to bind the function in the switch-case below.
+    //       This lets us pass in different arguments depending on the current document context.
+
+    function sendByEmail() {
+      // uploadPdf();
+      // TODO
+    }
+
+    function sendByWhatsApp() {
+      // uploadPdf();
+      // TODO
+      // NOTE: Don't use the wa.me link. 
+      //       That causes a window to open that opens the computer's local whatsapp 
+      //       but doesnt even include the file attachment.
+    }
 
     function writeText(value, x, y, style = undefined) {
       const el = document.createElement('div');

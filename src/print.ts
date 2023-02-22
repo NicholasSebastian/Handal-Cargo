@@ -11,7 +11,6 @@ const A4_WIDTH = 792;
 const A4_HEIGHT = 1120;
 
 const previewWindowConfig = (landscape: boolean): WindowOptions => ({ 
-  alwaysOnTop: true, 
   center: true, 
   focus: true, 
   resizable: false, 
