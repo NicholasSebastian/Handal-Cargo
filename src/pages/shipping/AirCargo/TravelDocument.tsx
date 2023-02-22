@@ -1,6 +1,6 @@
 import moment from "moment";
 import InputMeasurement from "../../../components/specialized/InputMeasurement";
-import getSwitchableCustomerNumber from "../../../components/specialized/SwitchableCustNumber";
+import getSwitchableCustomerValue from "../../../components/specialized/SwitchableCustValue";
 import { ITravelDocumentsStuff } from "../../../components/compounds/ShippingTemplate";
 import { gap as viewGap } from "../../../components/basics/BasicView";
 import { gap as formGap } from "../../../components/basics/BasicForm";
@@ -46,14 +46,14 @@ const travelDocumentsStuff: ITravelDocumentsStuff = {
     },
     formGap,
     { key: 'measurement', type: 'custom', render: InputMeasurement },
-    { key: 'home_number', type: 'custom', render: getSwitchableCustomerNumber('Nomor Telepon', 'home_number_2') },
+    { key: 'home_number', type: 'custom', render: getSwitchableCustomerValue('Nomor Telepon', 'home_number_2') },
     { key: 'unit', label: 'Satuan', type: 'select', 
       items: ['Colly', 'Ball', 'Roll', 'Kardus', 'Pcs', 'Kodi', 'Lusin'] 
     },
-    { key: 'phone_number', type: 'custom', render: getSwitchableCustomerNumber('Nomor HP', 'phone_number_2') },
+    { key: 'phone_number', type: 'custom', render: getSwitchableCustomerValue('Nomor HP', 'phone_number_2') },
     { key: 'customer', label: 'Customer' }, 
-    { key: 'city', label: 'Kota' },
-    { key: 'address', label: 'Alamat', type: 'textarea' },
+    { key: 'city', type: 'custom', render: getSwitchableCustomerValue('Kota', 'city_2') },
+    { key: 'address', type: 'custom', render: getSwitchableCustomerValue('Alamat', 'address_2', true) },
     { key: 'description', label: 'Keterangan Kirim', type: 'textarea' }
   ]
 }

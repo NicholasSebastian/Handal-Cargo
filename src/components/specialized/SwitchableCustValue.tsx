@@ -1,18 +1,19 @@
 import createSwitchableValue from "../basics/SwitchableValue";
 
-function getSwitchableCustomerNumber(label: string, altKey: string) {
+function getSwitchableCustomerValue(label: string, altKey: string, textarea = false) {
   return createSwitchableValue({ 
-    label: label, 
+    label, 
     labelSpan: 11,
+    textarea,
     altSource: {
       localField: 'marking',
       getter: async (database, marking) => {
         const customers = database?.collection('Customers');
         const result = await customers?.findOne({ markings: marking }, { projection: { [altKey]: 1 } });
-        return result.home_number_2;
+        return result[altKey];
       }
     }
   });
 }
 
-export default getSwitchableCustomerNumber;
+export default getSwitchableCustomerValue;

@@ -36,28 +36,34 @@ const Staff: FC = () => {
         { key: 'employment_date', label: 'Tanggal Kerja', render: value => dateToString(value) }
       ]}
       form={[
-        { key: 'name', label: 'Nama', required: true },
+        { type: 'divider', label: 'Data Akun' },
         { key: 'username', label: 'Nama Pengguna', required: true },
         { key: 'password', label: 'Kata Sandi', type: 'password', required: true },
         { key: 'access_level', label: 'Level Akses', type: 'select', items: 'AccessLevels', required: true },
+        { type: 'divider', label: 'Detail Kerjaan' },
+        { key: 'name', label: 'Nama', required: true },
         { key: 'staff_group', label: 'Kelompok Staff', type: 'select', items: 'StaffGroups', required: true },
-        { key: 'gender', label: 'Kelamin', type: 'select', items: ['Laki-laki', 'Perempuan'] },
+        { key: 'status', label: 'Aktif', type: 'boolean', required: true },
+        { key: 'employment_date', label: 'Tanggal Kerja', type: 'date', required: true },
         'pagebreak',
+        { type: 'divider', label: 'Data Pribadi' },
+        { key: 'gender', label: 'Kelamin', type: 'select', items: ['Laki-laki', 'Perempuan'] },
+        { key: 'birthplace', label: 'Tempat Lahir' },
+        { key: 'birthday', label: 'Tanggal Lahir', type: 'date' },
+        { type: 'divider', label: 'Alamat' },
         { key: 'address', label: 'Alamat' },
         { key: 'ward', label: 'Kecamatan' },
         { key: 'city', label: 'Kota' },
+        { type: 'divider', label: 'Kontak' },
         { key: 'home_number', label: 'Nomor Telepon' },
         { key: 'phone_number', label: 'Nomor HP' },
-        { key: 'birthplace', label: 'Tempat Lahir' },
-        { key: 'birthday', label: 'Tanggal Lahir', type: 'date' },
         'pagebreak',
+        { type: 'divider', label: 'Detail Gaji' },
         { key: 'salary', label: 'Gaji', type: 'currency' },
         { key: 'overtime_pay', label: 'Lembur / Jam', type: 'currency' },
         { key: 'allowance', label: 'Uang Makan', type: 'currency' },
         { key: 'holiday_pay', label: 'THR', type: 'currency' },
-        { key: 'bonus', label: 'Uang Kerajinan', type: 'currency' },
-        { key: 'status', label: 'Aktif', type: 'boolean', required: true },
-        { key: 'employment_date', label: 'Tanggal Kerja', type: 'date', required: true }
+        { key: 'bonus', label: 'Uang Kerajinan', type: 'currency' }
       ]} />
   );
 }

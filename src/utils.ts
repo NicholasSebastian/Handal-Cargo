@@ -119,3 +119,4 @@ export type Subtract<T extends T1, T1 extends object> = Pick<T, SetComplement<ke
 export type SetComplement<A, A1 extends A> = SetDifference<A, A1>;
 export type SetDifference<A, B> = A extends B ? never : A;
 export type RequiredKeys<T> = Pick<T, { [K in keyof T]: {} extends Pick<T, K> ? never : K }[keyof T]>;
+export type CommonProperties<A, B> = Pick<A, keyof (A | B)>;

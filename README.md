@@ -18,9 +18,15 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 
 ## TO DO LIST
 
-- Printing adjustments:
-  - The printing positions.
-  - Text that is too long needs to get truncated.
+- Change the 'Kode Pembayaran' of the Payments pages to use (year)(number) instead of '_id'.
+- Printing:
+  - Instead of automatically opening the print dialog directly, have options at the bottom of the page:
+    - A 'print' button.
+    - A 'send by email' button.
+    - A 'send by WhatsApp' button.
+  - Adjustments:
+    - The printing positions.
+    - Text that is too long needs to get truncated.
 
 ## POSSIBLE FUTURE FEATURES
 

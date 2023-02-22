@@ -1,13 +1,14 @@
-import { FC, useState, useRef, useEffect } from "react";
+import { FC, Fragment, ComponentProps, useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Form, Input as AntInput, Button } from "antd";
 import useDatabase from "../../data/useDatabase";
 import { ICustomComponentProps } from "./BasicForm";
 
 const { useFormInstance, Item } = Form;
+const { TextArea } = AntInput;
 
 function createSwitchableValue(config: ISwitchableValueConfig): FC<ICustomComponentProps> {
-  const { label, labelSpan, altSource, ...args } = config;
+  const { label, labelSpan, textarea, altSource, ...args } = config;
   return props => {
     const { itemKey, value } = props;
     const database = useDatabase();
@@ -36,31 +37,48 @@ function createSwitchableValue(config: ISwitchableValueConfig): FC<ICustomCompon
       form.setFieldsValue({ ...form.getFieldsValue(true), [itemKey!]: value });
     }
 
+    const itemProps: ItemProps = {
+      label,
+      labelCol: (labelSpan != null) ? { span: labelSpan } : undefined,
+      style: { marginBottom: 0 }
+    };
+
+    const buttonProps: ButtonProps = {
+      icon: 1 + (isAlt as never),
+      onClick: () => {
+        if (isAlt) {
+          handleChange(oriValue.current ?? '');
+          setAlt(false);
+        }
+        else {
+          handleChange(altValue.current ?? '');
+          setAlt(true);
+        }
+      }
+    };
+
+    if (textarea) return (
+      <Fragment>
+        <Item {...itemProps}>
+          <TextArea
+            {...args}
+            rows={4}
+            value={value}
+            onChange={e => handleChange(e.target.value)} />
+        </Item>
+        <Button style={{ float: 'right', marginTop: '-32px' }} {...buttonProps} />
+      </Fragment>
+    );
     return (
-      <Item
-        label={label}
-        labelCol={(labelSpan != null) ? { span: labelSpan } : undefined}
-        style={{ marginBottom: 0 }}>
+      <Item {...itemProps}>
         <Input 
+          {...args}
           value={value}
           onChange={e => handleChange(e.target.value)}
           style={{ width: '100%' }}
           addonAfter={
-            <Button 
-              type='text' 
-              icon={1 + (isAlt as never)}
-              onClick={() => {
-                if (isAlt) {
-                  handleChange(oriValue.current ?? '');
-                  setAlt(false);
-                }
-                else {
-                  handleChange(altValue.current ?? '');
-                  setAlt(true);
-                }
-              }} />
-          }
-          {...args} />
+            <Button type='text' {...buttonProps} />
+          } />
       </Item>
     );
   }
@@ -84,9 +102,13 @@ const Input = styled(AntInput)`
 interface ISwitchableValueConfig {
   label: string
   labelSpan?: number
+  textarea?: boolean
   altSource: {
     localField: string
     getter: (database: Realm.Services.MongoDBDatabase | undefined, localValue: any) => Promise<any>
   }
   [key: string]: any
 }
+
+type ItemProps = ComponentProps<typeof Item>;
+type ButtonProps = ComponentProps<typeof Button>;
