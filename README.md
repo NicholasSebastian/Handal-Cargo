@@ -26,4 +26,7 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
   - Adjustments:
     - The printing positions.
     - Text that is too long needs to get truncated.
-- Limit table lengths to 20 and sort by most recently added or edited.
+
+## TO BE IMPLEMENTED IN THE FUTURE
+
+- Table Pagination and Fixed Header.

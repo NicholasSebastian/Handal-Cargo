@@ -41,9 +41,16 @@ const TableTemplate: FC<ITemplateProps> = props => {
         query={(collectionName, search, searchKey) => {
           const extra = queryPipeline ?? [];
           if (search)
-            return database?.collection(collectionName).aggregate([{ [searchKey]: search }, ...pipeline, ...extra]);
+            return database?.collection(collectionName).aggregate([
+              { [searchKey]: search }, 
+              ...pipeline, 
+              ...extra
+            ]);
           else
-            return database?.collection(collectionName).aggregate([...pipeline, ...extra]);
+            return database?.collection(collectionName).aggregate([
+              ...pipeline, 
+              ...extra
+            ]);
         }}
         itemQuery={(collectionName, id) => database?.collection(collectionName)
           .aggregate([{ $match: { _id: id } }, ...pipeline])

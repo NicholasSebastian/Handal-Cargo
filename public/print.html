@@ -14,6 +14,32 @@
           transform: rotate(360deg); 
         } 
       }
+      @media print {
+        #menu {
+          display: none !important;
+        }
+      }
+      @media screen {
+        #root {
+          background-color: #fff;
+          width: 100vw;
+          height: 100vh;
+          transform: scale(0.8);
+        }
+      }
+      body {
+        background-color: #f0f2f5;
+        margin: 0;
+      }
+      #menu {
+        display: none;
+        background-color: #fff;
+        padding: 10px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
       #spinner {
         width: 30px;
         position: fixed;
@@ -21,13 +47,46 @@
         left: calc(50vw - 15px);
         animation: rotate 1.5s linear infinite;
       }
+      #menu > button {
+        float: right;
+        margin-left: 10px;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        user-select: none;
+        background-color: #fff;
+        font-size: 14px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        padding: 6px 15px;
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+      }
+      #menu > button:hover {
+        cursor: pointer;
+        color: #4096ff;
+        border-color: #4096ff;
+      }
     </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <img id="spinner" src="loading.png" />
     <div id="root"></div>
+    <div id="menu">
+      <button onclick="window.print()">Print</button>
+      <button onclick="sendByEmail()">Kirim lewat Email</button>
+      <button onclick="sendByWhatsApp()">Kirim lewat WhatsApp</button>
+    </div>
   </body>
+  <script>
+    function sendByEmail() {
+      // TODO: Save the page to a pdf.
+      // TODO: Send by email.
+    }
+
+    function sendByWhatsApp() {
+      // TODO: Save the page to a pdf.
+      // TODO: Send by whatsapp. Access another window depending on whether 'whatsapp-window' exists or not.
+    }
+  </script>
   <script>
     const tauri = window.__TAURI__;
     const { once, emit } = tauri.event;
@@ -79,6 +138,11 @@
       head.appendChild(style);
     }
 
+    function showMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = 'block';
+    }
+
     function removeSpinner() {
       const spinner = document.getElementById('spinner');
       spinner.parentNode.removeChild(spinner);
@@ -97,8 +161,7 @@
       const data = event.payload;
       emit('data-received');
       removeSpinner();
-
-      console.log(data);
+      showMenu();
 
       // Format and display the data properly for printing.
       switch (data.type) {
@@ -305,13 +368,6 @@
           break;
         }
       }
-
-      // Unfuck the scaling of the print result. This is dank af.
-      root.style = "transform-origin: top left; transform: scale(1.24);";
-
-      // Print the webview before closing the window.
-      addEventListener('afterprint', () => getCurrent().close());
-      window.print();
     });
   </script>
 </html>

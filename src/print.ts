@@ -6,8 +6,9 @@ type Collection = Realm.Services.MongoDB.MongoDBCollection<any> | undefined;
 type Presets = 'sf-surat-jalan-daerah' | 'sf-surat-jalan' | 'sf-faktur' | 'sf-rugi-laba'
   | 'ac-surat-jalan-daerah' | 'ac-surat-jalan' | 'ac-faktur' | 'ac-rugi-laba';
 
-const A4_WIDTH = 210 * 3; // 508 or 595.28
-const A4_HEIGHT = 297 * 3;  // 718.5 or 841.89
+// Magic numbers.
+const A4_WIDTH = 792;
+const A4_HEIGHT = 1120;
 
 const previewWindowConfig = (landscape: boolean): WindowOptions => ({ 
   alwaysOnTop: true, 

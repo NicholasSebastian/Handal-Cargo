@@ -15,11 +15,12 @@ function useDataFetching(collectionName: string, defaultSearchKey: string, custo
     if (customQuery)
       return customQuery(collectionName, search, searchKey);
     else if (!search) 
-      return database?.collection(collectionName).find();
+      return database?.collection(collectionName).find({}, { sort: { $natural: -1 } });
     else 
       return database?.collection(collectionName).find({ 
         [searchKey]: { $regex: search } 
-      });
+      }, 
+      { sort: { $natural: -1 } });
   };
 
   const refreshData = () => {
