@@ -73,6 +73,11 @@ const layouts: PrintLayouts = {
     { content: commaSeparate(data.total), prefix: DEFAULT_SYMBOL, x: 530, y: 280 }
   ],
   "sf-rugi-laba": data => [
+    { content: "Laporan Rugi Laba", x: 380, y: 20, size: 18, bold: 700, italic: true, color: '#004D52' },
+    { content: "Handal Cargo", x: 400, y: 40, size: 18, bold: 700, color: '#004D52' },
+    { x: 20, y: 80, width: 850, height: 25 },
+    { x: 20, y: 82, width: 850, height: 1, color: '#fff' },
+    { x: 20, y: 102, width: 850, height: 1, color: '#fff' },
     // TODO
   ],
   "ac-surat-jalan": data => [

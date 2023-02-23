@@ -16,6 +16,12 @@ const REPOSITORY_URL_V3 = 'https://github.com/NicholasSebastian/HandalCargo-v3';
 const REPOSITORY_URL_V2 = 'https://github.com/NicholasSebastian/Handal-ERP-v2';
 const REPOSITORY_URL_V1 = 'https://github.com/NicholasSebastian/Handal-Cargo-ERP';
 
+const date = new Date().toLocaleDateString('id-ID', { 
+  year: 'numeric', 
+  month: '2-digit', 
+  day: '2-digit' 
+});
+
 const Description = styled.dl`
   dt {
     margin-top: 16px;
@@ -47,6 +53,12 @@ const description: ReactNode = (
     <dd>
       <Timeline>
         <Item color="green">
+          {date} -&nbsp;
+          <a onClick={() => open(REPOSITORY_URL_V8)}>
+            Version 8.0.2
+          </a>
+        </Item>
+        <Item color="gray">
           20/02/2023 -&nbsp;
           <a onClick={() => open(REPOSITORY_URL_V8)}>
             Version 8.0.0
