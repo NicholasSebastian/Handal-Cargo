@@ -61,7 +61,7 @@ const PrintPreview: FC<IPrintPreviewProps> = props => {
                 fontStyle: item.italic ? 'italic' : 'normal',
                 textDecoration: item.underline ? 'underline' : 'none'
               }}>
-              {item.prefix} {item.content} {item.suffix}
+              {item.prefix} {item.content?.toString()} {item.suffix}
             </span>
           );
           return (
