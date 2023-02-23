@@ -71,7 +71,7 @@ function logoutAndClose() {
 }
 
 export type { ILoginProps };
-export { DatabaseProvider, useUser, logoutAndClose };
+export { DatabaseProvider, useUser, logoutAndClose, DEFAULT_WINDOW_SIZE };
 export default useDatabase;
 
 interface IProps {
