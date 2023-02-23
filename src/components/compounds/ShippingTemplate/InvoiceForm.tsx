@@ -1,11 +1,11 @@
 import { BSON } from "realm-web";
-import { FC, useRef } from "react";
+import { FC } from "react";
 import { Button, message } from "antd";
 import useDatabase from "../../../data/useDatabase";
+import usePrint, { Presets } from "../../abstractions/usePrint";
 import getFormInjector, { injectUser } from "../../abstractions/getFormInjector";
 import { IInjectedProps } from "../../abstractions/withInitialData";
 import BasicForm, { FormItem } from "../../basics/BasicForm";
-import print, { Presets } from "../../../print";
 import { momentsToDates } from "../../../utils";
 
 const injectAdditionalValues = getFormInjector({
@@ -15,14 +15,15 @@ const injectAdditionalValues = getFormInjector({
   projection: { 
     customer: '$name', 
     city: 1, 
-    measurement_details: 1 
+    measurement_details: 1,
+    email: 1
   }
 });
 
 const InvoiceForm: FC<IFormProps> = props => {
   const { items, values, printPreset, closeModal } = props;
   const database = useDatabase();
-  const singletons = useRef(database?.collection('Singletons'));
+  const print = usePrint()!;
 
   const handleSubmit = (submittedValues: any) => {
     const id = new BSON.ObjectId();
@@ -35,7 +36,7 @@ const InvoiceForm: FC<IFormProps> = props => {
       .then(() => {
         message.success("Faktur telah disimpan.");
         closeModal();
-        print({ _id: id, ...submittedValues }, printPreset, singletons.current);
+        print({ _id: id, ...submittedValues }, printPreset);
       })
       .catch(() => message.error("Error terjadi. Data gagal disimpan."));
   }

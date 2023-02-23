@@ -6,7 +6,7 @@ import useDatabase, { useUser } from "../../../data/useDatabase";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 import InputCurrency from "../../../components/basics/InputCurrency";
-import { formatCurrency } from "../../../utils";
+import { commaSeparate } from "../../../utils";
 
 const { useFormInstance } = Form;
 const { Option } = Select;
@@ -112,7 +112,7 @@ const DetailsTable: FC<ICustomComponentProps> = props => {
           { 
             dataIndex: 'price', 
             title: 'Harga', 
-            render: value => DEFAULT_SYMBOL + formatCurrency(value) 
+            render: value => DEFAULT_SYMBOL + commaSeparate(value) 
           },
           { dataIndex: 'user', title: 'User' },
           {

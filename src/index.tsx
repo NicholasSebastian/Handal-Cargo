@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Spin } from 'antd';
 import { DatabaseProvider } from './data/useDatabase';
 import { ProfileProvider } from './data/useProfile';
+import { PrintProvider } from "./components/abstractions/usePrint";
 import { routes } from './data/useRoute';
 import Layout from './components/specialized/Layout';
 import Login from './pages/Login';
@@ -34,17 +35,19 @@ const elements = (
   <DatabaseProvider Login={Login}>
     <ProfileProvider>
       <HashRouter>
-        <Layout>
-          <Suspense fallback={<Center><Spin /></Center>}>
-            <Routes>
-              <Route path='/' element={<Navigate to={'/home'} />} />
-              <Route path='/home' element={<Home />} />
-              <Route path='/profile' element={<Profile />} />
-              <Route path='/shortcuts' element={<Shortcuts />} />
-              {routes}
-            </Routes>
-          </Suspense>
-        </Layout>
+        <PrintProvider>
+          <Layout>
+            <Suspense fallback={<Center><Spin /></Center>}>
+              <Routes>
+                <Route path='/' element={<Navigate to={'/home'} />} />
+                <Route path='/home' element={<Home />} />
+                <Route path='/profile' element={<Profile />} />
+                <Route path='/shortcuts' element={<Shortcuts />} />
+                {routes}
+              </Routes>
+            </Suspense>
+          </Layout>
+        </PrintProvider>
       </HashRouter>
     </ProfileProvider>
   </DatabaseProvider>

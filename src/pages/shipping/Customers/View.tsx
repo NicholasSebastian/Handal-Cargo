@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Button, Descriptions, Table, Modal } from "antd";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
-import { formatCurrency } from "../../../utils";
+import { commaSeparate } from "../../../utils";
 import CustomerHistory from "./History";
 
 const { Item } = Descriptions;
@@ -52,7 +52,7 @@ const CustomersView: FC<IInjectedProps> = props => {
           { dataIndex: 'productDetail', title: "Keterangan Barang" },
           { dataIndex: 'route', title: 'Rute' },
           { dataIndex: 'transport', title: 'By' },
-          { dataIndex: 'price', title: 'Harga', render: value => DEFAULT_SYMBOL + formatCurrency(value) },
+          { dataIndex: 'price', title: 'Harga', render: value => DEFAULT_SYMBOL + commaSeparate(value) },
           { dataIndex: 'user', title: 'User' }
         ]} />
       <Button onClick={() => setHistoryPageOpen(true)}>

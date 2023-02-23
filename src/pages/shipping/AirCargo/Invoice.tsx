@@ -3,14 +3,15 @@ import { Form, Input } from "antd";
 import moment from "moment";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import { gap as viewGap } from "../../../components/basics/BasicView";
+import { gap as formGap } from "../../../components/basics/BasicForm";
 import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 import InputMeasurement from "../../../components/specialized/InputMeasurement";
 import { IInvoicesStuff } from "../../../components/compounds/ShippingTemplate";
 import { toDisplayRp } from "../SeaFreight/ViewAndForm";
-import { dateToString, formatCurrency } from "../../../utils";
+import { dateToString, commaSeparate } from "../../../utils";
 
 const { useFormInstance, useWatch, Item } = Form;
-const formatDefaultCurrency = (value: number) => DEFAULT_SYMBOL + formatCurrency(value);
+const formatDefaultCurrency = (value: number) => DEFAULT_SYMBOL + commaSeparate(value);
 
 const DisplayTotal: FC<ICustomComponentProps> = props => {
   const { value } = props;
@@ -32,8 +33,9 @@ const DisplayTotal: FC<ICustomComponentProps> = props => {
   return (
     <Item 
       label={`Total Biaya (${DEFAULT_SYMBOL})`} 
-      labelCol={{ span: 11 }}>
-      <Input disabled value={DEFAULT_SYMBOL + formatCurrency(value)} />
+      labelCol={{ span: 11 }}
+      style={{ marginBottom: 0 }}>
+      <Input disabled value={DEFAULT_SYMBOL + commaSeparate(value)} />
     </Item>
   );
 };
@@ -86,20 +88,22 @@ const invoicesStuff: IInvoicesStuff = {
     { key: 'two_various', label: '2 Various', type: 'boolean' },
     { key: 'product_detail', label: 'Keterangan Barang', type: 'select', items: 'ProductDetails' },
     { key: 'via_transfer', label: 'Via Transfer', type: 'boolean' },
-    { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies' },
+    formGap,
     { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', required: true, 
       items: ['List (m³)', 'List (kg)', 'DList (m³)', 'DList (kg)', 'HB (m³)', 'HB (kg)', 'Cust (m³)', 'Cust (kg)'] 
     },
-    { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1 },
+    { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies' },
     { key: 'measurement', type: 'custom', render: InputMeasurement },
-    { key: 'price', label: 'Harga', type: 'currency', required: true, defaultValue: 0 },
+    { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1 },
     { key: 'expedition', label: 'Expedisi', type: 'select',  items: 'Expeditions' },
-    { key: 'additional_fee', label: 'Biaya Tambahan', type: 'currency', defaultValue: 0 },
+    { key: 'price', label: 'Harga', type: 'currency', required: true, defaultValue: 0 },
     { key: 'travel_number', label: 'No. Surat Jalan Expedisi' },
-    { type: 'custom', render: toDisplayRp({ key: 'additional_fee', label: 'Biaya Tambahan' }) },
+    { key: 'additional_fee', label: 'Biaya Tambahan', type: 'currency', defaultValue: 0 },
     { key: 'customer', label: 'Customer', disabled: true },
-    { key: 'shipment_fee', label: 'Ongkos Kirim', type: 'currency', defaultValue: 0 },
+    { type: 'custom', render: toDisplayRp({ key: 'additional_fee', label: 'Biaya Tambahan' }) },
     { key: 'city', label: 'Kota', disabled: true },
+    { key: 'shipment_fee', label: 'Ongkos Kirim', type: 'currency', defaultValue: 0 },
+    { key: 'email', label: 'Email', disabled: true },
     { key: 'volume_charge', label: 'Harga Cas Volume', type: 'currency', defaultValue: 0 },
     { key: 'nb', label: 'NB', type: 'textarea' },
     { key: 'total', type: 'custom', render: DisplayTotal }

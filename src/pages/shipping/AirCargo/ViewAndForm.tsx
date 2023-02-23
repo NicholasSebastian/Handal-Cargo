@@ -4,30 +4,30 @@ import { gap as viewGap } from "../../../components/basics/BasicView";
 import { gap as formGap } from "../../../components/basics/BasicForm";
 import createDependentValue from "../../../components/basics/DependentValue";
 import { IViewAndFormStuff } from "../../../components/compounds/ShippingTemplate";
-import { dateToString, formatCurrency } from "../../../utils";
+import { dateToString, commaSeparate } from "../../../utils";
 
 function formatExchangeRate(value: any, record: Record<string, any>) {
-  return `${DEFAULT_SYMBOL}${formatCurrency(value)} / ${record.currency}`;
+  return `${DEFAULT_SYMBOL}${commaSeparate(value)} / ${record.currency}`;
 }
 
 function formatForeignCurrency(value: any, record: Record<string, any>) {
   const { exchange_rate } = record;
-  return DEFAULT_SYMBOL + formatCurrency(value * exchange_rate);
+  return DEFAULT_SYMBOL + commaSeparate(value * exchange_rate);
 }
 
 function calculateTotalFreight(record: Record<string, any>) {
   const { freight_fee, freight_weight, exchange_rate } = record;
-  return DEFAULT_SYMBOL + formatCurrency(freight_fee * freight_weight * exchange_rate);
+  return DEFAULT_SYMBOL + commaSeparate(freight_fee * freight_weight * exchange_rate);
 }
 
 function calculateTotalCommission(record: Record<string, any>) {
   const { commission_fee, commission_weight, exchange_rate } = record;
-  return DEFAULT_SYMBOL + formatCurrency(commission_fee * commission_weight * exchange_rate);
+  return DEFAULT_SYMBOL + commaSeparate(commission_fee * commission_weight * exchange_rate);
 }
 
 function calculateTotalClearance(record: Record<string, any>) {
   const { clearance_fee, clearance_weight, exchange_rate } = record;
-  return DEFAULT_SYMBOL + formatCurrency(clearance_fee * clearance_weight * exchange_rate);
+  return DEFAULT_SYMBOL + commaSeparate(clearance_fee * clearance_weight * exchange_rate);
 }
 
 function calculateTotal(record: Record<string, any>): number {
@@ -50,7 +50,7 @@ function toDisplayPrice(label: string, field1: any, field2: any) {
     dependencies: [field1.key, field2.key, 'exchange_rate'],
     calculateValue: ([field1_value, field2_value, exchange_rate]) => {
       const value = field1_value * field2_value * exchange_rate;
-      return formatCurrency(value);
+      return commaSeparate(value);
     },
     defaultValue: 0,
     prefix: DEFAULT_SYMBOL
@@ -69,8 +69,8 @@ const DisplayAdditionalFeeRp = createDependentValue({
   label: `Biaya Tambahan (${DEFAULT_SYMBOL})`,
   dependencies: ['additional_fee', 'exchange_rate'],
   calculateValue: ([field_value, exchange_rate]) => {
-    const value = field_value * exchange_rate;
-    return formatCurrency(value);
+    const value: number = field_value * exchange_rate;
+    return commaSeparate(value);
   },
   defaultValue: 0,
   prefix: DEFAULT_SYMBOL
@@ -85,7 +85,7 @@ const DisplayTotal = createDependentValue({
     const value2 = commission_fee * commission_weight;
     const value3 = clearance_fee * clearance_weight;
     const value = ((value1 + value2 + value3 + additional_fee) * exchange_rate) + other_fee;
-    return formatCurrency(value);
+    return commaSeparate(value);
   },
   defaultValue: 0,
   prefix: DEFAULT_SYMBOL
@@ -137,9 +137,9 @@ const viewAndFormStuff: IViewAndFormStuff = {
     { key: 'commission_weight', label: 'Berat Komisi (kg)', render: value => value + ' kg' },
     { key: 'additional_fee', label: 'Biaya Tambahan', render: formatForeignCurrency },
     { key: 'clearance_fee', label: 'Biaya Custom Clearance', render: formatForeignCurrency },
-    { key: 'other_fee', label: 'Biaya Lain-Lain', render: value => DEFAULT_SYMBOL + formatCurrency(value) },
+    { key: 'other_fee', label: 'Biaya Lain-Lain', render: value => DEFAULT_SYMBOL + commaSeparate(value) },
     { key: 'clearance_weight', label: 'Berat Clearance (kg)', render: value => value + ' kg' },
-    { label: 'Total Biaya', render: (_, record) => DEFAULT_SYMBOL + formatCurrency(calculateTotal(record)) },
+    { label: 'Total Biaya', render: (_, record) => DEFAULT_SYMBOL + commaSeparate(calculateTotal(record)) },
     viewGap,
     { key: 'description', label: 'Keterangan' }
   ],

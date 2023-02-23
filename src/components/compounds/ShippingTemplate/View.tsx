@@ -1,19 +1,19 @@
-import { ComponentType, FC, Fragment, useState, useRef } from "react";
+import { ComponentType, FC, Fragment, useState } from "react";
 import { Table, Space, Button, Tooltip, Modal } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { FileDoneOutlined, AuditOutlined } from "@ant-design/icons";
 import useRoute from "../../../data/useRoute";
 import useDatabase from "../../../data/useDatabase";
 import { IInjectedProps } from "../../abstractions/withInitialData";
+import usePrint, { Presets } from "../../abstractions/usePrint";
 import BasicView, { IViewItem } from "../../basics/BasicView";
-import print, { Presets } from "../../../print";
 
 const View: FC<IViewProps> = props => {
   const { items, columns, TravelDocumentForm, InvoiceForm, printPreset, calculateTotalFee } = props;
   const { markings, ...values } = props.values;
   const { title } = useRoute()!;
   const database = useDatabase();
-  const singletons = useRef(database?.collection('Singletons'));
+  const print = usePrint()!;
 
   const [currentPage, setCurrentPage] = useState<PageState>('default');
   const modalProps: any = {
@@ -41,7 +41,7 @@ const View: FC<IViewProps> = props => {
           item_code: values.item_code,
           total_fee: calculateTotalFee(values)
         };
-        print(printData, printPreset, singletons.current);
+        print(printData, printPreset);
       });
   }
 

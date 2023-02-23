@@ -1,10 +1,10 @@
 import { FC, Fragment, useRef } from "react";
 import { Button, message } from "antd";
 import useDatabase from "../../../data/useDatabase";
-import getFormInjector from "../../abstractions/getFormInjector";
+import usePrint, { Presets } from "../../abstractions/usePrint";
 import { IInjectedProps } from "../../abstractions/withInitialData";
+import getFormInjector from "../../abstractions/getFormInjector";
 import BasicForm, { FormItem } from "../../basics/BasicForm";
-import print, { Presets } from "../../../print";
 import { momentsToDates } from "../../../utils"; 
 
 const injectAdditionalValues = getFormInjector({
@@ -16,15 +16,16 @@ const injectAdditionalValues = getFormInjector({
     address: 1, 
     city: 1, 
     home_number: 1, 
-    phone_number: 1
+    phone_number: 1,
+    email: 1
   }
 });
 
 const TravelDocumentForm: FC<IFormProps> = props => {
   const { items, values, printPreset, printDaerahPreset, closeModal } = props;
   const database = useDatabase();
+  const print = usePrint()!;
   const isDaerahType = useRef<boolean>();
-  const singletons = useRef(database?.collection('Singletons'));
 
   const handleSubmit = (submittedValues: any) => {
     database?.collection('TravelPermits')
@@ -38,7 +39,7 @@ const TravelDocumentForm: FC<IFormProps> = props => {
 
         // Proceed to the printing process.
         const preset = isDaerahType.current ? printDaerahPreset : printPreset;
-        print(submittedValues, preset, singletons.current);
+        print(submittedValues, preset);
       })
       .catch(() => message.error("Error terjadi. Data gagal disimpan."));
   }

@@ -46,13 +46,15 @@ const travelDocumentsStuff: ITravelDocumentsStuff = {
     },
     formGap,
     { key: 'measurement', type: 'custom', render: InputMeasurement },
-    { key: 'home_number', type: 'custom', render: getSwitchableCustomerValue('Nomor Telepon', 'home_number_2') },
+    formGap,
     { key: 'unit', label: 'Satuan', type: 'select', 
       items: ['Colly', 'Ball', 'Roll', 'Kardus', 'Pcs', 'Kodi', 'Lusin'] 
     },
-    { key: 'phone_number', type: 'custom', render: getSwitchableCustomerValue('Nomor HP', 'phone_number_2') },
+    { key: 'home_number', type: 'custom', render: getSwitchableCustomerValue('Nomor Telepon', 'home_number_2') },
     { key: 'customer', label: 'Customer' }, 
+    { key: 'phone_number', type: 'custom', render: getSwitchableCustomerValue('Nomor HP', 'phone_number_2') },
     { key: 'city', type: 'custom', render: getSwitchableCustomerValue('Kota', 'city_2') },
+    { key: 'email', label: 'Email' },
     { key: 'address', type: 'custom', render: getSwitchableCustomerValue('Alamat', 'address_2', true) },
     { key: 'description', label: 'Keterangan Kirim', type: 'textarea' }
   ]

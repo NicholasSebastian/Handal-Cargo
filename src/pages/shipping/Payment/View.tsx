@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { Descriptions, Table } from "antd";
-import { formatCurrency, dateToString } from "../../../utils";
+import { commaSeparate, dateToString } from "../../../utils";
 import { IInjectedProps } from "../../../components/abstractions/withInitialData";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 
@@ -18,7 +18,7 @@ const PaymentView: FC<IInjectedProps> = props => {
         {values.id}
       </Item>
       <Item label="Total Pembayaran">
-        {DEFAULT_SYMBOL}{formatCurrency(total)}
+        {DEFAULT_SYMBOL}{commaSeparate(total)}
       </Item>
       <Item>
         <Table bordered
@@ -28,7 +28,7 @@ const PaymentView: FC<IInjectedProps> = props => {
           columns={[
             { dataIndex: 'date', title: 'Tanggal', width: 190, render: value => dateToString(value) },
             { dataIndex: 'type', title: 'Jenis Pembayaran', width: 140 },
-            { dataIndex: 'amount', title: 'Jumlah', width: 130, render: value => DEFAULT_SYMBOL + formatCurrency(value) },
+            { dataIndex: 'amount', title: 'Jumlah', width: 130, render: value => DEFAULT_SYMBOL + commaSeparate(value) },
             { dataIndex: 'description', title: 'Keterangan' }
           ]}
           style={{ width: '100%' }} />

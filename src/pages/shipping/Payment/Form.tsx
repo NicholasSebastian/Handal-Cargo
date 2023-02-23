@@ -7,7 +7,7 @@ import useDatabase from "../../../data/useDatabase";
 import { IInjectedProps } from "../../../components/abstractions/withFormHandling";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import InputCurrency from "../../../components/basics/InputCurrency";
-import { formatCurrency, dateToString } from "../../../utils";
+import { commaSeparate, dateToString } from "../../../utils";
 
 const { Text } = Typography;
 const year = (new Date().getFullYear() - 2000) * 10000;
@@ -71,7 +71,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
           </span>
           <span>
             <Text strong>Total Pembayaran: </Text> 
-            {DEFAULT_SYMBOL}{formatCurrency(total)}
+            {DEFAULT_SYMBOL}{commaSeparate(total)}
           </span>
         </div>
         <Divider style={{ margin: '10px' }} />
@@ -118,7 +118,7 @@ const PaymentForm: FC<IInjectedProps> = props => {
             { 
               dataIndex: 'amount', 
               title: 'Jumlah',
-              render: value => DEFAULT_SYMBOL + formatCurrency(value)
+              render: value => DEFAULT_SYMBOL + commaSeparate(value)
             },
             { dataIndex: 'description', title: 'Keterangan' },
             {

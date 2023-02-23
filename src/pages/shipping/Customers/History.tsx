@@ -6,14 +6,14 @@ import useDatabase from "../../../data/useDatabase";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import Search from "../../../components/basics/Search";
 import pipeline from "./history-aggregation";
-import { dateToString, formatCurrency } from "../../../utils";
+import { dateToString, commaSeparate } from "../../../utils";
 
 function formatLocalCurrency(value: any) {
-  return DEFAULT_SYMBOL + formatCurrency(value);
+  return DEFAULT_SYMBOL + commaSeparate(value);
 }
 
 function formatForeignCurrency(value: any, record: Record<string, any>) {
-  return DEFAULT_SYMBOL + formatCurrency(value * record.exchange_rate);
+  return DEFAULT_SYMBOL + commaSeparate(value * record.exchange_rate);
 }
 
 function formatMeasurement(value: any, record: Record<string, any>) {

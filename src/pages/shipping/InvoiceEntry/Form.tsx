@@ -5,7 +5,7 @@ import { Button, Form, Input, InputNumber, Select, message } from "antd";
 import useDatabase from "../../../data/useDatabase";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import InputCurrency from "../../../components/basics/InputCurrency";
-import { formatCurrency } from "../../../utils";
+import { commaSeparate } from "../../../utils";
 
 const { Item, useForm, useWatch } = Form;
 const { TextArea } = Input;
@@ -152,7 +152,7 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
               const id = payment._id.toString();
               return (
                 <Option key={id}>
-                  {id} - {DEFAULT_SYMBOL}{formatCurrency(payment.total)}
+                  {id} - {DEFAULT_SYMBOL}{commaSeparate(payment.total)}
                 </Option>
               );
             })}

@@ -1,10 +1,11 @@
 import createSwitchableValue from "../basics/SwitchableValue";
 
-function getSwitchableCustomerValue(label: string, altKey: string, textarea = false) {
+function getSwitchableCustomerValue(label: string, altKey: string, textarea = false, disabled = false) {
   return createSwitchableValue({ 
     label, 
     labelSpan: 11,
     textarea,
+    disabled,
     altSource: {
       localField: 'marking',
       getter: async (database, marking) => {

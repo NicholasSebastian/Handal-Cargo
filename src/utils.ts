@@ -56,8 +56,7 @@ export function isInputElement(element: Element): element is HTMLInputElement | 
 }
 
 export function dateToString(date: Date) {
-  if (!date) return undefined;
-  
+  if (date == null) return '';
   return date.toLocaleDateString("id-ID", { 
     weekday: 'long', 
     year: 'numeric', 
@@ -66,8 +65,8 @@ export function dateToString(date: Date) {
   });
 }
 
-export function formatCurrency(value: string | number | undefined) {
-  return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') ?? '0';
+export function commaSeparate(value: string | number | undefined) {
+  return (value != null) ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0';
 }
 
 export function clearLocalStorage(startsWith: string) {

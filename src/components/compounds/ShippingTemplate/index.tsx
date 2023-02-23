@@ -1,10 +1,10 @@
 import { FC, ComponentType, useMemo } from "react";
 import { ColumnsType } from "antd/lib/table";
 import useRoute from "../../../data/useRoute";
+import { Presets } from "../../abstractions/usePrint";
 import { IData } from "../../abstractions/withTemplateHandling";
 import { IViewItem } from "../../basics/BasicView";
 import { FormItem, gap } from "../../basics/BasicForm";
-import { Presets } from "../../../print";
 import TableTemplate from "./Table";
 import View from "./View";
 import MarkingTable, { MarkingField, fieldsToMarkingColumns } from "./MarkingTable";

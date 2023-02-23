@@ -16,6 +16,15 @@ const STAT_REFRESH_FREQUENCY = 5000;
 
 // Intended for use within the Layout component.
 
+function openWhatsApp() {
+  new WebviewWindow("whatsapp-window", {
+    center: true, 
+    focus: true, 
+    title: "WhatsApp",
+    url: "https://web.whatsapp.com/"
+  });
+}
+
 const Header: FC<IHeaderProps> = props => {
   const { showServerButton } = props;
   const user = useUser();
@@ -53,12 +62,7 @@ const Header: FC<IHeaderProps> = props => {
       key: 'whatsapp',
       label: 'WhatsApp',
       icon: <WhatsAppOutlined />,
-      onClick: () => new WebviewWindow("whatsapp-window", {
-        center: true, 
-        focus: true, 
-        title: "WhatsApp",
-        url: "https://web.whatsapp.com/"
-      })
+      onClick: openWhatsApp 
     },
     ...(showServerButton ? [{ 
       key: 'server', 
@@ -97,6 +101,7 @@ const Header: FC<IHeaderProps> = props => {
   );
 }
 
+export { openWhatsApp };
 export default Header;
 
 const Container = styled(AntHeader)`

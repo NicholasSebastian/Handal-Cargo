@@ -1,18 +1,18 @@
 import { BSON } from "realm-web";
-import { FC, useState, useEffect, useRef } from "react";
+import { FC, useState, useEffect } from "react";
 import { Button, Popconfirm, message } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import useDatabase from "../../../data/useDatabase";
+import usePrint, { Presets } from "../../abstractions/usePrint";
 import { IViewItem } from "../../basics/BasicView";
 import TableTemplate from "../ViewTableTemplate";
-import print, { Presets } from "../../../print";
-import { formatCurrency } from "../../../utils";
+import { commaSeparate } from "../../../utils";
 
 const Invoice: FC<ITableProps> = props => {
   const { title, columns, viewItems, filter, printPreset } = props;
   const database = useDatabase();
+  const print = usePrint()!;
   const [currencySymbols, setCurrencySymbols] = useState<Record<string, string>>();
-  const singletons = useRef(database?.collection('Singletons'));
 
   useEffect(() => {
     database?.collection('Currencies')
@@ -24,7 +24,7 @@ const Invoice: FC<ITableProps> = props => {
   }, []);
 
   const currencyFormatter = (price: string | number, currency: string) => {
-    const value = formatCurrency(price);
+    const value = commaSeparate(price);
     if (currencySymbols) 
       return currencySymbols[currency] + value;
     else 
@@ -75,7 +75,7 @@ const Invoice: FC<ITableProps> = props => {
       viewItems={viewItems(currencyFormatter)}
       viewExtra={values => (
         <Button 
-          onClick={() => print(values, printPreset, singletons.current)} 
+          onClick={() => print(values, printPreset)} 
           style={{ marginTop: '-10px', marginBottom: '10px' }}>
           Print Ulang Faktur
         </Button>

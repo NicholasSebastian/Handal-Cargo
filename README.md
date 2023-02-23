@@ -30,3 +30,4 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 ## TO BE IMPLEMENTED IN THE FUTURE
 
 - Table Pagination and Fixed Header.
+- Refactor all database fetches to use React Query instead.

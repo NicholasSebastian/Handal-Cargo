@@ -41,7 +41,7 @@ const BasicForm: FC<IFormProps> = (props) => {
       case 'number':
         return <InputNumber style={{ width: '100%' }} disabled={item.disabled} />
       case 'textarea':
-        return <TextArea rows={4} disabled={item.disabled} />
+        return <TextArea rows={5} disabled={item.disabled} />
       case 'boolean':
         return <Switch disabled={item.disabled} />
       case 'select':

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { InputNumber } from "antd";
-import { formatCurrency } from "../../utils";
+import { commaSeparate } from "../../utils";
 import { DEFAULT_SYMBOL } from "../abstractions/useCurrencyHandling";
 
 // Creates a basic InputNumber component formatted for currencies.
@@ -12,7 +12,7 @@ const InputCurrency: FC<IInputProps> = props => {
       prefix={prefix ?? DEFAULT_SYMBOL}
       disabled={disabled}
       style={{ width: '100%' }} 
-      formatter={value => formatCurrency(value)}
+      formatter={value => commaSeparate(value)}
       parser={value => value!.replace(/,*/g, '')}
       placeholder={placeholder}
       value={value}

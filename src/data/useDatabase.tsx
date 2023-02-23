@@ -70,9 +70,9 @@ function logoutAndClose() {
   appWindow.close();
 }
 
+export type { ILoginProps };
 export { DatabaseProvider, useUser, logoutAndClose };
 export default useDatabase;
-export type { ILoginProps };
 
 interface IProps {
   Login: ComponentType<ILoginProps>

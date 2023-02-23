@@ -3,15 +3,15 @@ import { gap } from "../../../components/basics/BasicView";
 import { RenderItem } from "../../../components/basics/BasicForm";
 import { IViewAndFormStuff } from "../../../components/compounds/ShippingTemplate";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
-import { dateToString, formatCurrency } from "../../../utils";
+import { dateToString, commaSeparate } from "../../../utils";
 
 function formatExchangeRate(value: any, record: Record<string, any>) {
-  return `${DEFAULT_SYMBOL}${formatCurrency(value)} / ${record.currency}`;
+  return `${DEFAULT_SYMBOL}${commaSeparate(value)} / ${record.currency}`;
 }
 
 function formatForeignCurrency(value: any, record: Record<string, any>) {
   const { exchange_rate } = record;
-  return DEFAULT_SYMBOL + formatCurrency(value * exchange_rate);
+  return DEFAULT_SYMBOL + commaSeparate(value * exchange_rate);
 }
 
 function calculateTotal(record: Record<string, any>): number {
@@ -26,7 +26,7 @@ function toDisplayRp(field: any) {
     dependencies: [field.key, 'exchange_rate'],
     calculateValue: ([fieldKey, exchange_rate]) => {
       const value: number = fieldKey * exchange_rate;
-      return formatCurrency(value);
+      return commaSeparate(value);
     },
     defaultValue: 0,
     prefix: DEFAULT_SYMBOL
@@ -47,7 +47,7 @@ const DisplayTotal = createDependentValue({
   dependencies: ['muat_fee', 'additional_fee', 'clearance_fee', 'other_fee', 'exchange_rate'],
   calculateValue: ([muat_fee, additional_fee, clearance_fee, other_fee, exchange_rate]) => {
     const value: number = ((muat_fee + additional_fee + clearance_fee) * exchange_rate) + other_fee;
-    return formatCurrency(value);
+    return commaSeparate(value);
   },
   defaultValue: 0,
   prefix: DEFAULT_SYMBOL
@@ -81,9 +81,9 @@ const viewAndFormStuff: IViewAndFormStuff = {
     { key: 'muat_fee', label: 'Biaya Muat', render: formatForeignCurrency },
     { key: 'additional_fee', label: 'Biaya Tambahan', render: formatForeignCurrency },
     { key: 'clearance_fee', label: 'Biaya Custom Clearance', render: formatForeignCurrency },
-    { key: 'other_fee', label: 'Biaya Lain-Lain', render: value => DEFAULT_SYMBOL + formatCurrency(value) },
+    { key: 'other_fee', label: 'Biaya Lain-Lain', render: value => DEFAULT_SYMBOL + commaSeparate(value) },
     gap,
-    { label: 'Total Biaya', render: (_, record) => DEFAULT_SYMBOL + formatCurrency(calculateTotal(record)) },
+    { label: 'Total Biaya', render: (_, record) => DEFAULT_SYMBOL + commaSeparate(calculateTotal(record)) },
     gap,
     { key: 'description', label: 'Keterangan' }
   ],

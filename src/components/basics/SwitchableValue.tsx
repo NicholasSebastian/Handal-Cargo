@@ -8,7 +8,7 @@ const { useFormInstance, Item } = Form;
 const { TextArea } = AntInput;
 
 function createSwitchableValue(config: ISwitchableValueConfig): FC<ICustomComponentProps> {
-  const { label, labelSpan, textarea, altSource, ...args } = config;
+  const { label, labelSpan, textarea, disabled, altSource, ...args } = config;
   return props => {
     const { itemKey, value } = props;
     const database = useDatabase();
@@ -62,8 +62,9 @@ function createSwitchableValue(config: ISwitchableValueConfig): FC<ICustomCompon
         <Item {...itemProps}>
           <TextArea
             {...args}
-            rows={4}
+            rows={5}
             value={value}
+            disabled={disabled}
             onChange={e => handleChange(e.target.value)} />
         </Item>
         <Button style={{ float: 'right', marginTop: '-32px' }} {...buttonProps} />
@@ -76,6 +77,7 @@ function createSwitchableValue(config: ISwitchableValueConfig): FC<ICustomCompon
           value={value}
           onChange={e => handleChange(e.target.value)}
           style={{ width: '100%' }}
+          disabled={disabled}
           addonAfter={
             <Button type='text' {...buttonProps} />
           } />
@@ -103,6 +105,7 @@ interface ISwitchableValueConfig {
   label: string
   labelSpan?: number
   textarea?: boolean
+  disabled?: boolean
   altSource: {
     localField: string
     getter: (database: Realm.Services.MongoDBDatabase | undefined, localValue: any) => Promise<any>

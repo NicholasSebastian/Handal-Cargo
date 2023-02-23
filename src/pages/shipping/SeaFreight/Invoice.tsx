@@ -3,14 +3,15 @@ import { Form, Input } from "antd";
 import moment from "moment";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
 import { gap as viewGap } from "../../../components/basics/BasicView";
+import { gap as formGap } from "../../../components/basics/BasicForm";
 import { ICustomComponentProps } from "../../../components/basics/BasicForm";
 import InputMeasurement from "../../../components/specialized/InputMeasurement";
 import { IInvoicesStuff } from "../../../components/compounds/ShippingTemplate";
 import { toDisplayRp } from "./ViewAndForm";
-import { dateToString, formatCurrency } from "../../../utils";
+import { dateToString, commaSeparate } from "../../../utils";
 
 const { useFormInstance, useWatch, Item } = Form;
-const formatDefaultCurrency = (value: number) => DEFAULT_SYMBOL + formatCurrency(value);
+const formatDefaultCurrency = (value: number) => DEFAULT_SYMBOL + commaSeparate(value);
 
 const DisplayTotal: FC<ICustomComponentProps> = props => {
   const { value } = props;
@@ -31,7 +32,8 @@ const DisplayTotal: FC<ICustomComponentProps> = props => {
   return (
     <Item 
       label={`Total Biaya (${DEFAULT_SYMBOL})`} 
-      labelCol={{ span: 11 }}>
+      labelCol={{ span: 11 }}
+      style={{ marginBottom: 0 }}>
       <Input disabled value={formatDefaultCurrency(value)} />
     </Item>
   );
@@ -89,16 +91,18 @@ const invoicesStuff: IInvoicesStuff = {
     { key: 'measurement_option', label: 'Pilihan Ukuran', type: 'select', required: true, 
       items: ['List (m³)', 'List (kg)', 'DList (m³)', 'DList (kg)', 'HB (m³)', 'HB (kg)', 'Cust (m³)', 'Cust (kg)'] 
     },
-    { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies' },
+    formGap,
     { key: 'measurement', type: 'custom', render: InputMeasurement },
-    { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1 },
+    { key: 'currency', label: 'Mata Uang', type: 'select', items: 'Currencies' },
     { key: 'expedition', label: 'Expedisi', type: 'select',  items: 'Expeditions' },
-    { key: 'price', label: 'Harga', type: 'currency', required: true, defaultValue: 0 },
+    { key: 'exchange_rate', label: 'Kurs', type: 'number', defaultValue: 1 },
     { key: 'travel_number', label: 'No. Surat Jalan Expedisi' },
-    { key: 'additional_fee', label: 'Biaya Tambahan', type: 'currency', defaultValue: 0 },
+    { key: 'price', label: 'Harga', type: 'currency', required: true, defaultValue: 0 },
     { key: 'customer', label: 'Customer', disabled: true },
-    { type: 'custom', render: toDisplayRp({ key: 'additional_fee', label: 'Biaya Tambahan' }) },
+    { key: 'additional_fee', label: 'Biaya Tambahan', type: 'currency', defaultValue: 0 },
     { key: 'city', label: 'Kota', disabled: true },
+    { type: 'custom', render: toDisplayRp({ key: 'additional_fee', label: 'Biaya Tambahan' }) },
+    { key: 'email', label: 'Email', disabled: true },
     { key: 'shipment_fee', label: 'Ongkos Kirim', type: 'currency', defaultValue: 0 },
     { key: 'nb', label: 'NB', type: 'textarea' },
     { key: 'total', type: 'custom', render: DisplayTotal }

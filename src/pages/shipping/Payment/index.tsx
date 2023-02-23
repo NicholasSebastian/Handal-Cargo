@@ -2,7 +2,7 @@ import { FC } from "react";
 import useDatabase from "../../../data/useDatabase";
 import TableTemplate from "../../../components/compounds/TableTemplate";
 import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHandling";
-import { formatCurrency } from "../../../utils";
+import { commaSeparate } from "../../../utils";
 import PaymentForm from "./Form";
 import PaymentView from "./View";
 
@@ -47,7 +47,7 @@ const Payment: FC = () => {
         { 
           dataIndex: "total",
           title: "Total Pembayaran",
-          render: total => DEFAULT_SYMBOL + formatCurrency(total)
+          render: total => DEFAULT_SYMBOL + commaSeparate(total)
         }
       ]} />
   );

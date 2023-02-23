@@ -4,7 +4,7 @@ import { DEFAULT_SYMBOL } from "../../../components/abstractions/useCurrencyHand
 import TableTemplate from "../../../components/compounds/ViewTableTemplate";
 import pipeline from "./aggregation";
 import InvoiceEntryForm from "./Form";
-import { dateToString, formatCurrency } from "../../../utils";
+import { dateToString, commaSeparate } from "../../../utils";
 
 const InvoiceEntry: FC = () => {
   const database = useDatabase();
@@ -29,13 +29,13 @@ const InvoiceEntry: FC = () => {
         { dataIndex: "muat_date", title: "Tanggal Muat", render: dateToString },
         { dataIndex: "payment", title: "Kode Pembayaran", render: value => value?.toString() },
         { dataIndex: "marking", title: "Marking" },
-        { dataIndex: "total", title: "Total", render: value => DEFAULT_SYMBOL + formatCurrency(value) },
-        { dataIndex: "payment_amount", title: "Sudah Terbayar", render: value => DEFAULT_SYMBOL + formatCurrency(value) },
+        { dataIndex: "total", title: "Total", render: value => DEFAULT_SYMBOL + commaSeparate(value) },
+        { dataIndex: "payment_amount", title: "Sudah Terbayar", render: value => DEFAULT_SYMBOL + commaSeparate(value) },
         { 
           title: "Belum Dibayar",
           render: (_, values) => {
-            const unpaid = values.total - (values.payment_amount ?? 0);
-            return DEFAULT_SYMBOL + formatCurrency(Math.max(unpaid, 0));
+            const unpaid: number = values.total - (values.payment_amount ?? 0);
+            return DEFAULT_SYMBOL + commaSeparate(Math.max(unpaid, 0));
           }
         }
       ]}
