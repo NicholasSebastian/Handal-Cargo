@@ -18,14 +18,9 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 
 ## TO DO LIST
 
-- Printing:
-  - Instead of automatically opening the print dialog directly, have options at the bottom of the page:
-    - A 'print' button.
-    - A 'send by email' button.
-    - A 'send by WhatsApp' button.
-  - Adjustments:
-    - The printing positions.
-    - Text that is too long needs to get truncated.
+- Printing Adjustments:
+  - The printing positions.
+  - Text that is too long needs to get truncated.
 
 ## TO BE IMPLEMENTED IN THE FUTURE
 
