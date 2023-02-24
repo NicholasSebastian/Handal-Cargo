@@ -10,7 +10,6 @@ const DATABASE_NAME = "Primary";
 
 const DEFAULT_WINDOW_SIZE = new LogicalSize(1280, 720);
 const MIN_WINDOW_SIZE = new LogicalSize(1000, 720);
-const TIME_TO_CENTER = 100;
 
 const instance = new Realm.App({ id: REALM_APP_ID });
 const DatabaseContext = createContext<Realm.App|undefined>(undefined);
@@ -22,10 +21,10 @@ class DatabaseProvider extends Component<PropsWithChildren<IProps>> {
     const { Login, children } = this.props;
     if (instance.currentUser) {
       // If a database session user exists, unlock the window.
-      appWindow.setResizable(true);
-      appWindow.setSize(DEFAULT_WINDOW_SIZE);
-      appWindow.setMinSize(MIN_WINDOW_SIZE);
-      setTimeout(() => appWindow.center(), TIME_TO_CENTER);
+      appWindow.setSize(DEFAULT_WINDOW_SIZE)
+        .then(() => appWindow.setMinSize(MIN_WINDOW_SIZE))
+        .then(() => appWindow.setResizable(true))
+        .then(() => appWindow.center());
       
       // Make sure to clear the authentication data when the app is closed.
       appWindow.once('tauri://close-requested', logoutAndClose);

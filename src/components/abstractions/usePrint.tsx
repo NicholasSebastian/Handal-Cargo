@@ -41,7 +41,7 @@ const PrintProvider: FC<PrintProps> = props => {
     const monitor = await currentMonitor();
     if (monitor && !isLandscape && (currentSize.height > monitor.size.height)) {
       const offsetX = (monitor.size.width - width) / 2;
-      const position = new LogicalPosition(offsetX, 0);
+      const position = new LogicalPosition(monitor.position.x + offsetX, monitor.position.y);
       currentWindow.setPosition(position);
 
       // And provide a function to move the window up when we need to see the bottom.
@@ -69,7 +69,7 @@ const PrintProvider: FC<PrintProps> = props => {
     setOpen({ width, height, type: preset, scrollDown, scrollUp, company_data, ...data });
   }
 
-  const closePrintView = () => {
+  const closePrintView = async () => {
     // Restore the original window size.
     currentWindow.setResizable(true);
 
@@ -78,8 +78,8 @@ const PrintProvider: FC<PrintProps> = props => {
       currentWindow.setSize(DEFAULT_WINDOW_SIZE);
       currentWindow.maximize();
     }
-    else if (originalSize.current !== undefined) {
-      currentWindow.setSize(originalSize.current);
+    else if (originalSize.current) {
+      await currentWindow.setSize(originalSize.current);
       currentWindow.center();
     }
 

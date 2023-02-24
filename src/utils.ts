@@ -1,5 +1,5 @@
 import { Command } from '@tauri-apps/api/shell';
-import moment, { isMoment } from 'moment';
+import moment, { isMoment, Moment } from 'moment';
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -55,8 +55,9 @@ export function isInputElement(element: Element): element is HTMLInputElement | 
   return ['input', 'textarea'].includes(element.tagName.toLowerCase())
 }
 
-export function dateToString(date: Date) {
+export function dateToString(date: Date | Moment) {
   if (date == null) return '';
+  if (isMoment(date)) return date.format('dddd, D MMMM YYYY');
   return date.toLocaleDateString("id-ID", { 
     weekday: 'long', 
     year: 'numeric', 

@@ -61,7 +61,7 @@ const PrintPreview: FC<IPrintPreviewProps> = props => {
                 fontStyle: item.italic ? 'italic' : 'normal',
                 textDecoration: item.underline ? 'underline' : 'none'
               }}>
-              {item.prefix} {item.content?.toString()} {item.suffix}
+              {item.prefix} {item.preserve ? <pre>{item.content}</pre> : item.content?.toString()} {item.suffix}
             </span>
           );
           return (
@@ -102,6 +102,10 @@ const Container = styled.div<IStyleProps>`
     > span {
       position: fixed;
       font-family: sans-serif;
+
+      > pre {
+        line-height: 15px;
+      }
     }
 
     > div {
