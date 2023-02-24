@@ -30,19 +30,20 @@ interface IRect {
 const layouts: PrintLayouts = {
   "sf-surat-jalan": data => [
     // Phone numbers at the top left.
-    { content: data.phone_number, prefix: "Telp:", x: 110, y: 60 },
-    { content: data.home_number, prefix: "Hp:", x: 110, y: 75 },
+    { content: data.phone_number, prefix: "Telp:", x: 168, y: 60 },
+    { content: data.home_number, prefix: "Hp:", x: 168, y: 80 },
 
     // Measurement and Sea Freight information at the bottom left.
-    { content: data.measurement, suffix: data.unit, x: 60, y: 160 },
-    { content: data.route, prefix: "Sea Freight:", x: 160, y: 160 },
-    { content: data.marking, prefix: "Marking:", x: 160, y: 175 },
-    { content: data.container_number, prefix: "Nomor Container:", x: 160, y: 190 },
+    { content: data.measurement, suffix: data.unit, x: 80, y: 237 },
+    { content: data.route, prefix: "Sea Freight:", x: 226, y: 237 },
+    { content: data.marking, prefix: "Marking:", x: 226, y: 257 },
+    { content: data.container_number, prefix: "Nomor Container:", x: 226, y: 277 },
 
     // Customer information at the top right.
-    { content: data.customer, x: 440, y: 65 },
-    { content: data.address, x: 440, y: 80 },
-    { content: data.city, x: 440, y: 95 }
+    { content: dateToString(data.date), x: 527, y: 44 },
+    { content: data.customer, x: 527, y: 92 },
+    { content: data.address, x: 527, y: 116 },
+    { content: data.city, x: 527, y: (data.address && data.address.length > 40) ? 160 : 140 }
   ],
   "sf-surat-jalan-daerah": data => [
     // Company information at the top left.
@@ -164,25 +165,25 @@ const layouts: PrintLayouts = {
   },
   "ac-surat-jalan": data => [
     // Phone numbers at the top left.
-    { content: data.phone_number, prefix: "Telp:", x: 110, y: 60 },
-    { content: data.home_number, prefix: "Hp:", x: 110, y: 75 },
+    { content: data.phone_number, prefix: "Telp:", x: 168, y: 60 },
+    { content: data.home_number, prefix: "Hp:", x: 168, y: 80 },
 
     // Measurement and Air Cargo information at the bottom left.
-    { content: data.measurement, suffix: data.unit, x: 60, y: 160 },
-    { content: data.item_code, x: 60, y: 175 },
-    { content: data.route, prefix: "Air Cargo:", x: 160, y: 160 },
-    { content: data.marking, prefix: "Marking:", x: 160, y: 175 },
+    { content: data.measurement, suffix: data.unit, x: 80, y: 237 },
+    { content: data.item_code, x: 80, y: 257 },
+    { content: data.route, prefix: "Air Cargo:", x: 226, y: 237 },
+    { content: data.marking, prefix: "Marking:", x: 226, y: 257 },
 
     // The last row at the bottom.
-    { content: "Total", suffix: data.unit, x: 170, y: 200 },
-    { content: data.quantity, suffix: data.unit, x: 280, y: 200 },
-    { content: data.measurement, suffix: data.measurement_option.substr(-3, 2), x: 380, y: 200 },
+    { content: "Total", suffix: data.unit, x: 226, y: 300 },
+    { content: data.quantity, suffix: data.unit, x: 326, y: 300 },
+    { content: data.measurement, suffix: data.measurement_option.substr(-3, 2), x: 426, y: 300 },
 
     // Customer information at the top right.
-    { content: dateToString(data.date), x: 430, y: 50 },
-    { content: data.customer, x: 440, y: 65 },
-    { content: data.address, x: 440, y: 80 },
-    { content: data.city, x: 440, y: 95 }
+    { content: dateToString(data.date), x: 527, y: 44 },
+    { content: data.customer, x: 527, y: 92 },
+    { content: data.address, x: 527, y: 116 },
+    { content: data.city, x: 527, y: (data.address && data.address.length > 40) ? 160 : 140 }
   ],
   "ac-surat-jalan-daerah": data => [
     // Company information at the top left.
