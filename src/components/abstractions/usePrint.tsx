@@ -30,43 +30,43 @@ const PrintProvider: FC<PrintProps> = props => {
     const height = isLandscape ? A4_WIDTH : A4_HEIGHT;
     
     // Resize the window for print.
-    const printSize = new LogicalSize(width, height);
-    currentWindow.setSize(printSize);
-    currentWindow.setResizable(false);
+    // const printSize = new LogicalSize(width, height);
+    // currentWindow.setSize(printSize);
+    // currentWindow.setResizable(false);
     
-    let scrollDown, scrollUp;
+    // let scrollDown, scrollUp;
 
-    // If the monitor isn't tall enough to fit the portrait-sized window, set the position explicitly.
-    const currentSize = await currentWindow.outerSize();
-    const monitor = await currentMonitor();
-    if (monitor && !isLandscape && (currentSize.height > monitor.size.height)) {
-      const offsetX = (monitor.size.width - width) / 2;
-      const position = new LogicalPosition(monitor.position.x + offsetX, monitor.position.y);
-      currentWindow.setPosition(position);
+    // // If the monitor isn't tall enough to fit the portrait-sized window, set the position explicitly.
+    // const currentSize = await currentWindow.outerSize();
+    // const monitor = await currentMonitor();
+    // if (monitor && !isLandscape && (currentSize.height > monitor.size.height)) {
+    //   const offsetX = (monitor.size.width - width) / 2;
+    //   const position = new LogicalPosition(monitor.position.x + offsetX, monitor.position.y);
+    //   currentWindow.setPosition(position);
 
-      // And provide a function to move the window up when we need to see the bottom.
-      scrollDown = async () => {
-        const currentPosition = await currentWindow.outerPosition();
-        const heightDifference = currentSize.height - monitor.size.height;
-        const position = new LogicalPosition(currentPosition.x, -heightDifference + 15);
-        await currentWindow.setPosition(position);
-      }
+    //   // And provide a function to move the window up when we need to see the bottom.
+    //   scrollDown = async () => {
+    //     const currentPosition = await currentWindow.outerPosition();
+    //     const heightDifference = currentSize.height - monitor.size.height;
+    //     const position = new LogicalPosition(currentPosition.x, -heightDifference + 15);
+    //     await currentWindow.setPosition(position);
+    //   }
 
-      // And provide yet another function to move the window back down when we need to see the bottom.
-      scrollUp = async () => {
-        const currentPosition = await currentWindow.outerPosition();
-        const position = new LogicalPosition(currentPosition.x, 0);
-        await currentWindow.setPosition(position);
-      }
-    }
-    else {
-      currentWindow.center();
-    }
+    //   // And provide yet another function to move the window back down when we need to see the bottom.
+    //   scrollUp = async () => {
+    //     const currentPosition = await currentWindow.outerPosition();
+    //     const position = new LogicalPosition(currentPosition.x, 0);
+    //     await currentWindow.setPosition(position);
+    //   }
+    // }
+    // else {
+    //   currentWindow.center();
+    // }
 
     // Set the data into the state.
     const singletons = database?.collection('Singletons');
     const company_data = await singletons?.findOne(companyQuery, { projection: { _id: 0 } });
-    setOpen({ width, height, type: preset, scrollDown, scrollUp, company_data, ...data });
+    setOpen({ width, height, type: preset, /*scrollDown, scrollUp,*/ company_data, ...data });
   }
 
   const closePrintView = async () => {

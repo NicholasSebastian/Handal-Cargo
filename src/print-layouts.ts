@@ -42,8 +42,8 @@ const layouts: PrintLayouts = {
     // Customer information at the top right.
     { content: dateToString(data.date), x: 527, y: 44 },
     { content: data.customer, x: 527, y: 92 },
-    { content: data.address, x: 527, y: 116 },
-    { content: data.city, x: 527, y: (data.address && data.address.length > 40) ? 160 : 140 }
+    { content: data.address, x: 455, y: 116 },
+    { content: data.city, x: 455, y: (data.address && data.address.length > 50) ? 160 : 140 }
   ],
   "sf-surat-jalan-daerah": data => [
     // Company information at the top left.
@@ -182,20 +182,20 @@ const layouts: PrintLayouts = {
     // Customer information at the top right.
     { content: dateToString(data.date), x: 527, y: 44 },
     { content: data.customer, x: 527, y: 92 },
-    { content: data.address, x: 527, y: 116 },
-    { content: data.city, x: 527, y: (data.address && data.address.length > 40) ? 160 : 140 }
+    { content: data.address, x: 455, y: 116 },
+    { content: data.city, x: 455, y: (data.address && data.address.length > 50) ? 160 : 140 }
   ],
   "ac-surat-jalan-daerah": data => [
     // Company information at the top left.
-    { content: data.company_data.name, prefix: "Sip.", x: 110, y: 45 },
-    { content: data.company_data.address, x: 110, y: 60 },
-    { content: data.company_data.phone_number, x: 110, y: 75 },
+    { content: data.company_data.name, prefix: "Sip.", x: 168, y: 40 },
+    { content: data.company_data.address, x: 168, y: 60 },
+    { content: data.company_data.phone_number, x: 168, y: 80 },
     
     // Measurement and Air Cargo information at the bottom left.
-    { content: data.measurement, suffix: data.unit, x: 50, y: 160 },
-    { content: data.item_code, x: 50, y: 175 },
-    { content: data.route, prefix: "Air Cargo:", x: 50, y: 190 },
-    { content: data.marking, prefix: "Marking:", x: 50, y: 205 },
+    { content: data.measurement, suffix: data.unit, x: 80, y: 237 },
+    { content: data.item_code, x: 80, y: 257 },
+    { content: data.route, prefix: "Air Cargo:", x: 80, y: 277 },
+    { content: data.marking, prefix: "Marking:", x: 80, y: 297 },
 
     // Customer information also at the middle.
     { content: `(${data.measurement}`, prefix: "Paket", suffix: `${data.measurement_option.substr(-3, 2)})`, x: 240, y: 165 },
@@ -207,8 +207,8 @@ const layouts: PrintLayouts = {
     { content: data.home_number, prefix: "Hp:", x: 240, y: 255 },
 
     // Date and Phone number at the top right.
-    { content: dateToString(data.date), x: 400, y: 60 },
-    { content: data.phone_number, prefix: "Telp:", x: 440, y: 110 }
+    { content: dateToString(data.date), x: 527, y: 44 },
+    { content: data.phone_number, prefix: "Telp:", x: 440, y: 110 } // TODO
   ],
   "ac-faktur": data => [
     // Document title at the top, invoice number at the top left, and transfer information at the top right.

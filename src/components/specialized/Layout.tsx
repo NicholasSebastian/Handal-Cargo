@@ -11,11 +11,16 @@ const { TabPane } = Tabs;
 
 // Intended for use at the base of the app, wrapping around all other pages.
 
+function loadTabs() {
+  const cachedTabs = sessionStorage.getItem('tabs');
+  return cachedTabs ? JSON.parse(cachedTabs) : [];
+}
+
 const Layout: FC<PropsWithChildren<{}>> = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [tabs, setTabs] = useState<Array<string>>([]);
+  const [tabs, setTabs] = useState<Array<string>>(loadTabs);
   const [active, setActive] = useState('');
   const [access, setAccess] = useState<Array<string>>();
 
@@ -34,6 +39,9 @@ const Layout: FC<PropsWithChildren<{}>> = (props) => {
       setTabs([...tabs, newTab]);
     }
   }, [location]);
+
+  // 'Memoize' the tabs with session storage so it persists whenever the layout is unmounted during printing.
+  useEffect(() => sessionStorage.setItem('tabs', JSON.stringify(tabs)), [tabs]);
 
   const onEdit: TabsCallback = (key, action) => {
     // Executes when a tab is deleted.
