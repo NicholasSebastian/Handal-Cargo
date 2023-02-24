@@ -1,6 +1,6 @@
 # Handal Cargo
 
-With 7191 lines of code!
+With 7509 lines of code!
 
 ## NOTES FOR MYSELF
 
@@ -18,9 +18,7 @@ to your "node_modules/react-scripts/config/webpack.config.js" > "exports" > "res
 
 ## TO DO LIST
 
-- Printing Adjustments:
-  - The printing positions.
-  - Text that is too long needs to get truncated.
+- Adjust the printing positions.
 
 ## TO BE IMPLEMENTED IN THE FUTURE
 
