@@ -23,28 +23,22 @@ function openWhatsAppChat() {
 
 const PrintPreview: FC<IPrintPreviewProps> = props => {
   const { file, close } = props;
-  const { type, scrollUp, scrollDown, ...data } = file;
+  const { type, width, height, ...data } = file;
   const layout = layouts[type];
   const title = titles[type];
 
-  const handlePrint = async () => {
-    scrollDown && await scrollDown();
-    scrollUp && addEventListener('afterprint', scrollUp, { once: true });
-    window.print();
-  }
-
   return (
     <Container 
-      documentWidth={file.width} 
-      documentHeight={file.height}>
-      <PageRules isLandscape={file.width > file.height} />
+      documentWidth={width} 
+      documentHeight={height}>
+      <PageRules isLandscape={width > height} />
       <div>
         <Button onClick={close}>Kembali</Button>
         <Title level={5}>{title}</Title>
         <div>
-          <Button onClick={() => openEmailDraft(file.email)}>Buka Email</Button>
+          <Button onClick={() => openEmailDraft(data.email)}>Buka Email</Button>
           <Button onClick={() => openWhatsAppChat()}>Buka WhatsApp</Button>
-          <Button type="primary" onClick={handlePrint}>Print</Button>
+          <Button type="primary" onClick={window.print}>Print</Button>
         </div>
       </div>
       <article>
@@ -94,11 +88,11 @@ const Container = styled.div<IStyleProps>`
   background-color: #f0f2f5;
   overflow-y: hidden;
 
+  // The print document.
   > article {
     position: relative;
-    width: ${props => props.documentWidth}px;
-    height: ${props => props.documentHeight}px;
 
+    // Texts within the print document.
     > span {
       position: fixed;
       font-family: sans-serif;
@@ -108,6 +102,7 @@ const Container = styled.div<IStyleProps>`
       }
     }
 
+    // Rects within the print document.
     > div {
       position: fixed;
       print-color-adjust: exact;
@@ -115,6 +110,7 @@ const Container = styled.div<IStyleProps>`
     }
   }
 
+  // The menu bar at the top.
   > div {
     background-color: #fff;
     border-bottom: 1px solid #d9d9d9;
@@ -136,16 +132,19 @@ const Container = styled.div<IStyleProps>`
     }
   }
 
+  // Make the print document presentable on the screen.
   @media screen {
     > article {
       background-color: #fff;
+      width: ${props => props.documentWidth}px;
+      height: ${props => props.documentHeight}px;
       border: 1px solid #d9d9d9;
-      width: 100vw;
-      height: 100vh;
+      margin: 0 auto;
       transform: scale(0.8);
     }
   }
 
+  // Hide the menu during print.
   @media print {
     > div {
       display: none !important;
