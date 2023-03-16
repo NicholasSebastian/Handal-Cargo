@@ -21,13 +21,14 @@ const DisplayTotal: FC<ICustomComponentProps> = props => {
   const additionalFee = useWatch('additional_fee', form);
   const shipmentFee = useWatch('shipment_fee', form);
   const exchangeRate = useWatch('exchange_rate', form);
+  const measurement = useWatch('measurement', form);
 
   useEffect(() => {
     form.setFieldsValue({ 
       ...form.getFieldsValue(true), 
-      total: ((price + additionalFee + shipmentFee) * exchangeRate)
+      total: (((price * measurement) + additionalFee + shipmentFee) * exchangeRate)
     });
-  }, [price, additionalFee, shipmentFee, exchangeRate]);
+  }, [price, measurement, additionalFee, shipmentFee, exchangeRate]);
 
   return (
     <Item 

@@ -63,7 +63,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
           const inMarkings = await Promise.all([inTravelDocuments, inInvoices]);
           return inMarkings.every(marking => marking == null);
         }}
-        showIndicator={values => values.markings.every((marking: any) => marking.paid)}
+        showIndicator={values => values.markings.every((marking: any) => marking.paid && marking.invoices > 0) }
         view={View}
         form={Form}
         columns={columns}

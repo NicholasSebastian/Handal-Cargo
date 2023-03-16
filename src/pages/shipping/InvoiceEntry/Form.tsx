@@ -24,6 +24,7 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
   const shipmentFee = useWatch('shipment_fee', form);
   const otherFee = useWatch('other_fee', form);
   const discount = useWatch('discount', form);
+  const measurement = useWatch('measurement', form);
 
   useEffect(() => {
     // Set the initial values for all the fields.
@@ -53,9 +54,9 @@ const InvoiceEntryForm: FC<IFormProps> = props => {
     // Update the total field whenever any of its dependency fields change.
     form.setFieldsValue({
       ...form.getFieldsValue(true),
-      total: ((price + (volumeCharge ?? 0) + additionalFee + shipmentFee + otherFee) - discount)
+      total: (((price * measurement) + (volumeCharge ?? 0) + additionalFee + shipmentFee + otherFee) - discount)
     });
-  }, [price, volumeCharge, additionalFee, shipmentFee, otherFee, discount]);
+  }, [price, measurement, volumeCharge, additionalFee, shipmentFee, otherFee, discount]);
 
   const handleSubmit = (submittedValues: any) => {
     const parsedValues = { 

@@ -50,8 +50,8 @@ const PrintPreview: FC<IPrintPreviewProps> = props => {
                 top: `${item.y}px`,
                 left: `${item.x}px`,
                 color: item.color ?? '#000',
-                fontSize: item.size ? `${item.size}px` : '12px',
-                fontWeight: item.bold ?? 400,
+                fontSize: item.size ? `${item.size}px` : '16px',
+                fontWeight: item.bold ?? 800,
                 fontStyle: item.italic ? 'italic' : 'normal',
                 textDecoration: item.underline ? 'underline' : 'none'
               }}>
@@ -95,7 +95,7 @@ const Container = styled.div<IStyleProps>`
     // Texts within the print document.
     > span {
       position: fixed;
-      font-family: sans-serif;
+      font-family: Courier New;
 
       > pre {
         line-height: 15px;

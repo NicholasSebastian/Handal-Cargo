@@ -93,7 +93,10 @@ export const markingAggregation = {
         "$$marking",
         { 
           paid: {
-            $gte: [markingPaymentsTotal, markingInvoicesTotal]
+            $and: [
+              {$gte: [markingPaymentsTotal, markingInvoicesTotal]},
+              {$gt: [markingInvoicesTotal, 0]}
+            ]
           },
           remainder: {
             $subtract: ["$$marking.quantity", markingTravelPermitsQuantityTotal] 
