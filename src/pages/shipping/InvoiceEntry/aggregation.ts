@@ -2,7 +2,7 @@
 // This looks absolutely retarded.
 const commonFields = {
   _id: '$_id',
-  payment: '$payment',
+  payment: '$payment_amount.id',
   marking: '$marking',
   quantity: '$quantity',
   measurement_option: '$measurement_option',
