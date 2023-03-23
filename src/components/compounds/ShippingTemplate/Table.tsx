@@ -42,7 +42,7 @@ const TableTemplate: FC<ITemplateProps> = props => {
           const extra = queryPipeline ?? [];
           if (search)
             return database?.collection(collectionName).aggregate([
-              { [searchKey]: search }, 
+              { $match: { [searchKey]: { $regex: search } } }, 
               ...pipeline, 
               ...extra
             ]);
